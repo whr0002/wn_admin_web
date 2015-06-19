@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "ManageUserRoles";
+}
+
+<h2>ManageUserRoles</h2>
+@Html.ActionLink("List Roles", "Index")
+<div class="row">
+    <h3>Role Add to User</h3>
+
+    @using (Html.BeginForm("RoleAddToUser", "Roles"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+
+
+        <div class="col-md-12">
+            Usernames: @Html.DropDownList("username", (IEnumerable<SelectListItem>)ViewBag.Users, "Select ...")
+        </div>
+
+        <div class="col-md-12">
+            Roles: @Html.DropDownList("roleName", (IEnumerable<SelectListItem>)ViewBag.Roles, "Select ...")
+        </div>
+
+        <div class="col-md-12">
+            <input type="submit" value="Save" />
+        </div>
+    }
+
+</div>
+
+<div class="row">
+    <h3>Get Roles</h3>
+
+    @using (Html.BeginForm("GetRoles", "Roles"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+
+        <div class="col-md-12">
+            Usernames: @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.Users, "Select ...")
+        </div>
+        
+        <div class="col-md-12">
+            <input type="submit" value="Get" />
+        </div>
+
+        
+    }
+
+    @if (ViewBag.RolesForThisUser != null)
+    {
+        <div style="background-color:yellow;">
+            <h4>Roles for this user</h4>
+            <ol>
+                @foreach (string s in ViewBag.RolesForThisUser)
+                {
+                    <li>@s</li>
+                }
+            </ol>
+        </div>
+    }
+
+</div>
+
+
+<div class="row">
+    <h3>Delete a role from a user</h3>
+
+    @using (Html.BeginForm("DeleteRoleForUser", "Roles"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+
+
+        <div class="col-md-12">
+            Usernames: @Html.DropDownList("username", (IEnumerable<SelectListItem>)ViewBag.Users, "Select ...")
+        </div>
+
+        <div class="col-md-12">
+            Roles: @Html.DropDownList("roleName", (IEnumerable<SelectListItem>)ViewBag.Roles, "Select ...")
+        </div>
+
+        <div class="col-md-12">
+            <input type="submit" value="Delete" />
+        </div>
+    }
+
+</div>

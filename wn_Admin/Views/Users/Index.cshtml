@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>User Management</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.ActionLink("Role Management", "Index", "Roles")
+    </div>
+    <div class="col-md-12">
+        @Html.ActionLink("Change a user's password", "ChangePassword")
+    </div>
+    <div class="col-md-12">
+        @Html.ActionLink("Remove an account", "RemoveAccount")
+    </div>
+</div>
+

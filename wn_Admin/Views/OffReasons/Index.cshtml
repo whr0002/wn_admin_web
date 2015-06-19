@@ -1,0 +1,27 @@
+﻿@model IEnumerable<wn_Admin.Models.CModels.OffReason>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.OffReasonID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.OffReasonID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.OffReasonID })
+        </td>
+    </tr>
+}
+
+</table>

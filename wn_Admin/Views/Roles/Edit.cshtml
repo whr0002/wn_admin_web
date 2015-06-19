@@ -1,0 +1,18 @@
+﻿@model Microsoft.AspNet.Identity.EntityFramework.IdentityRole
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(f => f.Id)
+    
+    <div>Role Name</div>
+    <div>@Html.TextBoxFor(s => s.Name)</div>
+    <input type="submit" value="Save" />
+}

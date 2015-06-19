@@ -1,0 +1,33 @@
+﻿@model IEnumerable<wn_Admin.Models.CModels.PayPeriod>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartDate)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.PayPeriodID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PayPeriodID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PayPeriodID })
+        </td>
+    </tr>
+}
+
+</table>
