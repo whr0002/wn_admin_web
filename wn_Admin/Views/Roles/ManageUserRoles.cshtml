@@ -49,12 +49,12 @@
 
     @if (ViewBag.RolesForThisUser != null)
     {
-        <div style="background-color:yellow;">
+        <div style="background-color:lightblue;">
             <h4>Roles for this user</h4>
             <ol>
                 @foreach (string s in ViewBag.RolesForThisUser)
                 {
-                    <li>@s</li>
+                    <li>@s <a href="DeleteRoleForUser?username=@ViewBag.UsernameForThisUser&roleName=@s" style="color:red;" onclick="return confirm('Are you sure you want to delete this role?')">[Delete]</a> </li>
                 }
             </ol>
         </div>
@@ -63,7 +63,7 @@
 </div>
 
 
-<div class="row">
+@*<div class="row">
     <h3>Delete a role from a user</h3>
 
     @using (Html.BeginForm("DeleteRoleForUser", "Roles"))
@@ -85,4 +85,4 @@
         </div>
     }
 
-</div>
+</div>*@

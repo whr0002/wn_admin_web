@@ -94,6 +94,7 @@ namespace wn_Admin.Controllers.CControllers
             var user = getCurrentUser();
             if (user != null) { 
                 var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(appDb));
+               
                 List<string> roles = um.GetRoles(user.Id) as List<string>;
                 if (roles != null)
                 {

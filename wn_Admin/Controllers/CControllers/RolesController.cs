@@ -96,6 +96,7 @@ namespace wn_Admin.Controllers.CControllers
             var userManager = new UserManager<ApplicationUser>(userStore);
 
             userManager.AddToRole(user.Id, roleName);
+
             setDropdowns();
             return RedirectToAction("ManageUserRoles");
         }
@@ -114,6 +115,7 @@ namespace wn_Admin.Controllers.CControllers
 
                 if (user.Id != null)
                 {
+                    ViewBag.UsernameForThisUser = UserName; 
                     ViewBag.RolesForThisUser = userManager.GetRoles(user.Id);
                 }
                 // prepopulate usernames and roles for the view dropdown
@@ -124,8 +126,8 @@ namespace wn_Admin.Controllers.CControllers
             return View("ManageUserRoles");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
         public ActionResult DeleteRoleForUser(string username, string roleName)
         {
             ApplicationUser user = db.Users.Where(w => w.UserName.Equals(username, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
@@ -135,6 +137,11 @@ namespace wn_Admin.Controllers.CControllers
             if (um.IsInRole(user.Id, roleName))
             {
                 um.RemoveFromRole(user.Id, roleName);
+            }
+
+            if (user.Id != null)
+            {
+                ViewBag.RolesForThisUser = um.GetRoles(user.Id);
             }
 
             setDropdowns();
