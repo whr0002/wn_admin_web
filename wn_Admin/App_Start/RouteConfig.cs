@@ -26,6 +26,14 @@ namespace wn_Admin
                 );
 
             routes.MapRoute(
+                name: "Supervision",
+                url: "Supervisions/Edit/{eid}/{mid}",
+                defaults: new { controller = "Supervisions", action = "Edit", eid="", mid=""}
+
+                );
+
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using wn_Admin.Models;
 
-namespace wn_Admin.Controllers.CControllers
+namespace wn_Admin.Controllers.CompanyControllers
 {
     public class ProjectsController : Controller
     {

@@ -26,6 +26,36 @@
             @Html.DisplayFor(model => model.ProjectName)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.Workings)
+        </dt>
+        <dd>
+            <table class="table" style="background: lightblue">
+                <tr>
+                    <th>Employee</th>
+                    <th>Hours</th>
+                </tr>
+                
+                @foreach (var item in Model.Workings)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Employee.FullName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Hours)</td>
+
+                    </tr>
+                }
+
+
+                @{
+                    var result = Model.Workings.GroupBy(g => g.ProjectID).Select(s => new { Total = s.Sum(i => i.Hours) });
+                    <tr>
+                        <td></td>
+                        <td><strong>Total: </strong>@result.FirstOrDefault().Total</td>
+                    </tr>
+                }
+                
+            </table>
+        </dd>
     </dl>
 </div>
 <p>

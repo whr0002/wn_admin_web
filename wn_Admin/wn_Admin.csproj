@@ -164,28 +164,45 @@
     <Compile Include="Controllers\CControllers\FieldAccessesController.cs" />
     <Compile Include="Controllers\CControllers\OffReasonsController.cs" />
     <Compile Include="Controllers\CControllers\PayPeriodsController.cs" />
-    <Compile Include="Controllers\CControllers\ProjectsController.cs" />
     <Compile Include="Controllers\CControllers\RolesController.cs" />
     <Compile Include="Controllers\CControllers\TasksController.cs" />
     <Compile Include="Controllers\CControllers\TimesheetsController.cs" />
     <Compile Include="Controllers\CControllers\UsersController.cs" />
     <Compile Include="Controllers\CControllers\VehiclesController.cs" />
+    <Compile Include="Controllers\CompanyControllers\DepartmentsController.cs" />
+    <Compile Include="Controllers\CompanyControllers\EmployeesController.cs" />
+    <Compile Include="Controllers\CompanyControllers\ProjectsController.cs" />
+    <Compile Include="Controllers\CompanyControllers\SupervisionsController.cs" />
+    <Compile Include="Controllers\CompanyControllers\WorkingsController.cs" />
+    <Compile Include="Controllers\CompanyControllers\WorksForsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201506181852365_1.cs" />
-    <Compile Include="Migrations\201506181852365_1.Designer.cs">
-      <DependentUpon>201506181852365_1.cs</DependentUpon>
+    <Compile Include="Migrations\201506231916255_1.cs" />
+    <Compile Include="Migrations\201506231916255_1.Designer.cs">
+      <DependentUpon>201506231916255_1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201506181916533_2.cs" />
-    <Compile Include="Migrations\201506181916533_2.Designer.cs">
-      <DependentUpon>201506181916533_2.cs</DependentUpon>
+    <Compile Include="Migrations\201506231939516_2.cs" />
+    <Compile Include="Migrations\201506231939516_2.Designer.cs">
+      <DependentUpon>201506231939516_2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201506191356246_hours.cs" />
-    <Compile Include="Migrations\201506191356246_hours.Designer.cs">
-      <DependentUpon>201506191356246_hours.cs</DependentUpon>
+    <Compile Include="Migrations\201506231953376_3.cs" />
+    <Compile Include="Migrations\201506231953376_3.Designer.cs">
+      <DependentUpon>201506231953376_3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506232047360_4.cs" />
+    <Compile Include="Migrations\201506232047360_4.Designer.cs">
+      <DependentUpon>201506232047360_4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506232057223_worksfor.cs" />
+    <Compile Include="Migrations\201506232057223_worksfor.Designer.cs">
+      <DependentUpon>201506232057223_worksfor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506232137039_8.cs" />
+    <Compile Include="Migrations\201506232137039_8.Designer.cs">
+      <DependentUpon>201506232137039_8.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -197,9 +214,15 @@
     <Compile Include="Models\CModels\Task.cs" />
     <Compile Include="Models\CModels\Timesheet.cs" />
     <Compile Include="Models\CModels\Vehicle.cs" />
+    <Compile Include="Models\CompanyModels\Control.cs" />
+    <Compile Include="Models\CompanyModels\Department.cs" />
+    <Compile Include="Models\CompanyModels\Employee.cs" />
+    <Compile Include="Models\CompanyModels\Supervision.cs" />
+    <Compile Include="Models\CompanyModels\Working.cs" />
+    <Compile Include="Models\CompanyModels\WorksFor.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\CModels\Project.cs" />
+    <Compile Include="Models\CompanyModels\Project.cs" />
     <Compile Include="Models\wn_admin_db.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -214,6 +237,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="ClassDiagram1.cd" />
+    <Content Include="ClassDiagram2.cd" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -289,11 +314,6 @@
     <Content Include="Views\PayPeriods\Details.cshtml" />
     <Content Include="Views\PayPeriods\Edit.cshtml" />
     <Content Include="Views\PayPeriods\Index.cshtml" />
-    <Content Include="Views\Projects\Create.cshtml" />
-    <Content Include="Views\Projects\Delete.cshtml" />
-    <Content Include="Views\Projects\Details.cshtml" />
-    <Content Include="Views\Projects\Edit.cshtml" />
-    <Content Include="Views\Projects\Index.cshtml" />
     <Content Include="Views\Tasks\Create.cshtml" />
     <Content Include="Views\Tasks\Delete.cshtml" />
     <Content Include="Views\Tasks\Details.cshtml" />
@@ -304,6 +324,36 @@
     <Content Include="Views\Vehicles\Details.cshtml" />
     <Content Include="Views\Vehicles\Edit.cshtml" />
     <Content Include="Views\Vehicles\Index.cshtml" />
+    <Content Include="Views\Projects\Create.cshtml" />
+    <Content Include="Views\Projects\Delete.cshtml" />
+    <Content Include="Views\Projects\Details.cshtml" />
+    <Content Include="Views\Projects\Edit.cshtml" />
+    <Content Include="Views\Projects\Index.cshtml" />
+    <Content Include="Views\Employees\Create.cshtml" />
+    <Content Include="Views\Employees\Delete.cshtml" />
+    <Content Include="Views\Employees\Details.cshtml" />
+    <Content Include="Views\Employees\Edit.cshtml" />
+    <Content Include="Views\Employees\Index.cshtml" />
+    <Content Include="Views\Workings\Create.cshtml" />
+    <Content Include="Views\Workings\Delete.cshtml" />
+    <Content Include="Views\Workings\Details.cshtml" />
+    <Content Include="Views\Workings\Edit.cshtml" />
+    <Content Include="Views\Workings\Index.cshtml" />
+    <Content Include="Views\Supervisions\Create.cshtml" />
+    <Content Include="Views\Supervisions\Delete.cshtml" />
+    <Content Include="Views\Supervisions\Details.cshtml" />
+    <Content Include="Views\Supervisions\Edit.cshtml" />
+    <Content Include="Views\Supervisions\Index.cshtml" />
+    <Content Include="Views\Departments\Create.cshtml" />
+    <Content Include="Views\Departments\Delete.cshtml" />
+    <Content Include="Views\Departments\Details.cshtml" />
+    <Content Include="Views\Departments\Edit.cshtml" />
+    <Content Include="Views\Departments\Index.cshtml" />
+    <Content Include="Views\WorksFors\Create.cshtml" />
+    <Content Include="Views\WorksFors\Delete.cshtml" />
+    <Content Include="Views\WorksFors\Details.cshtml" />
+    <Content Include="Views\WorksFors\Edit.cshtml" />
+    <Content Include="Views\WorksFors\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -318,14 +368,23 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201506181852365_1.resx">
-      <DependentUpon>201506181852365_1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201506231916255_1.resx">
+      <DependentUpon>201506231916255_1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201506181916533_2.resx">
-      <DependentUpon>201506181916533_2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201506231939516_2.resx">
+      <DependentUpon>201506231939516_2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201506191356246_hours.resx">
-      <DependentUpon>201506191356246_hours.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201506231953376_3.resx">
+      <DependentUpon>201506231953376_3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506232047360_4.resx">
+      <DependentUpon>201506232047360_4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506232057223_worksfor.resx">
+      <DependentUpon>201506232057223_worksfor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506232137039_8.resx">
+      <DependentUpon>201506232137039_8.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
