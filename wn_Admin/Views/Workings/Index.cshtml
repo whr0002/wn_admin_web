@@ -3,7 +3,9 @@
 @{
     ViewBag.Title = "Index";
 }
-
+@section cssSection{
+    <link href="~/Content/StyleSheet_Timesheet.css" rel="stylesheet" />
+}
 <h2>Index</h2>
 
 <p>
@@ -12,25 +14,34 @@
 <table class="table">
     <tr>
         <th>
+            @Html.DisplayNameFor(model => model.Client.ClientName)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Employee.FirstMidName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FK_FieldAccess.FieldAccessID)
+            @Html.DisplayNameFor(model => model.FK_FieldAccess.FieldAccessName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FK_Off.TaskID)
+            @Html.DisplayNameFor(model => model.FK_OffReason.OffReasonName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FK_Task.TaskID)
+            @Html.DisplayNameFor(model => model.FK_Task.TaskName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FK_Vehicle.VehicleID)
+            @Html.DisplayNameFor(model => model.FK_Vehicle.VehicleName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Project.ProjectName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PPYr)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PP)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Identifier)
@@ -68,25 +79,34 @@
 @foreach (var item in Model) {
     <tr>
         <td>
+            @Html.DisplayFor(modelItem => item.Client.ClientName)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.Employee.FirstMidName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.FK_FieldAccess.FieldAccessID)
+            @Html.DisplayFor(modelItem => item.FK_FieldAccess.FieldAccessName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.FK_Off.TaskID)
+            @Html.DisplayFor(modelItem => item.FK_OffReason.OffReasonName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.FK_Task.TaskID)
+            @Html.DisplayFor(modelItem => item.FK_Task.TaskName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.FK_Vehicle.VehicleID)
+            @Html.DisplayFor(modelItem => item.FK_Vehicle.VehicleName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Project.ProjectName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PPYr)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PP)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Identifier)

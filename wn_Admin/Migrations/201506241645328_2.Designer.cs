@@ -13,7 +13,7 @@ namespace wn_Admin.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201506231939516_2"; }
+            get { return "201506241645328_2"; }
         }
         
         string IMigrationMetadata.Source

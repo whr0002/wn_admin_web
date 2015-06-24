@@ -22,3 +22,10 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+.mCustomNavBar {
+  width: 300px;
+  height: 100%;
+  position: fixed;
+}

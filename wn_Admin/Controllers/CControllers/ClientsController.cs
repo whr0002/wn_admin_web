@@ -10,6 +10,7 @@ using wn_Admin.Models;
 
 namespace wn_Admin.Controllers.CControllers
 {
+    [Authorize(Roles="SUPERADMIN, Accountant")]
     public class ClientsController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
@@ -21,7 +22,7 @@ namespace wn_Admin.Controllers.CControllers
         }
 
         // GET: Clients/Details/5
-        public ActionResult Details(string id)
+        public ActionResult Details(int? id)
         {
             if (id == null)
             {
@@ -46,7 +47,7 @@ namespace wn_Admin.Controllers.CControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ClientID")] Client client)
+        public ActionResult Create([Bind(Include = "ClientID,ClientName")] Client client)
         {
             if (ModelState.IsValid)
             {
@@ -59,7 +60,7 @@ namespace wn_Admin.Controllers.CControllers
         }
 
         // GET: Clients/Edit/5
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
@@ -78,7 +79,7 @@ namespace wn_Admin.Controllers.CControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ClientID")] Client client)
+        public ActionResult Edit([Bind(Include = "ClientID,ClientName")] Client client)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +91,7 @@ namespace wn_Admin.Controllers.CControllers
         }
 
         // GET: Clients/Delete/5
-        public ActionResult Delete(string id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
@@ -107,7 +108,7 @@ namespace wn_Admin.Controllers.CControllers
         // POST: Clients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
+        public ActionResult DeleteConfirmed(int id)
         {
             Client client = db.Clients.Find(id);
             db.Clients.Remove(client);

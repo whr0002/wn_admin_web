@@ -166,13 +166,14 @@
     <Compile Include="Controllers\CControllers\PayPeriodsController.cs" />
     <Compile Include="Controllers\CControllers\RolesController.cs" />
     <Compile Include="Controllers\CControllers\TasksController.cs" />
-    <Compile Include="Controllers\CControllers\TimesheetsController.cs" />
     <Compile Include="Controllers\CControllers\UsersController.cs" />
     <Compile Include="Controllers\CControllers\VehiclesController.cs" />
     <Compile Include="Controllers\CompanyControllers\DepartmentsController.cs" />
     <Compile Include="Controllers\CompanyControllers\EmployeesController.cs" />
+    <Compile Include="Controllers\CompanyControllers\ExcelController.cs" />
     <Compile Include="Controllers\CompanyControllers\ProjectsController.cs" />
     <Compile Include="Controllers\CompanyControllers\SupervisionsController.cs" />
+    <Compile Include="Controllers\CompanyControllers\UserEmployeesController.cs" />
     <Compile Include="Controllers\CompanyControllers\WorkingsController.cs" />
     <Compile Include="Controllers\CompanyControllers\WorksForsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -180,29 +181,25 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201506231916255_1.cs" />
-    <Compile Include="Migrations\201506231916255_1.Designer.cs">
-      <DependentUpon>201506231916255_1.cs</DependentUpon>
+    <Compile Include="Migrations\201506241429327_initial.cs" />
+    <Compile Include="Migrations\201506241429327_initial.Designer.cs">
+      <DependentUpon>201506241429327_initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201506231939516_2.cs" />
-    <Compile Include="Migrations\201506231939516_2.Designer.cs">
-      <DependentUpon>201506231939516_2.cs</DependentUpon>
+    <Compile Include="Migrations\201506241457537_1.cs" />
+    <Compile Include="Migrations\201506241457537_1.Designer.cs">
+      <DependentUpon>201506241457537_1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201506231953376_3.cs" />
-    <Compile Include="Migrations\201506231953376_3.Designer.cs">
-      <DependentUpon>201506231953376_3.cs</DependentUpon>
+    <Compile Include="Migrations\201506241645328_2.cs" />
+    <Compile Include="Migrations\201506241645328_2.Designer.cs">
+      <DependentUpon>201506241645328_2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201506232047360_4.cs" />
-    <Compile Include="Migrations\201506232047360_4.Designer.cs">
-      <DependentUpon>201506232047360_4.cs</DependentUpon>
+    <Compile Include="Migrations\201506241756266_3.cs" />
+    <Compile Include="Migrations\201506241756266_3.Designer.cs">
+      <DependentUpon>201506241756266_3.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201506232057223_worksfor.cs" />
-    <Compile Include="Migrations\201506232057223_worksfor.Designer.cs">
-      <DependentUpon>201506232057223_worksfor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201506232137039_8.cs" />
-    <Compile Include="Migrations\201506232137039_8.Designer.cs">
-      <DependentUpon>201506232137039_8.cs</DependentUpon>
+    <Compile Include="Migrations\201506241827261_4.cs" />
+    <Compile Include="Migrations\201506241827261_4.Designer.cs">
+      <DependentUpon>201506241827261_4.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -218,11 +215,14 @@
     <Compile Include="Models\CompanyModels\Department.cs" />
     <Compile Include="Models\CompanyModels\Employee.cs" />
     <Compile Include="Models\CompanyModels\Supervision.cs" />
+    <Compile Include="Models\CompanyModels\UserEmployee.cs" />
     <Compile Include="Models\CompanyModels\Working.cs" />
     <Compile Include="Models\CompanyModels\WorksFor.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\CompanyModels\Project.cs" />
+    <Compile Include="Models\UtilityModels\PayPeriodCalculator.cs" />
+    <Compile Include="Models\UtilityModels\UserInfo.cs" />
     <Compile Include="Models\wn_admin_db.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -334,11 +334,6 @@
     <Content Include="Views\Employees\Details.cshtml" />
     <Content Include="Views\Employees\Edit.cshtml" />
     <Content Include="Views\Employees\Index.cshtml" />
-    <Content Include="Views\Workings\Create.cshtml" />
-    <Content Include="Views\Workings\Delete.cshtml" />
-    <Content Include="Views\Workings\Details.cshtml" />
-    <Content Include="Views\Workings\Edit.cshtml" />
-    <Content Include="Views\Workings\Index.cshtml" />
     <Content Include="Views\Supervisions\Create.cshtml" />
     <Content Include="Views\Supervisions\Delete.cshtml" />
     <Content Include="Views\Supervisions\Details.cshtml" />
@@ -354,11 +349,22 @@
     <Content Include="Views\WorksFors\Details.cshtml" />
     <Content Include="Views\WorksFors\Edit.cshtml" />
     <Content Include="Views\WorksFors\Index.cshtml" />
+    <Content Include="Views\Workings\Create.cshtml" />
+    <Content Include="Views\Workings\Delete.cshtml" />
+    <Content Include="Views\Workings\Details.cshtml" />
+    <Content Include="Views\Workings\Edit.cshtml" />
+    <Content Include="Views\Workings\Index.cshtml" />
+    <Content Include="Views\UserEmployees\Create.cshtml" />
+    <Content Include="Views\UserEmployees\Delete.cshtml" />
+    <Content Include="Views\UserEmployees\Details.cshtml" />
+    <Content Include="Views\UserEmployees\Edit.cshtml" />
+    <Content Include="Views\UserEmployees\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\Mobile\" />
     <Folder Include="Views\API\" />
+    <Folder Include="Views\Excel\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -368,23 +374,20 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201506231916255_1.resx">
-      <DependentUpon>201506231916255_1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201506241429327_initial.resx">
+      <DependentUpon>201506241429327_initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201506231939516_2.resx">
-      <DependentUpon>201506231939516_2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201506241457537_1.resx">
+      <DependentUpon>201506241457537_1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201506231953376_3.resx">
-      <DependentUpon>201506231953376_3.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201506241645328_2.resx">
+      <DependentUpon>201506241645328_2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201506232047360_4.resx">
-      <DependentUpon>201506232047360_4.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201506241756266_3.resx">
+      <DependentUpon>201506241756266_3.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201506232057223_worksfor.resx">
-      <DependentUpon>201506232057223_worksfor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201506232137039_8.resx">
-      <DependentUpon>201506232137039_8.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201506241827261_4.resx">
+      <DependentUpon>201506241827261_4.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

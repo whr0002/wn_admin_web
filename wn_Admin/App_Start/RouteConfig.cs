@@ -26,6 +26,13 @@ namespace wn_Admin
                 );
 
             routes.MapRoute(
+                name: "PayPeroids",
+                url: "API/PayPeriods/{date}",
+                defaults: new { controller = "API", action = "PayPeriods", date = ""}
+
+                );
+
+            routes.MapRoute(
                 name: "Supervision",
                 url: "Supervisions/Edit/{eid}/{mid}",
                 defaults: new { controller = "Supervisions", action = "Edit", eid="", mid=""}

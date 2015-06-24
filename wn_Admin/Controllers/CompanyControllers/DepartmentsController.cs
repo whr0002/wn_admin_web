@@ -11,6 +11,7 @@ using wn_Admin.Models.CompanyModels;
 
 namespace wn_Admin.Controllers.CompanyControllers
 {
+    [Authorize(Roles = "SUPERADMIN, Accountant")]
     public class DepartmentsController : Controller
     {
         private wn_admin_db db = new wn_admin_db();

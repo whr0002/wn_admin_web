@@ -11,6 +11,7 @@ using wn_Admin.Models.CModels;
 
 namespace wn_Admin.Controllers.CControllers
 {
+    [Authorize(Roles = "SUPERADMIN, Accountant")]
     public class FieldAccessesController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
@@ -22,7 +23,7 @@ namespace wn_Admin.Controllers.CControllers
         }
 
         // GET: FieldAccesses/Details/5
-        public ActionResult Details(string id)
+        public ActionResult Details(int? id)
         {
             if (id == null)
             {
@@ -47,7 +48,7 @@ namespace wn_Admin.Controllers.CControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "FieldAccessID")] FieldAccess fieldAccess)
+        public ActionResult Create([Bind(Include = "FieldAccessID,FieldAccessName")] FieldAccess fieldAccess)
         {
             if (ModelState.IsValid)
             {
@@ -60,7 +61,7 @@ namespace wn_Admin.Controllers.CControllers
         }
 
         // GET: FieldAccesses/Edit/5
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
@@ -79,7 +80,7 @@ namespace wn_Admin.Controllers.CControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "FieldAccessID")] FieldAccess fieldAccess)
+        public ActionResult Edit([Bind(Include = "FieldAccessID,FieldAccessName")] FieldAccess fieldAccess)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +92,7 @@ namespace wn_Admin.Controllers.CControllers
         }
 
         // GET: FieldAccesses/Delete/5
-        public ActionResult Delete(string id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
@@ -108,7 +109,7 @@ namespace wn_Admin.Controllers.CControllers
         // POST: FieldAccesses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
+        public ActionResult DeleteConfirmed(int id)
         {
             FieldAccess fieldAccess = db.FieldAccesses.Find(id);
             db.FieldAccesses.Remove(fieldAccess);

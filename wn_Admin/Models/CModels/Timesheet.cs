@@ -17,22 +17,22 @@ namespace wn_Admin.Models.CModels
         public DateTime Date { get; set; }
         public int? PPyr { get; set; }
         public int? PP { get; set; }
-        public string Client { get; set; }
+        public int Client { get; set; }
         public string Project { get; set; }
         public string ProjectID { get; set; }
-        public string Task { get; set; }
+        public int Task { get; set; }
         public string Identifier { get; set; }
-        public string Veh { get; set; }
+        public int Veh { get; set; }
         public string Crew { get; set; }
         public int? StartKm { get; set; }
         public int? EndKm { get; set; }
         public bool GPS { get; set; }
 
-        
-        public string Field { get; set; }
+
+        public int Field { get; set; }
         public bool PD { get; set; }
         public string JobDescription { get; set; }
-        public string Off { get; set; }
+        public int Off { get; set; }
 
         [Required]
         public int? Hours { get; set; }

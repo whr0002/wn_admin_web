@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
@@ -9,10 +10,12 @@ namespace wn_Admin.Models
 {
     public class Project
     {
-
+        [DisplayName("Project")]
         public string ProjectID { get; set; }
+
+        [DisplayName("Project Name")]
         public string ProjectName { get; set; }
-        public string Client { get; set; }
+        public int Client { get; set; }
 
 
         [ForeignKey("Client")]

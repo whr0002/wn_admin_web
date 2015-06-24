@@ -10,6 +10,7 @@ using wn_Admin.Models;
 
 namespace wn_Admin.Controllers.CompanyControllers
 {
+    [Authorize(Roles = "SUPERADMIN, Accountant")]
     public class ProjectsController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
@@ -39,7 +40,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // GET: Projects/Create
         public ActionResult Create()
         {
-            ViewBag.Client = new SelectList(db.Clients, "ClientID", "ClientID");
+            ViewBag.Client = new SelectList(db.Clients, "ClientID", "ClientName");
             return View();
         }
 
@@ -57,7 +58,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Client = new SelectList(db.Clients, "ClientID", "ClientID", project.Client);
+            ViewBag.Client = new SelectList(db.Clients, "ClientID", "ClientName", project.Client);
             return View(project);
         }
 
@@ -73,7 +74,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Client = new SelectList(db.Clients, "ClientID", "ClientID", project.Client);
+            ViewBag.Client = new SelectList(db.Clients, "ClientID", "ClientName", project.Client);
             return View(project);
         }
 
@@ -90,7 +91,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.Client = new SelectList(db.Clients, "ClientID", "ClientID", project.Client);
+            ViewBag.Client = new SelectList(db.Clients, "ClientID", "ClientName", project.Client);
             return View(project);
         }
 

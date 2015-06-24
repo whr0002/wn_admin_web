@@ -1,46 +1,47 @@
 ﻿var projects = [];
-$(document).on('change', "#Client", function () {
+$(document).on('change', "#ClientName", function () {
     
-    $('#Project').empty();
+    $('#ProjectID').empty();
     projects = [];
 
-    var client = $('#Client').find(":selected").text();
+    var client = $('#ClientName').find(":selected").text();
     var projects = getProjectByClient(client);
 
 
 });
 
-$(document).on('change', "#Project", function () {
-    $('#ProjectID').val("");
-
-    var selectedPj = $('#Project').find(":selected").text();
-
-    for (var i = 0; i < projects.length; i++) {
-        
-        var pname = projects[i]["ProjectName"];
-
-        if (selectedPj === pname) {
-            $('#ProjectID').val(projects[i]["ProjectID"]);
-        }
-        
-    }
-
-});
-
 function getProjectByClient(client) {
     $('#ProjectID').val("");
+    var mySelect = $('#ProjectID');
+    mySelect.append('<option value="">Choose ...</option>');
+
     $.getJSON("/api/projects/" + client, function (data) {
-        
+
         projects = data;
 
-        var mySelect = $('#Project');
-        mySelect.append('<option value="">Select ...</option>');
-        for (var i = 0; i < data.length;i++) {
-            console.log(data[i]);
+        
+        for (var i = 0; i < data.length; i++) {
+            //console.log(data[i]);
+            var pID = data[i]["ProjectID"];
             var pname = data[i]["ProjectName"];
-            mySelect.append('<option value="' + pname + '">' +pname+'</option>');
+            mySelect.append('<option value="' + pID + '">' + pname + '</option>');
         }
 
-  
+
     });
 }
+
+$(document).on('change', '#Date', function () {
+    $('#PPYr').val("");
+    $('#PP').val("");
+
+    var date = $('#Date').val();
+
+    $.getJSON("/api/PayPeriods/" + date, function (result) {
+        $('#PPYr').val(result["PPYear"]);
+        $('#PP').val(result["PPNumber"]);
+    });
+    
+});
+
+

@@ -11,6 +11,7 @@ using wn_Admin.Models.CModels;
 
 namespace wn_Admin.Controllers.CControllers
 {
+    [Authorize(Roles = "SUPERADMIN, Accountant")]
     public class OffReasonsController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
@@ -22,7 +23,7 @@ namespace wn_Admin.Controllers.CControllers
         }
 
         // GET: OffReasons/Details/5
-        public ActionResult Details(string id)
+        public ActionResult Details(int? id)
         {
             if (id == null)
             {
@@ -47,7 +48,7 @@ namespace wn_Admin.Controllers.CControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "OffReasonID")] OffReason offReason)
+        public ActionResult Create([Bind(Include = "OffReasonID,OffReasonName")] OffReason offReason)
         {
             if (ModelState.IsValid)
             {
@@ -60,7 +61,7 @@ namespace wn_Admin.Controllers.CControllers
         }
 
         // GET: OffReasons/Edit/5
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
@@ -79,7 +80,7 @@ namespace wn_Admin.Controllers.CControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "OffReasonID")] OffReason offReason)
+        public ActionResult Edit([Bind(Include = "OffReasonID,OffReasonName")] OffReason offReason)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +92,7 @@ namespace wn_Admin.Controllers.CControllers
         }
 
         // GET: OffReasons/Delete/5
-        public ActionResult Delete(string id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
@@ -108,7 +109,7 @@ namespace wn_Admin.Controllers.CControllers
         // POST: OffReasons/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
+        public ActionResult DeleteConfirmed(int id)
         {
             OffReason offReason = db.OffReasons.Find(id);
             db.OffReasons.Remove(offReason);

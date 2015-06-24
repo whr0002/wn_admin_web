@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -7,7 +9,10 @@ namespace wn_Admin.Models.CModels
 {
     public class Vehicle
     {
-
-        public string VehicleID { get; set; }
+        
+        public int VehicleID { get; set; }
+        [Index(IsUnique=true)]
+        [MaxLength(100)]
+        public string VehicleName { get; set; }
     }
 }
