@@ -27,8 +27,8 @@ namespace wn_Admin.Models.CompanyModels
         [DisplayName("Period")]
         public int PP { get; set; }
 
-        [DisplayName("Client")]
-        public int ClientName { get; set; }
+        //[DisplayName("Client")]
+        //public int ClientName { get; set; }
 
         [DisplayName("Project")]
         public string ProjectID { get; set; }
@@ -67,8 +67,8 @@ namespace wn_Admin.Models.CompanyModels
         public virtual Employee Employee { get; set; }
         public virtual Project Project { get; set; }
 
-        [ForeignKey("ClientName")]
-        public virtual Client Client { get; set; }
+        //[ForeignKey("ClientName")]
+        //public virtual Client Client { get; set; }
 
         [ForeignKey("Field")]
         public virtual FieldAccess FK_FieldAccess { get; set; }

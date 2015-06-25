@@ -29,3 +29,7 @@ textarea {
   height: 100%;
   position: fixed;
 }
+
+.mCustomDiv{
+    margin: 20px;
+}

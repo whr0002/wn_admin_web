@@ -44,4 +44,11 @@ $(document).on('change', '#Date', function () {
     
 });
 
+function toggleSearchPanel(checkbox) {
+    if (checkbox.checked) {
+        $('#SearchPanel').slideDown();
+    } else {
+        $('#SearchPanel').slideUp();
+    }
+}
 

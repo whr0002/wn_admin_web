@@ -40,6 +40,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -201,6 +207,10 @@
     <Compile Include="Migrations\201506241827261_4.Designer.cs">
       <DependentUpon>201506241827261_4.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506251447485_389257.cs" />
+    <Compile Include="Migrations\201506251447485_389257.Designer.cs">
+      <DependentUpon>201506251447485_389257.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -221,6 +231,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\CompanyModels\Project.cs" />
+    <Compile Include="Models\UtilityModels\LinkViewModel.cs" />
     <Compile Include="Models\UtilityModels\PayPeriodCalculator.cs" />
     <Compile Include="Models\UtilityModels\UserInfo.cs" />
     <Compile Include="Models\wn_admin_db.cs" />
@@ -230,6 +241,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="Content\StyleSheet_Timesheet.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -289,11 +301,6 @@
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Users\ChangePassword.cshtml" />
     <Content Include="Views\Users\RemoveAccount.cshtml" />
-    <Content Include="Views\Timesheets\Create.cshtml" />
-    <Content Include="Views\Timesheets\Delete.cshtml" />
-    <Content Include="Views\Timesheets\Details.cshtml" />
-    <Content Include="Views\Timesheets\Edit.cshtml" />
-    <Content Include="Views\Timesheets\Index.cshtml" />
     <Content Include="Views\Clients\Create.cshtml" />
     <Content Include="Views\Clients\Delete.cshtml" />
     <Content Include="Views\Clients\Details.cshtml" />
@@ -388,6 +395,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506241827261_4.resx">
       <DependentUpon>201506241827261_4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506251447485_389257.resx">
+      <DependentUpon>201506251447485_389257.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

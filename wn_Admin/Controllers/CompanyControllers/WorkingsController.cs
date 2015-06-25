@@ -12,6 +12,7 @@ using wn_Admin.Models.CompanyModels;
 using wn_Admin.Models.UtilityModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using PagedList;
 
 namespace wn_Admin.Controllers.CompanyControllers
 {
@@ -22,13 +23,15 @@ namespace wn_Admin.Controllers.CompanyControllers
         private UserInfo mUserInfo = new UserInfo();
 
         // GET: Workings
-        public ActionResult Index()
+        public ActionResult Index(int? page, DateTime? startDate = null, DateTime? endDate = null, int ppYear = -1, int pp = -1, int clientId = -1, int employeeId = -1, string projectId = null)
         {
 
             
-            var workings = db.Workings.Include(w => w.Client).Include(w => w.Employee).Include(w => w.FK_FieldAccess).Include(w => w.FK_OffReason).Include(w => w.FK_Task).Include(w => w.FK_Vehicle).Include(w => w.Project);
+            var workings = db.Workings.Include(w => w.Employee).Include(w => w.FK_FieldAccess).Include(w => w.FK_OffReason).Include(w => w.FK_Task).Include(w => w.FK_Vehicle).Include(w => w.Project);
             string userId = User.Identity.GetUserId();
             string role = mUserInfo.getFirstRole(userId);
+            string currentFilter = "";
+            
 
 
             if (!role.Equals("Accountant")) { 
@@ -42,9 +45,78 @@ namespace wn_Admin.Controllers.CompanyControllers
                 {
                     return View(new List<Working>());
                 }
+
+                ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == employee.EmployeeID), "EmployeeID", "FullName");   
+                ViewBag.clientId = new SelectList(workings.Select(s => s.Project.FK_Client).Distinct(), "ClientID", "ClientName");
+                ViewBag.projectId = new SelectList(workings.Select(s => s.Project).Distinct(), "ProjectID", "ProjectName");
+
+            }else{
+
+                // User is an accoutant, he or she can search Timesheets by Employee ID
+
+                if(employeeId != -1){
+                    workings = workings.Where(w => w.EmployeeID == employeeId);
+                    currentFilter += "&employeeId=" + employeeId;
+                }
+
+                ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName");
+                ViewBag.clientId = new SelectList(db.Clients, "ClientID", "ClientName");
+                ViewBag.projectId = new SelectList(db.Projects, "ProjectID", "ProjectName");
             }
 
-            return View(workings.ToList());
+
+            // Search Filters
+
+            // Date
+            if (startDate != null)
+            {
+                workings = workings.Where(w => w.Date >= startDate);
+
+                currentFilter += "&startDate=" + String.Format("{0:yyyy-MM-dd}", startDate);
+            }
+
+            if (endDate != null)
+            {
+                workings = workings.Where(w => w.Date <= endDate);
+                currentFilter += "&endDate=" + String.Format("{0:yyyy-MM-dd}", endDate);
+            }
+
+            // Pay Period Year
+            if (ppYear != -1)
+            {
+                workings = workings.Where(w => w.PPYr == ppYear);
+                currentFilter += "&ppYear=" + ppYear;
+            }
+
+            //Pay Period
+            if (pp != -1)
+            {
+                workings = workings.Where(w => w.PP == pp);
+                currentFilter += "&pp=" + pp;
+            }
+
+            //Client
+            if (clientId != -1)
+            {
+                workings = workings.Where(w => w.Project.Client == clientId);
+                currentFilter += "&clientId=" + clientId;
+            }
+
+            //Project
+            if (!String.IsNullOrWhiteSpace(projectId))
+            {
+                workings = workings.Where(w => w.ProjectID.Equals(projectId));
+                currentFilter += "&projectId=" + projectId;
+            }
+
+            ViewBag.CurrentFilter = currentFilter;
+            workings = workings.OrderByDescending(o => o.Date);
+
+            int pageSize = 15;
+            int pageNumber = (page ?? 1);
+
+
+            return View(workings.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Workings/Details/5
@@ -101,10 +173,6 @@ namespace wn_Admin.Controllers.CompanyControllers
                 ViewBag.EmployeeID = new SelectList(new List<Employee>(), "EmployeeID", "FullName");
             }
             
-            
-
-
-
 
             working.Date = DateTime.Today;
             PayPeriodCalculator calc = new PayPeriodCalculator();
@@ -121,7 +189,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ClientName,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours,Bank,OT")] Working working)
+        public ActionResult Create([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours,Bank,OT")] Working working)
         {
             if (ModelState.IsValid)
             {
@@ -130,7 +198,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName", working.ClientName);
+            ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
             ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName", working.Field);
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", working.OffReason);
@@ -153,7 +221,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName", working.ClientName);
+            ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
             ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName", working.Field);
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", working.OffReason);
@@ -169,7 +237,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Accountant")]
-        public ActionResult Edit([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ClientName,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours,Bank,OT")] Working working)
+        public ActionResult Edit([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours,Bank,OT")] Working working)
         {
             if (ModelState.IsValid)
             {
@@ -177,7 +245,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName", working.ClientName);
+            ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
             ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName", working.Field);
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", working.OffReason);

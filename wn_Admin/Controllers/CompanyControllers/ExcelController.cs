@@ -90,7 +90,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                         t.Date,
                         t.PPYr,
                         t.PP,
-                        t.Client.ClientName,
+                        t.Project.Client,
                         t.Project.ProjectName,
                         t.Project.ProjectID,
                         t.FK_Task.TaskName,
