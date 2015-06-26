@@ -211,6 +211,10 @@
     <Compile Include="Migrations\201506251447485_389257.Designer.cs">
       <DependentUpon>201506251447485_389257.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506252018523_389.cs" />
+    <Compile Include="Migrations\201506252018523_389.Designer.cs">
+      <DependentUpon>201506252018523_389.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -219,7 +223,6 @@
     <Compile Include="Models\CModels\PayPeriod.cs" />
     <Compile Include="Models\CModels\PPViewModel.cs" />
     <Compile Include="Models\CModels\Task.cs" />
-    <Compile Include="Models\CModels\Timesheet.cs" />
     <Compile Include="Models\CModels\Vehicle.cs" />
     <Compile Include="Models\CompanyModels\Control.cs" />
     <Compile Include="Models\CompanyModels\Department.cs" />
@@ -251,6 +254,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ClassDiagram1.cd" />
     <Content Include="ClassDiagram2.cd" />
+    <None Include="Properties\PublishProfiles\wnasap.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -398,6 +402,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506251447485_389257.resx">
       <DependentUpon>201506251447485_389257.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506252018523_389.resx">
+      <DependentUpon>201506252018523_389.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

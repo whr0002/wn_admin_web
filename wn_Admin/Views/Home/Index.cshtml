@@ -1,25 +1,32 @@
-﻿@model IEnumerable<wn_Admin.Models.UtilityModels.LinkViewModel>
+﻿@model wn_Admin.Models.UtilityModels.LinkGroupViewModel
 @{
     ViewBag.Title = "Dashboard";
 }
 
 
 <div class="row mCustomDiv">
-    @foreach (var item in Model)
+
+    @foreach (var s in Model.sections)
     {
+
         <div class="col-md-4">
-            <div class="panel panel-primary">
-                @*<div class="panel-heading"><h4>@item.LinkName</h4></div>*@
-                <div class="panel-body"><h3>@item.LinkName</h3></div>
-                <div class="panel-footer clearfix">
-                    <div class="pull-right">
-                        <a href="@item.Link" class="btn btn-primary btn-lg" target="_blank">Go</a>
-                    </div>
-                </div>
+            <div class="panel panel-primary" style="border-color:@s.color;">
+                <div class="panel-heading" style="background-color:@s.color;"><h4>@s.ListName</h4></div>
+                @foreach (var c in s.ListLinks)
+                {
+   
+                    <div class="panel-body"><a href="@c.Link" class="btn btn-primary" style="background-color:@s.color;" target="_blank">@c.LinkName</a></div>
+
+                }
             </div>
         </div>
+
     }
+
+
 </div>
+
+
 
 
 

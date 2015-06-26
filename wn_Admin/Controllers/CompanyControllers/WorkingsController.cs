@@ -13,6 +13,10 @@ using wn_Admin.Models.UtilityModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using PagedList;
+using System.IO;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Newtonsoft.Json;
 
 namespace wn_Admin.Controllers.CompanyControllers
 {
@@ -23,7 +27,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         private UserInfo mUserInfo = new UserInfo();
 
         // GET: Workings
-        public ActionResult Index(int? page, DateTime? startDate = null, DateTime? endDate = null, int ppYear = -1, int pp = -1, int clientId = -1, int employeeId = -1, string projectId = null)
+        public ActionResult Index(int? page, DateTime? startDate = null, DateTime? endDate = null, int ppYear = -1, int pp = -1, int clientId = -1, int employeeId = -1, string projectId = null, Boolean? exportToExcel = null)
         {
 
             
@@ -34,18 +38,37 @@ namespace wn_Admin.Controllers.CompanyControllers
             
 
 
-            if (!role.Equals("Accountant")) { 
+            if (!role.Equals("Accountant") && !role.Equals("SUPERADMIN")) { 
                 // User is not accountant, show records from this user
                 var employee = mUserInfo.getEmployee(userId);
                 if (employee != null)
                 {
-                    workings = workings.Where(w => w.EmployeeID == employee.EmployeeID);
+                    //workings = workings.Where(w => w.EmployeeID == employee.EmployeeID);
+
+                    // Query out all timesheets from this user and the timesheets of users under his supervision
+                    var ids = from s in db.Supervisions
+                              where s.SupervisorID == employee.EmployeeID
+                              select s.EmployeeID;
+
+
+                    workings = workings.Where(w => w.EmployeeID == employee.EmployeeID || ids.Contains(w.EmployeeID));
+
+                    if (ids.Count() > 0)
+                    {
+                        ViewBag.hasReviewControl = true;
+                        ViewBag.CurrentEID = employee.EmployeeID;
+                    }
+                    else
+                    {
+                        ViewBag.hasReviewControl = false;
+                    }
                 }
                 else
                 {
                     return View(new List<Working>());
                 }
 
+                ViewBag.hasFullControl = false;
                 ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == employee.EmployeeID), "EmployeeID", "FullName");   
                 ViewBag.clientId = new SelectList(workings.Select(s => s.Project.FK_Client).Distinct(), "ClientID", "ClientName");
                 ViewBag.projectId = new SelectList(workings.Select(s => s.Project).Distinct(), "ProjectID", "ProjectName");
@@ -58,7 +81,8 @@ namespace wn_Admin.Controllers.CompanyControllers
                     workings = workings.Where(w => w.EmployeeID == employeeId);
                     currentFilter += "&employeeId=" + employeeId;
                 }
-
+                ViewBag.hasReviewControl = true;
+                ViewBag.hasFullControl = true;
                 ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName");
                 ViewBag.clientId = new SelectList(db.Clients, "ClientID", "ClientName");
                 ViewBag.projectId = new SelectList(db.Projects, "ProjectID", "ProjectName");
@@ -109,6 +133,11 @@ namespace wn_Admin.Controllers.CompanyControllers
                 currentFilter += "&projectId=" + projectId;
             }
 
+            if (exportToExcel !=null && exportToExcel == true)
+            {
+                return Content(generateExcel(workings), "application/ms-excel");
+            }
+
             ViewBag.CurrentFilter = currentFilter;
             workings = workings.OrderByDescending(o => o.Date);
 
@@ -120,7 +149,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         }
 
         // GET: Workings/Details/5
-        [Authorize(Roles="Accountant")]
+        [Authorize(Roles="Accountant, SUPERADMIN")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -209,7 +238,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         }
 
         // GET: Workings/Edit/5
-        [Authorize(Roles = "Accountant")]
+        [Authorize(Roles = "Accountant, SUPERADMIN")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -236,7 +265,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Accountant")]
+        [Authorize(Roles = "Accountant, SUPERADMIN")]
         public ActionResult Edit([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours,Bank,OT")] Working working)
         {
             if (ModelState.IsValid)
@@ -256,7 +285,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         }
 
         // GET: Workings/Delete/5
-        [Authorize(Roles = "Accountant")]
+        [Authorize(Roles = "Accountant, SUPERADMIN")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -274,7 +303,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // POST: Workings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Accountant")]
+        [Authorize(Roles = "Accountant, SUPERADMIN")]
         public ActionResult DeleteConfirmed(int id)
         {
             Working working = db.Workings.Find(id);
@@ -290,6 +319,149 @@ namespace wn_Admin.Controllers.CompanyControllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+
+        public ActionResult Review(string ids)
+        {
+            string[] sids = ids.Split(',');
+            List<int> list = new List<int>();
+
+            // Get current supervisor
+            Employee employee = mUserInfo.getEmployee(User.Identity.GetUserId());
+            if (employee != null) { 
+            
+                var role = mUserInfo.getFirstRole(User.Identity.GetUserId());
+
+                if (role != null)
+                {
+                    if (role.Equals("Accountant") || role.Equals("SUPERADMIN"))
+                    {
+                        foreach (var id in sids)
+                        {
+                            try{
+                                int i = Convert.ToInt32(id);
+                                list.Add(i);
+                            }catch{}
+                        }
+                    }
+                    else
+                    {
+                        var underSupervised = db.Supervisions.Where(w => w.SupervisorID == employee.EmployeeID).Select(s => s.EmployeeID).ToList();
+                        foreach (var id in sids)
+                        {
+                            try
+                            {
+                                int i = Convert.ToInt32(id);
+                                if (underSupervised.Contains(i)) 
+                                { 
+                                    list.Add(i);
+                                }
+                            }
+                            catch { }
+                        }
+                    }
+                }
+
+
+
+
+            
+                var wlist = from work in db.Workings
+                            where list.Contains(work.WorkingID)
+                            select work;
+
+                foreach (Working work in wlist)
+                {
+                    work.isReviewed = true;
+                }
+
+                db.SaveChanges();
+            }
+
+
+            return RedirectToAction("Index");
+        }
+
+        private string generateExcel(IQueryable<Working> ws)
+        {
+            var timesheets = ws.ToList();
+
+            var table = new System.Data.DataTable("teste");
+            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Date", typeof(DateTime));
+            table.Columns.Add("PPyr", typeof(int));
+            table.Columns.Add("PP", typeof(int));
+            table.Columns.Add("Client", typeof(string));
+            table.Columns.Add("Project", typeof(string));
+            table.Columns.Add("ProjectID", typeof(string));
+            table.Columns.Add("Task", typeof(string));
+            table.Columns.Add("Identifier", typeof(string));
+            table.Columns.Add("Veh", typeof(string));
+            table.Columns.Add("Crew", typeof(string));
+            table.Columns.Add("StartKm", typeof(double));
+            table.Columns.Add("EndKm", typeof(double));
+            table.Columns.Add("GPS", typeof(bool));
+            table.Columns.Add("Field", typeof(string));
+            table.Columns.Add("PD", typeof(bool));
+            table.Columns.Add("JobDescription", typeof(string));
+            table.Columns.Add("Off", typeof(string));
+            table.Columns.Add("Hours", typeof(double));
+            table.Columns.Add("Bank", typeof(int));
+            table.Columns.Add("OT", typeof(int));
+
+            if (timesheets != null)
+            {
+                foreach (var t in timesheets)
+                {
+                    table.Rows.Add
+                        (
+                        t.Employee.FullName,
+                        t.Date,
+                        t.PPYr,
+                        t.PP,
+                        t.Project.Client,
+                        t.Project.ProjectName,
+                        t.Project.ProjectID,
+                        t.FK_Task.TaskName,
+                        t.Identifier,
+                        t.FK_Vehicle.VehicleName,
+                        t.Crew,
+                        t.StartKm,
+                        t.EndKm,
+                        t.GPS,
+                        t.FK_FieldAccess.FieldAccessName,
+                        t.PD,
+                        t.JobDescription,
+                        t.FK_OffReason.OffReasonName,
+                        t.Hours,
+                        t.Bank,
+                        t.OT
+                        );
+
+                }
+            }
+
+
+
+
+            var grid = new GridView();
+            grid.DataSource = table;
+            grid.DataBind();
+
+            Response.ClearContent();
+            Response.Buffer = true;
+            Response.AddHeader("content-disposition", "attachment; filename=timesheets.xls");
+            //Response.ContentType = "application/excel";
+
+            Response.Charset = "";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+
+            grid.RenderControl(htw);
+
+            //return Content(sw.ToString(), "application/ms-excel");
+            return sw.ToString();
         }
     }
 }

@@ -52,3 +52,52 @@ function toggleSearchPanel(checkbox) {
     }
 }
 
+
+function checkAll(checkbox) {
+
+
+    var subBoxes = $('.reviewBox');
+
+    if (checkbox.checked) {
+
+        subBoxes.prop('checked', true);
+        //subBoxes.each(function (index) {
+        //    if(subBoxes[index].checked){
+        //        var id = $(this).val();
+        //        console.log(id);
+        //    }  
+        //});
+    } else {
+        subBoxes.prop('checked', false);
+    }
+
+}
+
+function submitReviews() {
+    var subBoxes = $('.reviewBox');
+    var selection = [];
+    subBoxes.each(function (index) {
+        if (subBoxes[index].checked) {
+            var id = $(this).val();
+            selection.push(id);
+        }
+    });
+
+    console.log(selection);
+
+    if (selection.length > 0) {
+        // submit 
+        var json = JSON.stringify(selection);
+        var ids = "";
+        for(var i=0;i<selection.length;i++){
+            if (i == 0) {
+                ids += selection[i];
+            } else {
+                ids += "," + selection[i];
+            }
+        }
+        console.log(ids);
+        window.location.href = "/workings/review?ids=" + encodeURIComponent(ids);
+    }
+
+}

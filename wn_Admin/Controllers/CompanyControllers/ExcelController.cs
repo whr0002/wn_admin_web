@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using wn_Admin.Models;
+using wn_Admin.Models.CompanyModels;
 
 
 namespace wn_Admin.Controllers.CompanyControllers
@@ -52,10 +53,10 @@ namespace wn_Admin.Controllers.CompanyControllers
             return View("MyView");
         }
 
-        public ActionResult Generate()
+        public ActionResult Generate(IQueryable<Working> ws)
         {
-            wn_admin_db db = new wn_admin_db();
-            var timesheets = db.Workings.ToList();
+            //wn_admin_db db = new wn_admin_db();
+            var timesheets = ws.ToList();
 
             var table = new System.Data.DataTable("teste");
             table.Columns.Add("Name", typeof(string));
@@ -122,7 +123,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             Response.ClearContent();
             Response.Buffer = true;
             Response.AddHeader("content-disposition", "attachment; filename=timesheets.xls");
-            Response.ContentType = "application/excel";
+            //Response.ContentType = "application/excel";
 
             Response.Charset = "";
             StringWriter sw = new StringWriter();

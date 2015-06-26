@@ -64,6 +64,9 @@ namespace wn_Admin.Models.CompanyModels
         [DisplayName("Over time")]
         public int? OT { get; set; }
 
+        [DisplayName("Is Reviewed?")]
+        public bool isReviewed { get; set; }
+
         public virtual Employee Employee { get; set; }
         public virtual Project Project { get; set; }
 

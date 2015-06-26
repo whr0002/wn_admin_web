@@ -15,49 +15,67 @@ namespace wn_Admin.Controllers
         public ActionResult Index()
         {
             UserInfo ui = new UserInfo();
-            List<LinkViewModel> links = new List<LinkViewModel>();
+            
+            LinkGroupViewModel lModel = new LinkGroupViewModel();
 
             
             string role = ui.getFirstRole(User.Identity.GetUserId());
             if (role != null)
             {
-                if (role.Equals("Accountant"))
+                if (role.Equals("Accountant") || role.Equals("SUPERADMIN"))
                 {
-                    links.Add(new LinkViewModel { LinkName = "Manage Timesheets", Link = "/workings" });
-                    links.Add(new LinkViewModel { LinkName = "Manage Employees", Link = "/employees" });
-                    links.Add(new LinkViewModel { LinkName = "Manage Departments", Link = "/departments" });
-                    links.Add(new LinkViewModel { LinkName = "Manage Projects", Link = "/projects" });
-                    links.Add(new LinkViewModel { LinkName = "Manage Clients", Link = "/clients" });
+                    // People Section
+                    ListLinkViewModel people = new ListLinkViewModel();
+                    people.ListName = "People";
+                    people.color = "Orange";
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Manage Employees", Link = "/employees" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Create an Account", Link = "/account/register" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Assign an Account to an Employee", Link = "/useremployees" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Assign an Employee to a Department", Link = "/worksfors" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Assign a Supervisor to an Employee", Link = "/supervisions" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Safety", Link = "/#" });
 
-                    links.Add(new LinkViewModel { LinkName = "Manage Pay Periods", Link = "/payperiods" });
-                    links.Add(new LinkViewModel { LinkName = "Manage Vehicles", Link = "/vehicles" });
-                    links.Add(new LinkViewModel { LinkName = "Manage Tasks", Link = "/tasks" });
+                    // Projects
+                    ListLinkViewModel projects = new ListLinkViewModel();
+                    projects.ListName = "Projects";
+                    projects.color = "#428bca";
+                    projects.ListLinks.Add(new LinkViewModel { LinkName = "Manage Clients", Link = "/clients" });
+                    projects.ListLinks.Add(new LinkViewModel { LinkName = "Manage Projects", Link = "/projects" });
+                    projects.ListLinks.Add(new LinkViewModel { LinkName = "Manage Departments", Link = "/departments" });
+                    projects.ListLinks.Add(new LinkViewModel { LinkName = "Assign a Project to a Department", Link = "/controls" });
+                    projects.ListLinks.Add(new LinkViewModel { LinkName = "Project Summaries", Link = "/#" });
 
-                    links.Add(new LinkViewModel { LinkName = "Manage Field Accesses", Link = "/fieldaccesses" });
-                    links.Add(new LinkViewModel { LinkName = "Manage Off Details", Link = "/offreasons" });
+                    // Time
+                    ListLinkViewModel time = new ListLinkViewModel();
+                    time.ListName = "Time";
+                    time.color = "Green";
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Timesheets", Link = "/workings" });
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Pay Periods", Link = "/payperiods" });
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Tasks", Link = "/tasks" });
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Field Accesses", Link = "/fieldaccesses" });
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Off Details", Link = "/offreasons" });
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Vehicles", Link = "/vehicles" });
 
 
 
-
-                    links.Add(new LinkViewModel { LinkName = "Create an Account", Link = "/account/register" });
-
-                    links.Add(new LinkViewModel { LinkName = "Assign an Account to an Employee", Link = "/useremployees" });
-                    links.Add(new LinkViewModel { LinkName = "Assign a Supervisor to an Employee", Link = "/supervisions" });
-                    links.Add(new LinkViewModel { LinkName = "Assign an Employee to a Department", Link = "/worksfors" });
-                    links.Add(new LinkViewModel { LinkName = "Assign a Project to a Department", Link = "/controls" });
-
+                    lModel.sections.Add(people);
+                    lModel.sections.Add(projects);
+                    lModel.sections.Add(time);
 
                 }
                 else
                 {
-                    links.Add(new LinkViewModel { LinkName = "Manage Timesheets", Link = "/workings" });
-                    
+                    ListLinkViewModel time = new ListLinkViewModel();
+                    time.ListName = "Time";
+                    time.color = "Green";
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Timesheets", Link = "/workings" });
+                    lModel.sections.Add(time);
                 }
             }
             
            
 
-            return View(links);
+            return View(lModel);
         }
 
         public ActionResult About()
