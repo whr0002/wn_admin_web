@@ -10,6 +10,16 @@ $(document).on('change', "#ClientName", function () {
 
 });
 
+$(document).on('change', "#ProjectID", function () {
+    var pidSpan = $('#PID');
+    pidSpan.empty();
+
+    var pid = $('#ProjectID option:selected').val();
+
+    if(pid != null && pid.length > 0)
+        pidSpan.text("Project ID: " + pid);
+});
+
 function getProjectByClient(client) {
     $('#ProjectID').val("");
     var mySelect = $('#ProjectID');

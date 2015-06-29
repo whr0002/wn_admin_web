@@ -95,19 +95,19 @@ namespace wn_Admin.Controllers.CompanyControllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.EmployeeID);
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.SupervisorID);
+            ViewBag.EmployeeToID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.EmployeeID);
+            ViewBag.SupervisorToID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.SupervisorID);
             return View(supervision);
         }
 
         // GET: Supervisions/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? eid, int? mid)
         {
-            if (id == null)
+            if (eid == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Supervision supervision = db.Supervisions.Find(id);
+            Supervision supervision = db.Supervisions.Find(eid, mid);
             if (supervision == null)
             {
                 return HttpNotFound();
@@ -118,9 +118,9 @@ namespace wn_Admin.Controllers.CompanyControllers
         // POST: Supervisions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int eid, int mid)
         {
-            Supervision supervision = db.Supervisions.Find(id);
+            Supervision supervision = db.Supervisions.Find(eid, mid);
             db.Supervisions.Remove(supervision);
             db.SaveChanges();
             return RedirectToAction("Index");

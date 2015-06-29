@@ -101,22 +101,7 @@
 <table class="table" ng-controller="checkboxController">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Employee.FirstMidName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().FK_FieldAccess.FieldAccessName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().FK_OffReason.OffReasonName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().FK_Task.TaskName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().FK_Vehicle.VehicleName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Project.ProjectName)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Employee.FullName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FirstOrDefault().Date)
@@ -128,7 +113,19 @@
             @Html.DisplayNameFor(model => model.FirstOrDefault().PP)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Project.FK_Client.ClientName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Project.ProjectName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().FK_Task.TaskName)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.FirstOrDefault().Identifier)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().FK_Vehicle.VehicleName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FirstOrDefault().Crew)
@@ -143,10 +140,16 @@
             @Html.DisplayNameFor(model => model.FirstOrDefault().GPS)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().FK_FieldAccess.FieldAccessName)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.FirstOrDefault().PD)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FirstOrDefault().JobDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().FK_OffReason.OffReasonName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FirstOrDefault().Hours)
@@ -176,21 +179,6 @@
                 @Html.DisplayFor(modelItem => item.Employee.FirstMidName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FK_FieldAccess.FieldAccessName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FK_OffReason.OffReasonName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FK_Task.TaskName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FK_Vehicle.VehicleName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Project.ProjectName)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Date)
             </td>
             <td>
@@ -200,7 +188,19 @@
                 @Html.DisplayFor(modelItem => item.PP)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Project.FK_Client.ClientName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Project.ProjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FK_Task.TaskName)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Identifier)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FK_Vehicle.VehicleName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Crew)
@@ -215,10 +215,16 @@
                 @Html.DisplayFor(modelItem => item.GPS)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.FK_FieldAccess.FieldAccessName)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.PD)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.JobDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FK_OffReason.OffReasonName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Hours)

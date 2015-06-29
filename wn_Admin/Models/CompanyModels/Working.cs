@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using wn_Admin.Models.CModels;
+using wn_Admin.Models.UtilityModels;
 
 namespace wn_Admin.Models.CompanyModels
 {
@@ -19,6 +20,7 @@ namespace wn_Admin.Models.CompanyModels
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString="{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [CustomValidation(typeof(TimesheetDateValidator), "ValidateTimesheetDateRange")]
         public DateTime Date { get; set; }
 
         [DisplayName("Period Year")]
@@ -27,13 +29,11 @@ namespace wn_Admin.Models.CompanyModels
         [DisplayName("Period")]
         public int PP { get; set; }
 
-        //[DisplayName("Client")]
-        //public int ClientName { get; set; }
-
         [DisplayName("Project")]
+        [Required]
         public string ProjectID { get; set; }
 
-        
+        [Required]
         public int Task { get; set; }
         public string Identifier { get; set; }
 
@@ -42,9 +42,11 @@ namespace wn_Admin.Models.CompanyModels
         public string Crew { get; set; }
 
         [DisplayName("Start Km")]
+        [Range(0, int.MaxValue)]
         public int? StartKm { get; set; }
 
         [DisplayName("End Km")]
+        [Range(0, int.MaxValue)]
         public int? EndKm { get; set; }
         public bool GPS { get; set; }
 
@@ -53,15 +55,20 @@ namespace wn_Admin.Models.CompanyModels
         public bool PD { get; set; }
 
         [DisplayName("Job Description")]
+        [StringLength(300)]
         public string JobDescription { get; set; }
 
         [DisplayName("Off Details")]
         public int OffReason { get; set; }
-        
+
+        [Range(0, 8)]
         public double Hours { get; set; }
+
+        [Range(0, 6)]
         public int? Bank { get; set; }
 
         [DisplayName("Over time")]
+        [Range(0,6)]
         public int? OT { get; set; }
 
         [DisplayName("Is Reviewed?")]

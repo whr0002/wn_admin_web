@@ -65,10 +65,6 @@ namespace wn_Admin.Models
 
     public class RegisterViewModel
     {
-        [Required]
-        [DisplayName("Full Name")]
-        [StringLength(50, ErrorMessage="Name must be greater than 1 and less than 50 characters.", MinimumLength=1)]
-        public string FullName { get; set; }
 
         [Required]
         [EmailAddress]

@@ -28,8 +28,11 @@ namespace wn_Admin.Controllers
                     ListLinkViewModel people = new ListLinkViewModel();
                     people.ListName = "People";
                     people.color = "Orange";
-                    people.ListLinks.Add(new LinkViewModel { LinkName = "Manage Employees", Link = "/employees" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Create an Account", Link = "/account/register" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Manage Employees", Link = "/employees" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Manage User Roles", Link = "/roles" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Change an Account's password", Link = "/users/changepassword" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Remove an Account", Link = "/users/removeaccount" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Assign an Account to an Employee", Link = "/useremployees" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Assign an Employee to a Department", Link = "/worksfors" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Assign a Supervisor to an Employee", Link = "/supervisions" });
@@ -49,6 +52,7 @@ namespace wn_Admin.Controllers
                     ListLinkViewModel time = new ListLinkViewModel();
                     time.ListName = "Time";
                     time.color = "Green";
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Daily Time Ticket", Link = "/workings/create" });
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Timesheets", Link = "/workings" });
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Pay Periods", Link = "/payperiods" });
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Tasks", Link = "/tasks" });
@@ -68,6 +72,7 @@ namespace wn_Admin.Controllers
                     ListLinkViewModel time = new ListLinkViewModel();
                     time.ListName = "Time";
                     time.color = "Green";
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Daily Time Ticket", Link = "/workings/create" });
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Timesheets", Link = "/workings" });
                     lModel.sections.Add(time);
                 }

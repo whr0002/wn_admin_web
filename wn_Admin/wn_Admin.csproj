@@ -215,6 +215,18 @@
     <Compile Include="Migrations\201506252018523_389.Designer.cs">
       <DependentUpon>201506252018523_389.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506291559543_39825792384.cs" />
+    <Compile Include="Migrations\201506291559543_39825792384.Designer.cs">
+      <DependentUpon>201506291559543_39825792384.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506291614307_32798327koer.cs" />
+    <Compile Include="Migrations\201506291614307_32798327koer.Designer.cs">
+      <DependentUpon>201506291614307_32798327koer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506291703552_327983273i2u4.cs" />
+    <Compile Include="Migrations\201506291703552_327983273i2u4.Designer.cs">
+      <DependentUpon>201506291703552_327983273i2u4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -236,6 +248,7 @@
     <Compile Include="Models\CompanyModels\Project.cs" />
     <Compile Include="Models\UtilityModels\LinkViewModel.cs" />
     <Compile Include="Models\UtilityModels\PayPeriodCalculator.cs" />
+    <Compile Include="Models\UtilityModels\TimesheetDateValidator.cs" />
     <Compile Include="Models\UtilityModels\UserInfo.cs" />
     <Compile Include="Models\wn_admin_db.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -405,6 +418,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506252018523_389.resx">
       <DependentUpon>201506252018523_389.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506291559543_39825792384.resx">
+      <DependentUpon>201506291559543_39825792384.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506291614307_32798327koer.resx">
+      <DependentUpon>201506291614307_32798327koer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506291703552_327983273i2u4.resx">
+      <DependentUpon>201506291703552_327983273i2u4.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

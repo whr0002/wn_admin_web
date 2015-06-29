@@ -39,6 +39,12 @@ namespace wn_Admin
 
                 );
 
+            routes.MapRoute(
+                name: "Supervision delete",
+                url: "Supervisions/Delete/{eid}/{mid}",
+                defaults: new { controller = "Supervisions", action = "Delete", eid="", mid="" }
+                );
+
 
             routes.MapRoute(
                 name: "Default",

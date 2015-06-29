@@ -12,10 +12,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Employee.FirstMidName)
+            @Html.DisplayName("Employee")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Supervisor.FirstMidName)
+            @Html.DisplayName("Supervisor")
         </th>
         <th>
             @Html.DisplayNameFor(model => model.StartDate)
@@ -43,7 +43,7 @@
         <td>
             @Html.ActionLink("Edit", "Edit", new { eid=item.EmployeeID, mid=item.SupervisorID }) |
             @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            @Html.ActionLink("Delete", "Delete", new { eid=item.EmployeeID, mid=item.SupervisorID })
         </td>
     </tr>
 }

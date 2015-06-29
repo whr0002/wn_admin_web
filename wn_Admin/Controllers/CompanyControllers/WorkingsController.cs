@@ -43,7 +43,6 @@ namespace wn_Admin.Controllers.CompanyControllers
                 var employee = mUserInfo.getEmployee(userId);
                 if (employee != null)
                 {
-                    //workings = workings.Where(w => w.EmployeeID == employee.EmployeeID);
 
                     // Query out all timesheets from this user and the timesheets of users under his supervision
                     var ids = from s in db.Supervisions
@@ -51,7 +50,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                               select s.EmployeeID;
 
 
-                    workings = workings.Where(w => w.EmployeeID == employee.EmployeeID || ids.Contains(w.EmployeeID));
+                    workings = workings.Where(w => w.EmployeeID == employee.EmployeeID || (ids.Contains(w.EmployeeID) && w.isReviewed == false));
 
                     if (ids.Count() > 0)
                     {
@@ -168,40 +167,14 @@ namespace wn_Admin.Controllers.CompanyControllers
         public ActionResult Create()
         {
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
-            //ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName");
             ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName");
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName");
             ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName");
             ViewBag.Veh = new SelectList(db.Vehicles, "VehicleID", "VehicleName");
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
-
-
-            string userId = User.Identity.GetUserId();
-            var employee = mUserInfo.getEmployee(userId);
-            var role = mUserInfo.getFirstRole(userId);
-
+            setEmployeeDropdowns();
 
             Working working = new Working();
-
-            if (employee != null)
-            {
-                IQueryable<Employee> es = db.Employees;
-
-                if (!role.Equals("Accountant"))
-                {
-                    es = es.Where(w => w.EmployeeID == employee.EmployeeID);
-                }
-
-
-
-                ViewBag.EmployeeID = new SelectList(es, "EmployeeID", "FullName");
-
-            }
-            else
-            {
-                ViewBag.EmployeeID = new SelectList(new List<Employee>(), "EmployeeID", "FullName");
-            }
-            
 
             working.Date = DateTime.Today;
             PayPeriodCalculator calc = new PayPeriodCalculator();
@@ -222,13 +195,21 @@ namespace wn_Admin.Controllers.CompanyControllers
         {
             if (ModelState.IsValid)
             {
-                db.Workings.Add(working);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var result = db.Workings.Where(w => w.EmployeeID == working.EmployeeID && w.Date == working.Date).FirstOrDefault();
+                if (result == null) { 
+                    db.Workings.Add(working);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("Date", "Only one timesheet is allowed for each day.");
+                }
             }
 
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
+            //ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
+            setEmployeeDropdowns();
             ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName", working.Field);
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", working.OffReason);
             ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName", working.Task);
@@ -251,7 +232,8 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return HttpNotFound();
             }
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
+            //ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
+            setEmployeeDropdowns();
             ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName", working.Field);
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", working.OffReason);
             ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName", working.Task);
@@ -275,7 +257,8 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return RedirectToAction("Index");
             }
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
+            //ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
+            setEmployeeDropdowns();
             ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName", working.Field);
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", working.OffReason);
             ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName", working.Task);
@@ -324,9 +307,9 @@ namespace wn_Admin.Controllers.CompanyControllers
 
         public ActionResult Review(string ids)
         {
+            
             string[] sids = ids.Split(',');
-            List<int> list = new List<int>();
-
+            
             // Get current supervisor
             Employee employee = mUserInfo.getEmployee(User.Identity.GetUserId());
             if (employee != null) { 
@@ -337,6 +320,9 @@ namespace wn_Admin.Controllers.CompanyControllers
                 {
                     if (role.Equals("Accountant") || role.Equals("SUPERADMIN"))
                     {
+                        // User is Accountant or Superadmin, they can review everyone's timesheet
+                        List<int> list = new List<int>();
+
                         foreach (var id in sids)
                         {
                             try{
@@ -344,42 +330,63 @@ namespace wn_Admin.Controllers.CompanyControllers
                                 list.Add(i);
                             }catch{}
                         }
+
+                        var wlist = from work in db.Workings
+                                    where list.Contains(work.WorkingID)
+                                    select work;
+
+
+
+                        foreach (Working work in wlist)
+                        {
+                            work.isReviewed = true;
+                        }
+
+                        db.SaveChanges();
                     }
-                    else
+                    else if(role.Equals("Employee"))
                     {
-                        var underSupervised = db.Supervisions.Where(w => w.SupervisorID == employee.EmployeeID).Select(s => s.EmployeeID).ToList();
-                        foreach (var id in sids)
+                        // User is an employee, check if he is supervisor or not.
+
+                        
+                        var result = from super in db.Supervisions
+                                     join work in db.Workings
+                                     on super.EmployeeID equals work.EmployeeID
+                                     where super.SupervisorID == employee.EmployeeID
+                                     select work;
+                        
+                        foreach (string id in sids)
                         {
                             try
                             {
                                 int i = Convert.ToInt32(id);
-                                if (underSupervised.Contains(i)) 
-                                { 
-                                    list.Add(i);
+                                // check the input IDs whether are in employee IDs which are under supervised by this supervisor
+                                foreach (var work in result)
+                                {
+                                    if (work.WorkingID == i)
+                                    {
+                                        work.isReviewed = true;
+                                    }
                                 }
+
+                                db.SaveChanges();
+
                             }
                             catch { }
                         }
                     }
+                    else
+                    {
+                        //Response.Write("unknown role");
+                        return RedirectToAction("Index");
+                    }
                 }
-
-
-
-
-            
-                var wlist = from work in db.Workings
-                            where list.Contains(work.WorkingID)
-                            select work;
-
-                foreach (Working work in wlist)
+                else
                 {
-                    work.isReviewed = true;
+                    //Response.Write("no role");
+                    return RedirectToAction("Index");
                 }
-
-                db.SaveChanges();
             }
-
-
             return RedirectToAction("Index");
         }
 
@@ -462,6 +469,30 @@ namespace wn_Admin.Controllers.CompanyControllers
 
             //return Content(sw.ToString(), "application/ms-excel");
             return sw.ToString();
+        }
+
+        private void setEmployeeDropdowns()
+        {
+            string userId = User.Identity.GetUserId();
+            var employee = mUserInfo.getEmployee(userId);
+            var role = mUserInfo.getFirstRole(userId);
+
+            if (employee != null)
+            {
+                IQueryable<Employee> es = db.Employees;
+
+                if (!role.Equals("Accountant") && !role.Equals("SUPERADMIN"))
+                {
+                    es = es.Where(w => w.EmployeeID == employee.EmployeeID);
+                }
+
+                ViewBag.EmployeeID = new SelectList(es, "EmployeeID", "FullName");
+
+            }
+            else
+            {
+                ViewBag.EmployeeID = new SelectList(new List<Employee>(), "EmployeeID", "FullName");
+            }
         }
     }
 }
