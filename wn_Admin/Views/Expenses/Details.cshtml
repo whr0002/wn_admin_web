@@ -1,0 +1,90 @@
+﻿@model wn_Admin.Models.CompanyModels.Expense
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Expense</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AccountType.AccountName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccountType.AccountName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Employee.FirstMidName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Employee.FirstMidName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Project.ProjectName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Project.ProjectName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateSubmitted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateSubmitted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Item)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Item)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReceiptDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReceiptDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReceiptLink)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReceiptLink)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.isApproved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.isApproved)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ExpenseID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

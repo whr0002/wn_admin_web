@@ -10,13 +10,24 @@
     <ul class="nav navbar-nav navbar-right">
         <li>
             @{
-                //var currentUserId = User.Identity.GetUserId();
-                //var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-                //var user = manager.FindById(currentUserId);
-                
-                    @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-                    }
-</li>
+        //var currentUserId = User.Identity.GetUserId();
+        //var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+        //var user = manager.FindById(currentUserId);
+        wn_admin_db db = new wn_admin_db();
+        var uid = User.Identity.GetUserId();
+        var e = db.UserEmployees.Where(w => w.UserID.Equals(uid)).FirstOrDefault();
+        if (e != null)
+        {
+            @Html.ActionLink("Hello " + e.Employee.FullName + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+        }
+        else
+        {
+            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+        }
+
+
+}
+        </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
     </ul>
     }

@@ -44,9 +44,9 @@ namespace wn_Admin.Controllers
                     projects.color = "#428bca";
                     projects.ListLinks.Add(new LinkViewModel { LinkName = "Manage Clients", Link = "/clients" });
                     projects.ListLinks.Add(new LinkViewModel { LinkName = "Manage Projects", Link = "/projects" });
-                    projects.ListLinks.Add(new LinkViewModel { LinkName = "Manage Departments", Link = "/departments" });
+
                     projects.ListLinks.Add(new LinkViewModel { LinkName = "Assign a Project to a Department", Link = "/controls" });
-                    projects.ListLinks.Add(new LinkViewModel { LinkName = "Project Summaries", Link = "/#" });
+                    projects.ListLinks.Add(new LinkViewModel { LinkName = "Project Summaries", Link = "/projectsummary" });
 
                     // Time
                     ListLinkViewModel time = new ListLinkViewModel();
@@ -58,13 +58,24 @@ namespace wn_Admin.Controllers
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Tasks", Link = "/tasks" });
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Field Accesses", Link = "/fieldaccesses" });
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Off Details", Link = "/offreasons" });
-                    time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Vehicles", Link = "/vehicles" });
+                    
 
+                    // Time
+                    ListLinkViewModel resource = new ListLinkViewModel();
+                    resource.ListName = "Resource";
+                    resource.color = "Grey";
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Vehicles", Link = "/vehicles" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Departments", Link = "/departments" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Equipments", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Account Types", Link = "/accounttypes" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Costs", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Payments", Link = "/expenses" });
 
 
                     lModel.sections.Add(people);
                     lModel.sections.Add(projects);
                     lModel.sections.Add(time);
+                    lModel.sections.Add(resource);
 
                 }
                 else
@@ -74,7 +85,22 @@ namespace wn_Admin.Controllers
                     time.color = "Green";
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Daily Time Ticket", Link = "/workings/create" });
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Timesheets", Link = "/workings" });
+
+                    // Time
+                    ListLinkViewModel resource = new ListLinkViewModel();
+                    resource.ListName = "Resource";
+                    resource.color = "Grey";
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Expense Form", Link = "/expenses" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Time Off Request", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Daily Tailgate Safety Meeting", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Vehicle Inspection Form", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Major Incident Report Form", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Minor Incident Report Form", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Employee Handbook", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Health & Safety Manual", Link = "/#" });
+
                     lModel.sections.Add(time);
+                    lModel.sections.Add(resource);
                 }
             }
             

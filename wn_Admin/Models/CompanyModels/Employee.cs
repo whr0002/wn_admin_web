@@ -29,6 +29,7 @@ namespace wn_Admin.Models.CompanyModels
 
 
         public virtual ICollection<Working> Workings { get; set; }
+        public virtual ICollection<Expense> Expenses { get; set; }
 
 
     }

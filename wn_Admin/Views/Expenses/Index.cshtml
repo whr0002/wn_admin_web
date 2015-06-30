@@ -1,0 +1,115 @@
+﻿@model PagedList.IPagedList<wn_Admin.Models.CompanyModels.Expense>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Index";
+}
+@section jsSection{
+    <script src="~/Scripts/ng_controllers/timesheet_controller.js"></script>
+}
+
+@section cssSection{
+    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+}
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().AccountType.AccountName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Employee.FirstMidName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Project.ProjectName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().DateSubmitted)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Item)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().ReceiptDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().ReceiptLink)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().isApproved)
+        </th>
+        @{
+            if (ViewBag.hasFullControl)
+            {
+                <th>
+                    <input type="checkbox" onclick="checkAll(this)" />
+                </th>
+                <th><button class="btn btn-primary" onclick="submitApproves()">Approve</button></th>
+            }
+        }
+        
+    </tr>
+
+
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.AccountType.AccountName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Employee.FirstMidName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Project.ProjectName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateSubmitted)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Item)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReceiptDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReceiptLink)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.isApproved)
+        </td>
+
+        @{
+    if (ViewBag.hasFullControl)
+    {
+        <td>
+            <input type="checkbox" value="@item.ExpenseID" class="reviewBox" />
+        </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ExpenseID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ExpenseID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ExpenseID })
+                </td>
+            }
+        }
+
+    </tr>
+}
+
+</table>
+
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => "/expenses?page=" + page)

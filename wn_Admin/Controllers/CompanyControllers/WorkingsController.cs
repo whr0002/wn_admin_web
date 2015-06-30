@@ -193,18 +193,38 @@ namespace wn_Admin.Controllers.CompanyControllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours,Bank,OT")] Working working)
         {
+
+
+
+
             if (ModelState.IsValid)
             {
-                var result = db.Workings.Where(w => w.EmployeeID == working.EmployeeID && w.Date == working.Date).FirstOrDefault();
-                if (result == null) { 
+                var role = mUserInfo.getFirstRole(User.Identity.GetUserId());
+
+                // Check date to see if it is valid.
+                string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date);
+                
+                if (role.Equals("Accountant") || role.Equals("SUPERADMIN"))
+                {
                     db.Workings.Add(working);
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    ModelState.AddModelError("Date", "Only one timesheet is allowed for each day.");
+                    if (validationError != null)
+                    {
+                        ModelState.AddModelError("Date", validationError);
+                    }
+                    else
+                    {
+                        db.Workings.Add(working);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    
                 }
+
             }
 
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
@@ -427,7 +447,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                         t.Date,
                         t.PPYr,
                         t.PP,
-                        t.Project.Client,
+                        t.Project.FK_Client.ClientName,
                         t.Project.ProjectName,
                         t.Project.ProjectID,
                         t.FK_Task.TaskName,

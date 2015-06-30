@@ -40,6 +40,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.2\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.2\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.2\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage">
+      <HintPath>..\packages\WindowsAzure.Storage.4.3.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
     <Reference Include="PagedList">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
     </Reference>
@@ -49,6 +67,10 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Spatial, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Spatial.5.6.2\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -174,10 +196,13 @@
     <Compile Include="Controllers\CControllers\TasksController.cs" />
     <Compile Include="Controllers\CControllers\UsersController.cs" />
     <Compile Include="Controllers\CControllers\VehiclesController.cs" />
+    <Compile Include="Controllers\CompanyControllers\AccountTypesController.cs" />
     <Compile Include="Controllers\CompanyControllers\DepartmentsController.cs" />
     <Compile Include="Controllers\CompanyControllers\EmployeesController.cs" />
     <Compile Include="Controllers\CompanyControllers\ExcelController.cs" />
+    <Compile Include="Controllers\CompanyControllers\ExpensesController.cs" />
     <Compile Include="Controllers\CompanyControllers\ProjectsController.cs" />
+    <Compile Include="Controllers\CompanyControllers\ProjectSummaryController.cs" />
     <Compile Include="Controllers\CompanyControllers\SupervisionsController.cs" />
     <Compile Include="Controllers\CompanyControllers\UserEmployeesController.cs" />
     <Compile Include="Controllers\CompanyControllers\WorkingsController.cs" />
@@ -227,6 +252,10 @@
     <Compile Include="Migrations\201506291703552_327983273i2u4.Designer.cs">
       <DependentUpon>201506291703552_327983273i2u4.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506301647421_dlksagm.cs" />
+    <Compile Include="Migrations\201506301647421_dlksagm.Designer.cs">
+      <DependentUpon>201506301647421_dlksagm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -236,9 +265,11 @@
     <Compile Include="Models\CModels\PPViewModel.cs" />
     <Compile Include="Models\CModels\Task.cs" />
     <Compile Include="Models\CModels\Vehicle.cs" />
+    <Compile Include="Models\CompanyModels\AccountType.cs" />
     <Compile Include="Models\CompanyModels\Control.cs" />
     <Compile Include="Models\CompanyModels\Department.cs" />
     <Compile Include="Models\CompanyModels\Employee.cs" />
+    <Compile Include="Models\CompanyModels\Expense.cs" />
     <Compile Include="Models\CompanyModels\Supervision.cs" />
     <Compile Include="Models\CompanyModels\UserEmployee.cs" />
     <Compile Include="Models\CompanyModels\Working.cs" />
@@ -248,15 +279,22 @@
     <Compile Include="Models\CompanyModels\Project.cs" />
     <Compile Include="Models\UtilityModels\LinkViewModel.cs" />
     <Compile Include="Models\UtilityModels\PayPeriodCalculator.cs" />
+    <Compile Include="Models\UtilityModels\SummaryModel.cs" />
     <Compile Include="Models\UtilityModels\TimesheetDateValidator.cs" />
     <Compile Include="Models\UtilityModels\UserInfo.cs" />
     <Compile Include="Models\wn_admin_db.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\wn_logo.jpg" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\StyleSheet_Timesheet.css" />
     <Content Include="favicon.ico" />
@@ -268,6 +306,10 @@
     <Content Include="ClassDiagram1.cd" />
     <Content Include="ClassDiagram2.cd" />
     <None Include="Properties\PublishProfiles\wnasap.pubxml" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -383,6 +425,17 @@
     <Content Include="Views\UserEmployees\Details.cshtml" />
     <Content Include="Views\UserEmployees\Edit.cshtml" />
     <Content Include="Views\UserEmployees\Index.cshtml" />
+    <Content Include="Views\ProjectSummary\Index.cshtml" />
+    <Content Include="Views\AccountTypes\Create.cshtml" />
+    <Content Include="Views\AccountTypes\Delete.cshtml" />
+    <Content Include="Views\AccountTypes\Details.cshtml" />
+    <Content Include="Views\AccountTypes\Edit.cshtml" />
+    <Content Include="Views\AccountTypes\Index.cshtml" />
+    <Content Include="Views\Expenses\Create.cshtml" />
+    <Content Include="Views\Expenses\Delete.cshtml" />
+    <Content Include="Views\Expenses\Details.cshtml" />
+    <Content Include="Views\Expenses\Edit.cshtml" />
+    <Content Include="Views\Expenses\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -427,6 +480,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506291703552_327983273i2u4.resx">
       <DependentUpon>201506291703552_327983273i2u4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506301647421_dlksagm.resx">
+      <DependentUpon>201506301647421_dlksagm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

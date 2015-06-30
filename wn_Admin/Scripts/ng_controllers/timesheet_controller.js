@@ -106,8 +106,22 @@ function submitReviews() {
                 ids += "," + selection[i];
             }
         }
-        console.log(ids);
+        //console.log(ids);
         window.location.href = "/workings/review?ids=" + encodeURIComponent(ids);
     }
 
+}
+
+function submitApproves() {
+    var selection = [];
+    var subBoxes = $('.reviewBox');
+    subBoxes.each(function (index) {
+        if (subBoxes[index].checked) {
+            var id = $(this).val();
+            selection.push(id);
+        }
+    });
+
+    //console.log(selection.join(","));
+    window.location.href = "/expenses/review?ids=" + encodeURIComponent(selection.join(","));
 }
