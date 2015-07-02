@@ -68,6 +68,7 @@ namespace wn_Admin.Controllers
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Departments", Link = "/departments" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Equipments", Link = "/#" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Account Types", Link = "/accounttypes" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Time Off Request", Link = "/timeoffrequests" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Costs", Link = "/#" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Payments", Link = "/expenses" });
 
@@ -91,7 +92,7 @@ namespace wn_Admin.Controllers
                     resource.ListName = "Resource";
                     resource.color = "Grey";
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Expense Form", Link = "/expenses" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Time Off Request", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Time Off Request", Link = "/timeoffrequests" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Daily Tailgate Safety Meeting", Link = "/#" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Vehicle Inspection Form", Link = "/#" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Major Incident Report Form", Link = "/#" });

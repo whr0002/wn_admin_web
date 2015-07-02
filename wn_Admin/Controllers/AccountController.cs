@@ -136,8 +136,8 @@ namespace wn_Admin.Controllers
 
         //
         // GET: /Account/Register
-        //[AllowAnonymous]
-        [Authorize(Roles = "SUPERADMIN,Accountant")]
+        [AllowAnonymous]
+        //[Authorize(Roles = "SUPERADMIN,Accountant")]
         public ActionResult Register()
         {
             return View();
@@ -146,8 +146,8 @@ namespace wn_Admin.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        //[AllowAnonymous]
-        [Authorize(Roles = "SUPERADMIN,Accountant")]
+        [AllowAnonymous]
+        //[Authorize(Roles = "SUPERADMIN,Accountant")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {

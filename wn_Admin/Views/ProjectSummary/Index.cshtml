@@ -22,11 +22,21 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-3">
+                            Client
                             @Html.DropDownList("ClientID", null, "Choose ...", htmlAttributes: new { @class="form-control"})
                         </div>
 
                         <div class="col-md-3">
+                            Project
                             @Html.DropDownList("ProjectID", null, "Choose ...", htmlAttributes: new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-3">
+                            Date From
+                            @Html.TextBox("startDate", null, htmlAttributes: new { @class="form-control", @type="date"})
+                        </div>
+                        <div class="col-md-3">
+                            Date To
+                            @Html.TextBox("endDate", null, htmlAttributes: new { @class = "form-control", @type = "date" })
                         </div>
                     </div>
                 </div>
@@ -58,6 +68,7 @@
                     <table class="table">
                         <tr>
                             <th>@Html.DisplayNameFor(model => model.MixedWorkings.FirstOrDefault().Employee.FullName)</th>
+                            <th>@Html.DisplayNameFor(model => model.MixedWorkings.FirstOrDefault().Project.ProjectName)</th>
                             <th>@Html.DisplayNameFor(model => model.MixedWorkings.FirstOrDefault().Date)</th>
                             <th>@Html.DisplayNameFor(model => model.MixedWorkings.FirstOrDefault().JobDescription)</th>
                             <th>@Html.DisplayNameFor(model => model.MixedWorkings.FirstOrDefault().Hours)</th>
@@ -69,6 +80,7 @@
                         {
                             <tr>
                                 <td>@Html.DisplayFor(modelItem => w.Employee.FullName)</td>
+                                <td>@Html.DisplayFor(modelItem => w.Project.ProjectName)</td>
                                 <td>@Html.DisplayFor(modelItem => w.Date)</td>
                                 <td>@Html.DisplayFor(modelItem => w.JobDescription)</td>
                                 <td>@Html.DisplayFor(modelItem => w.Hours)</td>
@@ -145,13 +157,13 @@
                         {
                             <tr>
                                 <td>@Html.DisplayFor(modelItem => w.DateSubmitted)</td>
-                                <td>$@Html.DisplayFor(modelItem => w.Amount)</td>
+                                <td>@Html.DisplayFor(modelItem => w.Amount)</td>
                             </tr>
                         }
 
                         <tr>
                             <td><strong>Total</strong></td>
-                            <td><strong>$@ViewBag.AmountSum</strong></td>
+                            <td><strong>@(((decimal)ViewBag.AmountSum).ToString("C2"))</strong></td>
                         </tr>
                     </table>
                 </div>

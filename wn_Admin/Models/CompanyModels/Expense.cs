@@ -32,6 +32,7 @@ namespace wn_Admin.Models.CompanyModels
 
         [DisplayName("Amount")]
         [Range(0, int.MaxValue)]
+        [DataType(DataType.Currency)]
         public decimal Amount { get; set; }
 
 

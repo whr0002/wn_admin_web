@@ -1,0 +1,74 @@
+﻿@model wn_Admin.Models.CompanyModels.TimeOffRequest
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TimeOffRequest</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Employee.FirstMidName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Employee.FirstMidName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OffReason.OffReasonName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OffReason.OffReasonName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReturnToWorkDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReturnToWorkDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberOfDays)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumberOfDays)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TimeOffRequestID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

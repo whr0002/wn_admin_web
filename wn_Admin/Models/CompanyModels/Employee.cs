@@ -4,11 +4,13 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using wn_Admin.Models.Safety;
 
 namespace wn_Admin.Models.CompanyModels
 {
     public class Employee
     {
+
         [DisplayName("Employee")]
         public int EmployeeID { get; set; }
 
@@ -30,6 +32,8 @@ namespace wn_Admin.Models.CompanyModels
 
         public virtual ICollection<Working> Workings { get; set; }
         public virtual ICollection<Expense> Expenses { get; set; }
+        public virtual ICollection<TimeOffRequest> TimeOffRequests { get; set; }
+        public virtual ICollection<EmployeeSafetyMeeting> SafetyMeetings { get; set; }
 
 
     }

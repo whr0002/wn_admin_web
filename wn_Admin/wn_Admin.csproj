@@ -204,6 +204,7 @@
     <Compile Include="Controllers\CompanyControllers\ProjectsController.cs" />
     <Compile Include="Controllers\CompanyControllers\ProjectSummaryController.cs" />
     <Compile Include="Controllers\CompanyControllers\SupervisionsController.cs" />
+    <Compile Include="Controllers\CompanyControllers\TimeOffRequestsController.cs" />
     <Compile Include="Controllers\CompanyControllers\UserEmployeesController.cs" />
     <Compile Include="Controllers\CompanyControllers\WorkingsController.cs" />
     <Compile Include="Controllers\CompanyControllers\WorksForsController.cs" />
@@ -256,6 +257,22 @@
     <Compile Include="Migrations\201506301647421_dlksagm.Designer.cs">
       <DependentUpon>201506301647421_dlksagm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507021542022_TimeOff.cs" />
+    <Compile Include="Migrations\201507021542022_TimeOff.Designer.cs">
+      <DependentUpon>201507021542022_TimeOff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507021938321_safetyik.cs" />
+    <Compile Include="Migrations\201507021938321_safetyik.Designer.cs">
+      <DependentUpon>201507021938321_safetyik.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507022010027_pid.cs" />
+    <Compile Include="Migrations\201507022010027_pid.Designer.cs">
+      <DependentUpon>201507022010027_pid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507022127053_dskalfj.cs" />
+    <Compile Include="Migrations\201507022127053_dskalfj.Designer.cs">
+      <DependentUpon>201507022127053_dskalfj.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -263,20 +280,25 @@
     <Compile Include="Models\CModels\OffReason.cs" />
     <Compile Include="Models\CModels\PayPeriod.cs" />
     <Compile Include="Models\CModels\PPViewModel.cs" />
-    <Compile Include="Models\CModels\Task.cs" />
+    <Compile Include="Models\CompanyModels\Task.cs" />
     <Compile Include="Models\CModels\Vehicle.cs" />
     <Compile Include="Models\CompanyModels\AccountType.cs" />
     <Compile Include="Models\CompanyModels\Control.cs" />
     <Compile Include="Models\CompanyModels\Department.cs" />
     <Compile Include="Models\CompanyModels\Employee.cs" />
     <Compile Include="Models\CompanyModels\Expense.cs" />
+    <Compile Include="Models\Safety\EmployeeSafetyMeeting.cs" />
+    <Compile Include="Models\Safety\SafetyLeaving.cs" />
+    <Compile Include="Models\Safety\SafetyMeeting.cs" />
     <Compile Include="Models\CompanyModels\Supervision.cs" />
+    <Compile Include="Models\CompanyModels\TimeOffRequest.cs" />
     <Compile Include="Models\CompanyModels\UserEmployee.cs" />
     <Compile Include="Models\CompanyModels\Working.cs" />
     <Compile Include="Models\CompanyModels\WorksFor.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\CompanyModels\Project.cs" />
+    <Compile Include="Models\UtilityModels\CustomValidators.cs" />
     <Compile Include="Models\UtilityModels\LinkViewModel.cs" />
     <Compile Include="Models\UtilityModels\PayPeriodCalculator.cs" />
     <Compile Include="Models\UtilityModels\SummaryModel.cs" />
@@ -436,10 +458,16 @@
     <Content Include="Views\Expenses\Details.cshtml" />
     <Content Include="Views\Expenses\Edit.cshtml" />
     <Content Include="Views\Expenses\Index.cshtml" />
+    <Content Include="Views\TimeOffRequests\Create.cshtml" />
+    <Content Include="Views\TimeOffRequests\Delete.cshtml" />
+    <Content Include="Views\TimeOffRequests\Details.cshtml" />
+    <Content Include="Views\TimeOffRequests\Edit.cshtml" />
+    <Content Include="Views\TimeOffRequests\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\Mobile\" />
+    <Folder Include="Controllers\SafetyControllers\" />
     <Folder Include="Views\API\" />
     <Folder Include="Views\Excel\" />
   </ItemGroup>
@@ -483,6 +511,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506301647421_dlksagm.resx">
       <DependentUpon>201506301647421_dlksagm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507021542022_TimeOff.resx">
+      <DependentUpon>201507021542022_TimeOff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507021938321_safetyik.resx">
+      <DependentUpon>201507021938321_safetyik.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507022010027_pid.resx">
+      <DependentUpon>201507022010027_pid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507022127053_dskalfj.resx">
+      <DependentUpon>201507022127053_dskalfj.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
