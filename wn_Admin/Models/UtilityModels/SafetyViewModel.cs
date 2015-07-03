@@ -12,10 +12,10 @@ namespace wn_Admin.Models.UtilityModels
         public List<SafetyStep> steps { get; set; }
     }
 
-    public class SafetyLeavingViewModel
+    public class SafetyItemViewModel
     {
         public int MeetingID { get; set; }
-        public List<SafetyLeavingItem> LeavingItems { get; set; }
+        public List<SafetyItemValue> items { get; set; }
         public List<YesNoNA> YesNoNAs { get; set; }
     }
 }

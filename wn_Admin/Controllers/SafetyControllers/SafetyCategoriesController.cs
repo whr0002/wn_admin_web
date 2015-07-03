@@ -11,107 +11,107 @@ using wn_Admin.Models.Safety;
 
 namespace wn_Admin.Controllers.SafetyControllers
 {
-    public class SafetyLeavingItemsController : Controller
+    public class SafetyCategoriesController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
 
-        // GET: SafetyLeavingItems
+        // GET: SafetyCategories
         public ActionResult Index()
         {
-            return View(db.SafetyLeavingItems.ToList());
+            return View(db.SafetyCategories.ToList());
         }
 
-        // GET: SafetyLeavingItems/Details/5
+        // GET: SafetyCategories/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SafetyLeavingItem safetyLeavingItem = db.SafetyLeavingItems.Find(id);
-            if (safetyLeavingItem == null)
+            SafetyCategory safetyCategory = db.SafetyCategories.Find(id);
+            if (safetyCategory == null)
             {
                 return HttpNotFound();
             }
-            return View(safetyLeavingItem);
+            return View(safetyCategory);
         }
 
-        // GET: SafetyLeavingItems/Create
+        // GET: SafetyCategories/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: SafetyLeavingItems/Create
+        // POST: SafetyCategories/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SafetyLeavingItemID,SafetyLeavingItemName")] SafetyLeavingItem safetyLeavingItem)
+        public ActionResult Create([Bind(Include = "SafetyCategoryID,SafetyCategoryName")] SafetyCategory safetyCategory)
         {
             if (ModelState.IsValid)
             {
-                db.SafetyLeavingItems.Add(safetyLeavingItem);
+                db.SafetyCategories.Add(safetyCategory);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(safetyLeavingItem);
+            return View(safetyCategory);
         }
 
-        // GET: SafetyLeavingItems/Edit/5
+        // GET: SafetyCategories/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SafetyLeavingItem safetyLeavingItem = db.SafetyLeavingItems.Find(id);
-            if (safetyLeavingItem == null)
+            SafetyCategory safetyCategory = db.SafetyCategories.Find(id);
+            if (safetyCategory == null)
             {
                 return HttpNotFound();
             }
-            return View(safetyLeavingItem);
+            return View(safetyCategory);
         }
 
-        // POST: SafetyLeavingItems/Edit/5
+        // POST: SafetyCategories/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SafetyLeavingItemID,SafetyLeavingItemName")] SafetyLeavingItem safetyLeavingItem)
+        public ActionResult Edit([Bind(Include = "SafetyCategoryID,SafetyCategoryName")] SafetyCategory safetyCategory)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(safetyLeavingItem).State = EntityState.Modified;
+                db.Entry(safetyCategory).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(safetyLeavingItem);
+            return View(safetyCategory);
         }
 
-        // GET: SafetyLeavingItems/Delete/5
+        // GET: SafetyCategories/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SafetyLeavingItem safetyLeavingItem = db.SafetyLeavingItems.Find(id);
-            if (safetyLeavingItem == null)
+            SafetyCategory safetyCategory = db.SafetyCategories.Find(id);
+            if (safetyCategory == null)
             {
                 return HttpNotFound();
             }
-            return View(safetyLeavingItem);
+            return View(safetyCategory);
         }
 
-        // POST: SafetyLeavingItems/Delete/5
+        // POST: SafetyCategories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            SafetyLeavingItem safetyLeavingItem = db.SafetyLeavingItems.Find(id);
-            db.SafetyLeavingItems.Remove(safetyLeavingItem);
+            SafetyCategory safetyCategory = db.SafetyCategories.Find(id);
+            db.SafetyCategories.Remove(safetyCategory);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

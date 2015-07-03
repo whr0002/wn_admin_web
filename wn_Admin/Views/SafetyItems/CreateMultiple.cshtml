@@ -1,0 +1,56 @@
+﻿@model wn_Admin.Models.UtilityModels.SafetyItemViewModel
+@{
+    ViewBag.Title = "CreateMultiple";
+}
+
+<h2>CreateMultiple</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Meeting ID: @Model.MeetingID</h3>
+            </div>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="panel-body">
+                    @Html.Hidden("MeetingID", Model.MeetingID)
+                    @Html.Hidden("NumOfItems", Model.items.Count())
+                    @Html.Hidden("category_id", Model.items.FirstOrDefault().SafetyCategoryID)
+
+                    @{
+                        var i = 0;
+                        foreach (var item in Model.items)
+                        {
+                            <div class="col-md-6">
+
+                                @item.SafetyItemValueName
+                                @Html.Hidden("item_name_" + @i, @item.SafetyItemValueName)
+                                <select name="item_answer_@i" class="form-control" style="display:inline !important;">
+                                    <option value="">Choose ...</option>
+                                    @foreach (var option in Model.YesNoNAs)
+                                    {
+                                        <option value="@option.YesNoNAID">@option.YesNoNAName</option>
+                                    }
+                                </select>
+
+                            </div>
+
+                                    i++;
+                        }
+
+                    }
+
+                </div>
+                
+                <div class="panel-footer">
+                    <input class="btn btn-default" type="submit" value="Submit" />
+                </div>
+
+            }
+        </div>
+    </div>
+</div>

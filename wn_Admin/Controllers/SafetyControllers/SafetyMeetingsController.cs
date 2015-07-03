@@ -64,6 +64,7 @@ namespace wn_Admin.Controllers.SafetyControllers
                     model.currentStep += 1;
                     Session["SafetyViewModel"] = model;
                 }
+
                 return RedirectToAction("Index", "SafetyInterface");
             }
 

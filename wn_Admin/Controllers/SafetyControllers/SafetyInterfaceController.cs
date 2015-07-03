@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using wn_Admin.Models;
 using wn_Admin.Models.UtilityModels;
 
 namespace wn_Admin.Controllers.SafetyControllers
 {
     public class SafetyInterfaceController : Controller
     {
+        private wn_admin_db db = new wn_admin_db();
+
         // GET: SafetyInterface
         public ActionResult Index()
         {
@@ -19,10 +22,20 @@ namespace wn_Admin.Controllers.SafetyControllers
             if (modelSession == null) 
             {
                 // model does not exist, initialize one
+                var categories = db.SafetyCategories.ToList();
+
+
                 model.currentStep = 0;
                 model.steps = new List<SafetyStep>();
-                model.steps.Add(new SafetyStep { Name = "1.0 Start Meeting", link = "SafetyMeetings/Create" });
-                model.steps.Add(new SafetyStep { Name = "2.0 Prior to leaving", link = "SafetyLeavings/CreateMultiple" });
+
+                
+                model.steps.Add(new SafetyStep { Name = "Start Meeting", link = "SafetyMeetings/Create" });
+
+                foreach (var c in categories)
+                {
+                    model.steps.Add(new SafetyStep { Name = c.SafetyCategoryName, link = "SafetyItems/CreateMultiple?category="+c.SafetyCategoryID });
+                }
+                
 
                 Session["SafetyViewModel"] = model;
             }
