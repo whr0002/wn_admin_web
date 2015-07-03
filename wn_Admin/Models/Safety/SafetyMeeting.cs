@@ -34,17 +34,13 @@ namespace wn_Admin.Models.Safety
 
         public int? SafetyLeavingID { get; set; }
 
-
-
-
         public bool IsReviewedBySafetyManager { get; set; }
+
 
         public virtual Project Project { get; set; }
 
-
-        
         public virtual ICollection<SafetyLeaving> SafetyLeavings { get; set; }
 
-        public virtual ICollection<EmployeeSafetyMeeting> Employees { get; set; }
+        public virtual ICollection<EmployeeSafetyMeeting> EmployeeSafetyMeetings { get; set; }
     }
 }

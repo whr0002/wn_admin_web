@@ -210,6 +210,11 @@
     <Compile Include="Controllers\CompanyControllers\WorksForsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SafetyControllers\SafetyInterfaceController.cs" />
+    <Compile Include="Controllers\SafetyControllers\SafetyLeavingItemsController.cs" />
+    <Compile Include="Controllers\SafetyControllers\SafetyLeavingsController.cs" />
+    <Compile Include="Controllers\SafetyControllers\SafetyMeetingsController.cs" />
+    <Compile Include="Controllers\SafetyControllers\YesNoNAsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -273,6 +278,18 @@
     <Compile Include="Migrations\201507022127053_dskalfj.Designer.cs">
       <DependentUpon>201507022127053_dskalfj.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507031401114_moka1.cs" />
+    <Compile Include="Migrations\201507031401114_moka1.Designer.cs">
+      <DependentUpon>201507031401114_moka1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507031408221_lota.cs" />
+    <Compile Include="Migrations\201507031408221_lota.Designer.cs">
+      <DependentUpon>201507031408221_lota.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507031449003_dlkjsaflkn.cs" />
+    <Compile Include="Migrations\201507031449003_dlkjsaflkn.Designer.cs">
+      <DependentUpon>201507031449003_dlkjsaflkn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -289,6 +306,7 @@
     <Compile Include="Models\CompanyModels\Expense.cs" />
     <Compile Include="Models\Safety\EmployeeSafetyMeeting.cs" />
     <Compile Include="Models\Safety\SafetyLeaving.cs" />
+    <Compile Include="Models\Safety\SafetyLeavingItem.cs" />
     <Compile Include="Models\Safety\SafetyMeeting.cs" />
     <Compile Include="Models\CompanyModels\Supervision.cs" />
     <Compile Include="Models\CompanyModels\TimeOffRequest.cs" />
@@ -298,9 +316,12 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\CompanyModels\Project.cs" />
+    <Compile Include="Models\Safety\YesNoNA.cs" />
     <Compile Include="Models\UtilityModels\CustomValidators.cs" />
     <Compile Include="Models\UtilityModels\LinkViewModel.cs" />
     <Compile Include="Models\UtilityModels\PayPeriodCalculator.cs" />
+    <Compile Include="Models\UtilityModels\SafetyStep.cs" />
+    <Compile Include="Models\UtilityModels\SafetyViewModel.cs" />
     <Compile Include="Models\UtilityModels\SummaryModel.cs" />
     <Compile Include="Models\UtilityModels\TimesheetDateValidator.cs" />
     <Compile Include="Models\UtilityModels\UserInfo.cs" />
@@ -316,6 +337,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\next.png" />
     <Content Include="Content\Images\wn_logo.jpg" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\StyleSheet_Timesheet.css" />
@@ -463,11 +485,32 @@
     <Content Include="Views\TimeOffRequests\Details.cshtml" />
     <Content Include="Views\TimeOffRequests\Edit.cshtml" />
     <Content Include="Views\TimeOffRequests\Index.cshtml" />
+    <Content Include="Views\YesNoNAs\Create.cshtml" />
+    <Content Include="Views\YesNoNAs\Delete.cshtml" />
+    <Content Include="Views\YesNoNAs\Details.cshtml" />
+    <Content Include="Views\YesNoNAs\Edit.cshtml" />
+    <Content Include="Views\YesNoNAs\Index.cshtml" />
+    <Content Include="Views\SafetyLeavingItems\Create.cshtml" />
+    <Content Include="Views\SafetyLeavingItems\Delete.cshtml" />
+    <Content Include="Views\SafetyLeavingItems\Details.cshtml" />
+    <Content Include="Views\SafetyLeavingItems\Edit.cshtml" />
+    <Content Include="Views\SafetyLeavingItems\Index.cshtml" />
+    <Content Include="Views\SafetyLeavings\Create.cshtml" />
+    <Content Include="Views\SafetyLeavings\Delete.cshtml" />
+    <Content Include="Views\SafetyLeavings\Details.cshtml" />
+    <Content Include="Views\SafetyLeavings\Edit.cshtml" />
+    <Content Include="Views\SafetyLeavings\Index.cshtml" />
+    <Content Include="Views\SafetyInterface\Index.cshtml" />
+    <Content Include="Views\SafetyMeetings\Create.cshtml" />
+    <Content Include="Views\SafetyMeetings\Delete.cshtml" />
+    <Content Include="Views\SafetyMeetings\Details.cshtml" />
+    <Content Include="Views\SafetyMeetings\Edit.cshtml" />
+    <Content Include="Views\SafetyMeetings\Index.cshtml" />
+    <Content Include="Views\SafetyLeavings\CreateMultiple.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\Mobile\" />
-    <Folder Include="Controllers\SafetyControllers\" />
     <Folder Include="Views\API\" />
     <Folder Include="Views\Excel\" />
   </ItemGroup>
@@ -523,6 +566,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507022127053_dskalfj.resx">
       <DependentUpon>201507022127053_dskalfj.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507031401114_moka1.resx">
+      <DependentUpon>201507031401114_moka1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507031408221_lota.resx">
+      <DependentUpon>201507031408221_lota.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507031449003_dlkjsaflkn.resx">
+      <DependentUpon>201507031449003_dlkjsaflkn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -36,7 +36,7 @@ namespace wn_Admin.Controllers
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Assign an Account to an Employee", Link = "/useremployees" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Assign an Employee to a Department", Link = "/worksfors" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Assign a Supervisor to an Employee", Link = "/supervisions" });
-                    people.ListLinks.Add(new LinkViewModel { LinkName = "Safety", Link = "/#" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Safety", Link = "/SafetyInterface" });
 
                     // Projects
                     ListLinkViewModel projects = new ListLinkViewModel();
@@ -93,7 +93,7 @@ namespace wn_Admin.Controllers
                     resource.color = "Grey";
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Expense Form", Link = "/expenses" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Time Off Request", Link = "/timeoffrequests" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Daily Tailgate Safety Meeting", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Daily Tailgate Safety Meeting", Link = "/SafetyInterface" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Vehicle Inspection Form", Link = "/#" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Major Incident Report Form", Link = "/#" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Minor Incident Report Form", Link = "/#" });

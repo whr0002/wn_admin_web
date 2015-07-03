@@ -1,0 +1,42 @@
+﻿@model wn_Admin.Models.UtilityModels.SafetyViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Safety Meeting</h2>
+
+<div class="row">
+    @{
+        int i = 0;
+        foreach (var step in Model.steps)
+        {
+            <div class="col-md-2">
+                @if (Model.currentStep == i)
+                {
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">@step.Name</h3>
+                        </div>
+                        <div class="panel-body"><a class="btn btn-primary" href="/@step.link">Go</a> </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">@step.Name</h3>
+                        </div>
+                        <div class="panel-body"><a class="btn btn-default" href="/@step.link">Go</a> </div>
+                    </div>
+                    
+                }
+                
+            </div>
+        
+        <div class="col-md-1">
+            <img src="~/Content/Images/next.png" class="img-responsive"/>
+        </div>
+                i++;
+        }
+}
+</div>

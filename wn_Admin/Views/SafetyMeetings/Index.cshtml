@@ -1,0 +1,69 @@
+﻿@model IEnumerable<wn_Admin.Models.Safety.SafetyMeeting>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Project.ProjectName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FieldLocation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SafeWorkPermitNum)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ScopeOfWork)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SafetyLeavingID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsReviewedBySafetyManager)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Project.ProjectName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FieldLocation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SafeWorkPermitNum)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ScopeOfWork)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SafetyLeavingID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsReviewedBySafetyManager)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.SafetyMeetingID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.SafetyMeetingID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.SafetyMeetingID })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,74 @@
+﻿@model wn_Admin.Models.Safety.SafetyMeeting
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SafetyMeeting</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Project.ProjectName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Project.ProjectName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FieldLocation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FieldLocation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SafeWorkPermitNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SafeWorkPermitNum)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ScopeOfWork)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ScopeOfWork)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SafetyLeavingID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SafetyLeavingID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsReviewedBySafetyManager)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsReviewedBySafetyManager)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.SafetyMeetingID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

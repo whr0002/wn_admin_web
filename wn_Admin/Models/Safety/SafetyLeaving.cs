@@ -15,19 +15,15 @@ namespace wn_Admin.Models.Safety
 
         public int SafetyLeavingID { get; set; }
 
+
         public int SafetyMeetingID { get; set; }
 
-        [DisplayName("Item Name")]
-        [StringLength(50)]
-        public string ItemName { get; set; }
+        public int SafetyLeavingItemID { get; set; }
 
-        [Required]
-        [CustomValidation(typeof(CustomValidators), "CheckYNN")]
-        [DisplayName("Item Status")]
-        [StringLength(15)]
-        public string ItemStatus { get; set; }
+        public int YesNoNAID { get; set; }
 
         public virtual SafetyMeeting SafetyMeeting { get; set; }
-
+        public virtual SafetyLeavingItem SafetyLeavingItem { get; set; }
+        public virtual YesNoNA YesNoNA { get; set; }
     }
 }

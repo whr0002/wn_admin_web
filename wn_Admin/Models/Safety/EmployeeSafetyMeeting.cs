@@ -12,7 +12,7 @@ namespace wn_Admin.Models.Safety
     {
         public int EmployeeID { get; set; }
         public int SafetyMeetingID { get; set; }
-        public string ProjectID { get; set; }
+
 
         [Required]
         [ForeignKey("EmployeeID")]
@@ -22,6 +22,6 @@ namespace wn_Admin.Models.Safety
         [ForeignKey("EmployeeID")]
         public virtual SafetyMeeting SafetyMeeting { get; set; }
 
-        public virtual Project Project { get; set; }
+
     }
 }
