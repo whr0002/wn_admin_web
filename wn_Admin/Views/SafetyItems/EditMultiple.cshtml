@@ -23,30 +23,41 @@
 
                     @{
                         var i = 0;
-                        foreach (var item in Model.items)
+                        foreach (var item in Model.SafetyItems)
                         {
-                            <div class="row" style="margin-bottom: 10px;">
+                            <div class="row">
 
                                 <div class="col-md-3">
-                                    @item.SafetyItemValueName
-                                    @Html.Hidden("item_name_" + @i, @item.SafetyItemValueName)
+                                    @item.SafetyItemName
+                                    @Html.Hidden("itemID_" + @i, @item.SafetyItemID)
                                 </div>
 
-                                
+
                                 <div class="col-md-3">
-                                    <select name="item_answer_@i" class="form-control">
+                                    <select name="item_answer_@i" class="form-control" style="display:inline !important;">
                                         <option value="">Choose ...</option>
                                         @foreach (var option in Model.YesNoNAs)
                                         {
-                                            <option value="@option.YesNoNAID">@option.YesNoNAName</option>
+                                            if (item.YesNoNAID == option.YesNoNAID)
+                                            {
+                                                <option value="@option.YesNoNAID" selected>@option.YesNoNAName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@option.YesNoNAID">@option.YesNoNAName</option>
+                                            }
+
                                         }
                                     </select>
                                 </div>
 
-                                <div class="col-md-6" >
-                                    <input type="text" name="item_comment_@i" class="form-control" style="max-width:100% !important;" />
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="item_comment_@i" value="@item.Description" style="max-width: 1000px !important" />
                                 </div>
+
                             </div>
+                        
+
 
                                     i++;
                         }

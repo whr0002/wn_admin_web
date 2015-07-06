@@ -15,6 +15,7 @@ namespace wn_Admin.Models.Safety
 
         public int SafetyMeetingID { get; set; }
 
+        public int EmployeeID { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString="{0:yyyy-MM-dd}", ApplyFormatInEditMode=true)]
@@ -31,15 +32,15 @@ namespace wn_Admin.Models.Safety
         [DisplayName("Scope of Work & Meeting Agenda")]
         public string ScopeOfWork { get; set; }
 
-
-        public int? SafetyLeavingID { get; set; }
-
         public bool IsReviewedBySafetyManager { get; set; }
 
+        public bool  IsDone { get; set; }
+
+        public virtual Employee Employee { get; set; }
 
         public virtual Project Project { get; set; }
 
-        public virtual ICollection<SafetyLeaving> SafetyLeavings { get; set; }
+        public virtual ICollection<SafetyItem> SafetyItems { get; set; }
 
         public virtual ICollection<EmployeeSafetyMeeting> EmployeeSafetyMeetings { get; set; }
     }

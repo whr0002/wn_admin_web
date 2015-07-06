@@ -9,5 +9,7 @@ namespace wn_Admin.Models.UtilityModels
     {
         public string Name { get; set; }
         public string link { get; set; }
+        public string editLink { get; set; }
+        public int StepNumber { get; set; }
     }
 }

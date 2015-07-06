@@ -8,13 +8,16 @@ namespace wn_Admin.Models.UtilityModels
 {
     public class SafetyViewModel
     {
+        public int MeetingID { get; set; }
         public int currentStep { get; set; }
         public List<SafetyStep> steps { get; set; }
+        public List<int> finishedSections { get; set; }
     }
 
     public class SafetyItemViewModel
     {
         public int MeetingID { get; set; }
+        public List<SafetyItem> SafetyItems { get; set; }
         public List<SafetyItemValue> items { get; set; }
         public List<YesNoNA> YesNoNAs { get; set; }
     }

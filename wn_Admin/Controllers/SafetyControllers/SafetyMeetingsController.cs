@@ -9,12 +9,16 @@ using System.Web.Mvc;
 using wn_Admin.Models;
 using wn_Admin.Models.Safety;
 using wn_Admin.Models.UtilityModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace wn_Admin.Controllers.SafetyControllers
 {
+    [Authorize(Roles="SUPERADMIN")]
     public class SafetyMeetingsController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
+        private UserInfo ui = new UserInfo();
 
         // GET: SafetyMeetings
         public ActionResult Index()
@@ -41,6 +45,9 @@ namespace wn_Admin.Controllers.SafetyControllers
         // GET: SafetyMeetings/Create
         public ActionResult Create()
         {
+            var e = ui.getEmployee(User.Identity.GetUserId());
+
+            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == e.EmployeeID), "EmployeeID", "FullName");
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
             return View();
         }
@@ -50,7 +57,7 @@ namespace wn_Admin.Controllers.SafetyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SafetyMeetingID,Date,ProjectID,FieldLocation,SafeWorkPermitNum,ScopeOfWork,SafetyLeavingID,IsReviewedBySafetyManager")] SafetyMeeting safetyMeeting)
+        public ActionResult Create([Bind(Include = "SafetyMeetingID,Date,EmployeeID, ProjectID,FieldLocation,SafeWorkPermitNum,ScopeOfWork,SafetyLeavingID,IsReviewedBySafetyManager")] SafetyMeeting safetyMeeting)
         {
             if (ModelState.IsValid)
             {
@@ -61,6 +68,7 @@ namespace wn_Admin.Controllers.SafetyControllers
                 var model = Session["SafetyViewModel"] as SafetyViewModel;
                 if (model != null)
                 {
+                    model.finishedSections.Add(model.currentStep);
                     model.currentStep += 1;
                     Session["SafetyViewModel"] = model;
                 }
@@ -73,17 +81,21 @@ namespace wn_Admin.Controllers.SafetyControllers
         }
 
         // GET: SafetyMeetings/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? meetingID)
         {
-            if (id == null)
+            if (meetingID == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SafetyMeeting safetyMeeting = db.SafetyMeetings.Find(id);
+            SafetyMeeting safetyMeeting = db.SafetyMeetings.Find(meetingID);
             if (safetyMeeting == null)
             {
                 return HttpNotFound();
             }
+
+            var e = ui.getEmployee(User.Identity.GetUserId());
+
+            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == e.EmployeeID), "EmployeeID", "FullName");
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", safetyMeeting.ProjectID);
             return View(safetyMeeting);
         }
@@ -93,7 +105,7 @@ namespace wn_Admin.Controllers.SafetyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SafetyMeetingID,Date,ProjectID,FieldLocation,SafeWorkPermitNum,ScopeOfWork,SafetyLeavingID,IsReviewedBySafetyManager")] SafetyMeeting safetyMeeting)
+        public ActionResult Edit([Bind(Include = "SafetyMeetingID,Date,EmployeeID,ProjectID,FieldLocation,SafeWorkPermitNum,ScopeOfWork,SafetyLeavingID,IsReviewedBySafetyManager")] SafetyMeeting safetyMeeting)
         {
             if (ModelState.IsValid)
             {
@@ -139,5 +151,7 @@ namespace wn_Admin.Controllers.SafetyControllers
             }
             base.Dispose(disposing);
         }
+
+
     }
 }

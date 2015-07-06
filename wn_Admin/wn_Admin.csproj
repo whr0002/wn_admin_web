@@ -210,6 +210,7 @@
     <Compile Include="Controllers\CompanyControllers\WorksForsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SafetyControllers\EmployeeSafetyMeetingsController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyCategoriesController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyInterfaceController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyItemsController.cs" />
@@ -323,6 +324,30 @@
     <Compile Include="Migrations\201507032132218_kolopdsfdsnds.Designer.cs">
       <DependentUpon>201507032132218_kolopdsfdsnds.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507061545340_dsaklfnmqe12.cs" />
+    <Compile Include="Migrations\201507061545340_dsaklfnmqe12.Designer.cs">
+      <DependentUpon>201507061545340_dsaklfnmqe12.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507061607314_dsaklfnmqe1234.cs" />
+    <Compile Include="Migrations\201507061607314_dsaklfnmqe1234.Designer.cs">
+      <DependentUpon>201507061607314_dsaklfnmqe1234.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507061609000_dsaklfnmqe12345.cs" />
+    <Compile Include="Migrations\201507061609000_dsaklfnmqe12345.Designer.cs">
+      <DependentUpon>201507061609000_dsaklfnmqe12345.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507061656109_dsaklfnmqe123456.cs" />
+    <Compile Include="Migrations\201507061656109_dsaklfnmqe123456.Designer.cs">
+      <DependentUpon>201507061656109_dsaklfnmqe123456.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507061756326_dsaklfnmqe1234567.cs" />
+    <Compile Include="Migrations\201507061756326_dsaklfnmqe1234567.Designer.cs">
+      <DependentUpon>201507061756326_dsaklfnmqe1234567.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507061758234_dsaklfnmqe12345678.cs" />
+    <Compile Include="Migrations\201507061758234_dsaklfnmqe12345678.Designer.cs">
+      <DependentUpon>201507061758234_dsaklfnmqe12345678.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -340,9 +365,7 @@
     <Compile Include="Models\Safety\EmployeeSafetyMeeting.cs" />
     <Compile Include="Models\Safety\SafetyCategory.cs" />
     <Compile Include="Models\Safety\SafetyItem.cs" />
-    <Compile Include="Models\Safety\SafetyLeaving.cs" />
     <Compile Include="Models\Safety\SafetyItemName.cs" />
-    <Compile Include="Models\Safety\SafetyLeavingItem.cs" />
     <Compile Include="Models\Safety\SafetyMeeting.cs" />
     <Compile Include="Models\CompanyModels\Supervision.cs" />
     <Compile Include="Models\CompanyModels\TimeOffRequest.cs" />
@@ -548,6 +571,13 @@
     <Content Include="Views\SafetyItemValues\Edit.cshtml" />
     <Content Include="Views\SafetyItemValues\Index.cshtml" />
     <Content Include="Views\SafetyItems\CreateMultiple.cshtml" />
+    <Content Include="Views\SafetyItems\EditMultiple.cshtml" />
+    <Content Include="Views\EmployeeSafetyMeetings\Create.cshtml" />
+    <Content Include="Views\EmployeeSafetyMeetings\Delete.cshtml" />
+    <Content Include="Views\EmployeeSafetyMeetings\Details.cshtml" />
+    <Content Include="Views\EmployeeSafetyMeetings\Edit.cshtml" />
+    <Content Include="Views\EmployeeSafetyMeetings\Index.cshtml" />
+    <Content Include="Views\SafetyInterface\Summary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -640,6 +670,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507032132218_kolopdsfdsnds.resx">
       <DependentUpon>201507032132218_kolopdsfdsnds.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507061545340_dsaklfnmqe12.resx">
+      <DependentUpon>201507061545340_dsaklfnmqe12.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507061607314_dsaklfnmqe1234.resx">
+      <DependentUpon>201507061607314_dsaklfnmqe1234.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507061609000_dsaklfnmqe12345.resx">
+      <DependentUpon>201507061609000_dsaklfnmqe12345.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507061656109_dsaklfnmqe123456.resx">
+      <DependentUpon>201507061656109_dsaklfnmqe123456.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507061756326_dsaklfnmqe1234567.resx">
+      <DependentUpon>201507061756326_dsaklfnmqe1234567.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507061758234_dsaklfnmqe12345678.resx">
+      <DependentUpon>201507061758234_dsaklfnmqe12345678.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

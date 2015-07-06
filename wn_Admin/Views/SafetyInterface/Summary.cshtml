@@ -1,0 +1,94 @@
+﻿@model wn_Admin.Models.Safety.SafetyMeeting
+
+@{
+    ViewBag.Title = "Safety Meeting Summary";
+}
+
+
+
+<div class="row">
+    <div class="col-md-12  text-center">
+        <h2>DAILY TAILGATE SAFETY MEETING</h2>
+    </div>
+
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-md-4">
+        <strong>Date:</strong> @Model.Date
+    </div>
+    <div class="col-md-4">
+        <strong>Field Location/ID:</strong> @Model.FieldLocation
+    </div>
+    <div class="col-md-4">
+        <strong>Safe Work Permit # (if applicable):</strong> @Model.SafeWorkPermitNum
+    </div>
+
+
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <strong>Project:</strong> @Model.Project.ProjectName
+    </div>
+
+    <div class="col-md-4">
+        <strong>Project ID:</strong> @Model.ProjectID
+    </div>
+
+    <div class="col-md-4">
+        <strong>Client:</strong> @Model.Project.FK_Client.ClientName
+    </div>
+
+</div>
+
+<br />
+<div>
+    <h3>Items</h3>
+    <table class="table">
+        <tr>
+            <th>Category</th>
+            <th>Item Name</th>
+            <th>Result</th>
+            <th>Comment</th>
+        </tr>
+        @foreach (var item in Model.SafetyItems)
+        {
+            <tr>
+                <td>@item.SafetyCategory.SafetyCategoryName</td>
+                <td>@item.SafetyItemName</td>
+                <td>
+                    @if (item.YesNoNA != null)
+                    {
+                        @item.YesNoNA.YesNoNAName;
+                    }
+                </td>
+
+                <td>@item.Description</td>
+            </tr>
+
+
+        }
+    </table>
+
+    <br />
+
+    <h3>Attendees</h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+        </tr>
+        @{
+ 
+            foreach (var item in ViewBag.Attendees as List<wn_Admin.Models.CompanyModels.Employee>)
+            {
+            <tr>
+                <td>@item.FullName</td>
+            </tr>
+            }
+        }
+    </table>
+</div>
+

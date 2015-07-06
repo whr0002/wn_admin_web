@@ -15,28 +15,55 @@
                 {
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h3 class="panel-title">@step.Name</h3>
+                            <h3 class="panel-title">@step.StepNumber. @step.Name</h3>
                         </div>
-                        <div class="panel-body"><a class="btn btn-primary" href="/@step.link">Go</a> </div>
+                        <div class="panel-body"><a class="btn btn-primary" href="/@step.link">Start</a> </div>
                     </div>
                 }
                 else
                 {
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">@step.Name</h3>
+                    if (Model.finishedSections.Contains(i))
+                    {
+                        var fullLink = step.editLink + "meetingID="+Session["MeetingID"];
+                        
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">@step.StepNumber. @step.Name - <strong>COMPLETED</strong></h3>
+                            </div>
+                            
+                            <div class="panel-body"><a class="btn btn-default" href="/@fullLink">View</a> </div>
                         </div>
-                        <div class="panel-body"><a class="btn btn-default" href="/@step.link">Go</a> </div>
-                    </div>
-                    
+                    }
+                    else
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">@step.StepNumber. @step.Name</h3>
+                            </div>
+                            <div class="panel-body"><a class="btn btn-default" href="/@step.link">Start</a> </div>
+                        </div>
+                    }
+
                 }
-                
+
             </div>
-        
-        <div class="col-md-1">
-            <img src="~/Content/Images/next.png" class="img-responsive"/>
-        </div>
+
+            if (i < Model.steps.Count()-1) { 
+                <div class="col-md-1">
+                    <img src="~/Content/Images/next.png" class="img-responsive" />
+                </div>
+            }
                 i++;
         }
-}
+    }
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.ActionLink("Summary", "Summary", "SafetyInterface", new { mid = @Session["MeetingID"] }, null)
+    </div>
+
+    <div class="col-md-12">
+        @Html.ActionLink("Clear Session", "ClearMeetingSession", "SafetyInterface")
+    </div>
 </div>

@@ -10,16 +10,12 @@ namespace wn_Admin.Models.Safety
 {
     public class EmployeeSafetyMeeting
     {
+
         public int EmployeeID { get; set; }
         public int SafetyMeetingID { get; set; }
 
-
-        [Required]
-        [ForeignKey("EmployeeID")]
         public virtual Employee Employee { get; set; }
 
-        [Required]
-        [ForeignKey("EmployeeID")]
         public virtual SafetyMeeting SafetyMeeting { get; set; }
 
 

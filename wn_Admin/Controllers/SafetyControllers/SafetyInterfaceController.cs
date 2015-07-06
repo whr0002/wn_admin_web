@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using wn_Admin.Models;
 using wn_Admin.Models.UtilityModels;
+using System.Data;
+using System.Data.Entity;
 
 namespace wn_Admin.Controllers.SafetyControllers
 {
@@ -27,15 +29,19 @@ namespace wn_Admin.Controllers.SafetyControllers
 
                 model.currentStep = 0;
                 model.steps = new List<SafetyStep>();
+                model.finishedSections = new List<int>();
 
-                
-                model.steps.Add(new SafetyStep { Name = "Start Meeting", link = "SafetyMeetings/Create" });
 
+                model.steps.Add(new SafetyStep { Name = "Start Meeting", link = "SafetyMeetings/Create", editLink = "SafetyMeetings/Edit?", StepNumber = 0 });
+
+                int i = 1;
                 foreach (var c in categories)
                 {
-                    model.steps.Add(new SafetyStep { Name = c.SafetyCategoryName, link = "SafetyItems/CreateMultiple?category="+c.SafetyCategoryID });
+                    model.steps.Add(new SafetyStep { Name = c.SafetyCategoryName, link = "SafetyItems/CreateMultiple?category=" + c.SafetyCategoryID +"&currentStep="+i, editLink = "SafetyItems/EditMultiple?category=" + c.SafetyCategoryID + "&", StepNumber =  i});
+                    i++;
                 }
-                
+
+                model.steps.Add(new SafetyStep { Name = "Attendees", link = "EmployeeSafetyMeetings/Create"+"?currentStep="+i, editLink = "EmployeeSafetyMeetings/Edit?", StepNumber = i });
 
                 Session["SafetyViewModel"] = model;
             }
@@ -44,6 +50,30 @@ namespace wn_Admin.Controllers.SafetyControllers
                 model = modelSession;
             }
             return View(model);
+        }
+
+        public ActionResult ClearMeetingSession()
+        {
+            Session.Clear();
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Summary(int mid = -1) 
+        {
+
+            if (mid == -1)
+            {
+                return View();
+            }
+
+            var safetyMeetings = db.SafetyMeetings.Include(s => s.SafetyItems).Include(s => s.Employee).Include(s => s.EmployeeSafetyMeetings);
+            var theMeeting =  safetyMeetings.Where(w => w.SafetyMeetingID == mid).FirstOrDefault();
+            var ids = theMeeting.EmployeeSafetyMeetings.Select(s => s.EmployeeID).ToList();
+            var es = db.Employees.Where(w => ids.Contains(w.EmployeeID)).ToList();
+            ViewBag.Attendees = es;
+            return View(theMeeting);
+           
         }
     }
 }
