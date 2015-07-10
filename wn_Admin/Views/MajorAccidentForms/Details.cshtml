@@ -1,0 +1,394 @@
+﻿@model wn_Admin.Models.Safety.MajorAccidentForm
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>MajorAccidentForm</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TypeInjury)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TypeInjury)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BodyLeft)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BodyLeft)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BodyRight)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BodyRight)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HospitalName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HospitalName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DoctorName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DoctorName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstAidAttendent)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstAidAttendent)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EquipmentInvolved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EquipmentInvolved)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WCBFormCompSubm)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WCBFormCompSubm)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OHSNotified)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OHSNotified)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OHSNameContact)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OHSNameContact)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DescLoss)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DescLoss)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InjuriesDueToIncident)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InjuriesDueToIncident)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LostTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LostTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EquipOut)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EquipOut)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OtherLosses)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OtherLosses)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WitnessesOccur)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WitnessesOccur)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateOccur)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateOccur)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TimeOccur)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TimeOccur)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LocationOccur)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LocationOccur)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AccidentPPEOption)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccidentPPEOption)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ListPPE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ListPPE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WasPersonTrained)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WasPersonTrained)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PotReoccur)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PotReoccur)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LossPotEval)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LossPotEval)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LocationSpill)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LocationSpill)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SourceSpill)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SourceSpill)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TypeSubstance)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TypeSubstance)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AmountSubstance)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AmountSubstance)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AdvEffOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AdvEffOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AccidentDesc)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccidentDesc)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PhotoTaken)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhotoTaken)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WitnessStatement)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WitnessStatement)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ImmediateCauses)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ImmediateCauses)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KeyStates)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KeyStates)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SubstandardActions)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SubstandardActions)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SubstandardConditions)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SubstandardConditions)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BasicCauses)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BasicCauses)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PersonalFactors)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PersonalFactors)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.JobFactors)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.JobFactors)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RiskAssess)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RiskAssess)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TempActionTaken)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TempActionTaken)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SuggestedCorrActions)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SuggestedCorrActions)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PreparedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PreparedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PrepareDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PrepareDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ApprovedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ApprovedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ApprovedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ApprovedDate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MajorAccidentFormID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

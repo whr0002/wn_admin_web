@@ -23,9 +23,9 @@ namespace wn_Admin.Controllers.CompanyControllers
         public ActionResult Index()
         {
             var timeOffRequests = db.TimeOffRequests.Include(t => t.Employee).Include(t => t.OffReason);
-            var role = ui.getFirstRole(User.Identity.GetUserId());
 
-            if (role.Equals("Employee"))
+
+            if (ui.isInRole(User.Identity.GetUserId(), "Employee"))
             {
                 // Show records only from him.
                 Employee e = ui.getEmployee(User.Identity.GetUserId());

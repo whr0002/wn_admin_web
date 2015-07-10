@@ -13,6 +13,7 @@ using wn_Admin.Models.UtilityModels;
 
 namespace wn_Admin.Controllers.SafetyControllers
 {
+    [Authorize()]
     public class EmployeeSafetyMeetingsController : Controller
     {
         private wn_admin_db db = new wn_admin_db();

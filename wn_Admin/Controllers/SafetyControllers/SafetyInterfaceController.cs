@@ -10,6 +10,7 @@ using System.Data.Entity;
 
 namespace wn_Admin.Controllers.SafetyControllers
 {
+    [Authorize()]
     public class SafetyInterfaceController : Controller
     {
         private wn_admin_db db = new wn_admin_db();

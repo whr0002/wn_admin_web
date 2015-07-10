@@ -1,0 +1,309 @@
+﻿@model IEnumerable<wn_Admin.Models.Safety.MajorAccidentForm>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TypeInjury)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BodyLeft)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BodyRight)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HospitalName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DoctorName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstAidAttendent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EquipmentInvolved)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WCBFormCompSubm)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OHSNotified)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OHSNameContact)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DescLoss)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InjuriesDueToIncident)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LostTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EquipOut)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OtherLosses)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WitnessesOccur)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateOccur)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TimeOccur)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LocationOccur)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AccidentPPEOption)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ListPPE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WasPersonTrained)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PotReoccur)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LossPotEval)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LocationSpill)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SourceSpill)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TypeSubstance)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AmountSubstance)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AdvEffOn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AccidentDesc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhotoTaken)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WitnessStatement)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImmediateCauses)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KeyStates)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SubstandardActions)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SubstandardConditions)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BasicCauses)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PersonalFactors)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.JobFactors)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RiskAssess)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TempActionTaken)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SuggestedCorrActions)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PreparedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrepareDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ApprovedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ApprovedDate)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TypeInjury)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BodyLeft)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BodyRight)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HospitalName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DoctorName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstAidAttendent)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EquipmentInvolved)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WCBFormCompSubm)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OHSNotified)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OHSNameContact)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DescLoss)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InjuriesDueToIncident)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LostTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EquipOut)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OtherLosses)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WitnessesOccur)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateOccur)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TimeOccur)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LocationOccur)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AccidentPPEOption)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ListPPE)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WasPersonTrained)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PotReoccur)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LossPotEval)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LocationSpill)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SourceSpill)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TypeSubstance)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AmountSubstance)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AdvEffOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AccidentDesc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PhotoTaken)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WitnessStatement)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImmediateCauses)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KeyStates)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SubstandardActions)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SubstandardConditions)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BasicCauses)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PersonalFactors)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.JobFactors)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RiskAssess)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TempActionTaken)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SuggestedCorrActions)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PreparedBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PrepareDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ApprovedBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ApprovedDate)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.MajorAccidentFormID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.MajorAccidentFormID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.MajorAccidentFormID })
+        </td>
+    </tr>
+}
+
+</table>

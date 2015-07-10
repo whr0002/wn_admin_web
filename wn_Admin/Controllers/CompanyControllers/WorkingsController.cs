@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 
 namespace wn_Admin.Controllers.CompanyControllers
 {
-    [Authorize(Roles="SUPERADMIN, Accountant, Employee")]
+    [Authorize(Roles = "SUPERADMIN, Accountant, Employee")]
     public class WorkingsController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
@@ -30,15 +30,29 @@ namespace wn_Admin.Controllers.CompanyControllers
         public ActionResult Index(int? page, DateTime? startDate = null, DateTime? endDate = null, int ppYear = -1, int pp = -1, int clientId = -1, int employeeId = -1, string projectId = null, Boolean? exportToExcel = null)
         {
 
-            
+
             var workings = db.Workings.Include(w => w.Employee).Include(w => w.FK_FieldAccess).Include(w => w.FK_OffReason).Include(w => w.FK_Task).Include(w => w.FK_Vehicle).Include(w => w.Project);
             string userId = User.Identity.GetUserId();
-            string role = mUserInfo.getFirstRole(userId);
             string currentFilter = "";
-            
 
+            if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
+            {
 
-            if (!role.Equals("Accountant") && !role.Equals("SUPERADMIN")) { 
+                // User is an accoutant, he or she can search Timesheets by Employee ID
+
+                if (employeeId != -1)
+                {
+                    workings = workings.Where(w => w.EmployeeID == employeeId);
+                    currentFilter += "&employeeId=" + employeeId;
+                }
+                ViewBag.hasReviewControl = true;
+                ViewBag.hasFullControl = true;
+                ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName");
+                ViewBag.clientId = new SelectList(db.Clients, "ClientID", "ClientName");
+                ViewBag.projectId = new SelectList(db.Projects, "ProjectID", "ProjectName");
+            }
+            else
+            {
                 // User is not accountant, show records from this user
                 var employee = mUserInfo.getEmployee(userId);
                 if (employee != null)
@@ -68,25 +82,11 @@ namespace wn_Admin.Controllers.CompanyControllers
                 }
 
                 ViewBag.hasFullControl = false;
-                ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == employee.EmployeeID), "EmployeeID", "FullName");   
+                ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == employee.EmployeeID), "EmployeeID", "FullName");
                 ViewBag.clientId = new SelectList(workings.Select(s => s.Project.FK_Client).Distinct(), "ClientID", "ClientName");
                 ViewBag.projectId = new SelectList(workings.Select(s => s.Project).Distinct(), "ProjectID", "ProjectName");
 
-            }else{
-
-                // User is an accoutant, he or she can search Timesheets by Employee ID
-
-                if(employeeId != -1){
-                    workings = workings.Where(w => w.EmployeeID == employeeId);
-                    currentFilter += "&employeeId=" + employeeId;
-                }
-                ViewBag.hasReviewControl = true;
-                ViewBag.hasFullControl = true;
-                ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName");
-                ViewBag.clientId = new SelectList(db.Clients, "ClientID", "ClientName");
-                ViewBag.projectId = new SelectList(db.Projects, "ProjectID", "ProjectName");
             }
-
 
             // Search Filters
 
@@ -132,7 +132,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                 currentFilter += "&projectId=" + projectId;
             }
 
-            if (exportToExcel !=null && exportToExcel == true)
+            if (exportToExcel != null && exportToExcel == true)
             {
                 return Content(generateExcel(workings), "application/ms-excel");
             }
@@ -148,7 +148,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         }
 
         // GET: Workings/Details/5
-        [Authorize(Roles="Accountant, SUPERADMIN")]
+        [Authorize(Roles = "Accountant, SUPERADMIN")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -195,16 +195,14 @@ namespace wn_Admin.Controllers.CompanyControllers
         {
 
 
-
-
             if (ModelState.IsValid)
             {
-                var role = mUserInfo.getFirstRole(User.Identity.GetUserId());
 
                 // Check date to see if it is valid.
                 string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date);
-                
-                if (role.Equals("Accountant") || role.Equals("SUPERADMIN"))
+                string userId = User.Identity.GetUserId();
+
+                if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
                 {
                     db.Workings.Add(working);
                     db.SaveChanges();
@@ -222,7 +220,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                         db.SaveChanges();
                         return RedirectToAction("Index");
                     }
-                    
+
                 }
 
             }
@@ -327,85 +325,80 @@ namespace wn_Admin.Controllers.CompanyControllers
 
         public ActionResult Review(string ids)
         {
-            
+
             string[] sids = ids.Split(',');
-            
+
             // Get current supervisor
             Employee employee = mUserInfo.getEmployee(User.Identity.GetUserId());
-            if (employee != null) { 
-            
-                var role = mUserInfo.getFirstRole(User.Identity.GetUserId());
+            if (employee != null)
+            {
 
-                if (role != null)
+                string userId = User.Identity.GetUserId();
+
+                if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
                 {
-                    if (role.Equals("Accountant") || role.Equals("SUPERADMIN"))
+                    // User is Accountant or Superadmin, they can review everyone's timesheet
+                    List<int> list = new List<int>();
+
+                    foreach (var id in sids)
                     {
-                        // User is Accountant or Superadmin, they can review everyone's timesheet
-                        List<int> list = new List<int>();
-
-                        foreach (var id in sids)
+                        try
                         {
-                            try{
-                                int i = Convert.ToInt32(id);
-                                list.Add(i);
-                            }catch{}
+                            int i = Convert.ToInt32(id);
+                            list.Add(i);
                         }
-
-                        var wlist = from work in db.Workings
-                                    where list.Contains(work.WorkingID)
-                                    select work;
-
-
-
-                        foreach (Working work in wlist)
-                        {
-                            work.isReviewed = true;
-                        }
-
-                        db.SaveChanges();
+                        catch { }
                     }
-                    else if(role.Equals("Employee"))
-                    {
-                        // User is an employee, check if he is supervisor or not.
 
-                        
-                        var result = from super in db.Supervisions
-                                     join work in db.Workings
-                                     on super.EmployeeID equals work.EmployeeID
-                                     where super.SupervisorID == employee.EmployeeID
-                                     select work;
-                        
-                        foreach (string id in sids)
+                    var wlist = from work in db.Workings
+                                where list.Contains(work.WorkingID)
+                                select work;
+
+
+
+                    foreach (Working work in wlist)
+                    {
+                        work.isReviewed = true;
+                    }
+
+                    db.SaveChanges();
+                }
+                else if (mUserInfo.isInRole(userId, "Employee"))
+                {
+                    // User is an employee, check if he is supervisor or not.
+
+                    var result = from super in db.Supervisions
+                                 join work in db.Workings
+                                 on super.EmployeeID equals work.EmployeeID
+                                 where super.SupervisorID == employee.EmployeeID
+                                 select work;
+
+                    foreach (string id in sids)
+                    {
+                        try
                         {
-                            try
+                            int i = Convert.ToInt32(id);
+                            // check the input IDs whether are in employee IDs which are under supervised by this supervisor
+                            foreach (var work in result)
                             {
-                                int i = Convert.ToInt32(id);
-                                // check the input IDs whether are in employee IDs which are under supervised by this supervisor
-                                foreach (var work in result)
+                                if (work.WorkingID == i)
                                 {
-                                    if (work.WorkingID == i)
-                                    {
-                                        work.isReviewed = true;
-                                    }
+                                    work.isReviewed = true;
                                 }
-
-                                db.SaveChanges();
-
                             }
-                            catch { }
+
+                            db.SaveChanges();
+
                         }
-                    }
-                    else
-                    {
-                        //Response.Write("unknown role");
-                        return RedirectToAction("Index");
+                        catch { }
                     }
                 }
                 else
                 {
-                    //Response.Write("no role");
+                    //Response.Write("unknown role");
                     return RedirectToAction("Index");
                 }
+
             }
             return RedirectToAction("Index");
         }
@@ -495,13 +488,12 @@ namespace wn_Admin.Controllers.CompanyControllers
         {
             string userId = User.Identity.GetUserId();
             var employee = mUserInfo.getEmployee(userId);
-            var role = mUserInfo.getFirstRole(userId);
 
             if (employee != null)
             {
                 IQueryable<Employee> es = db.Employees;
 
-                if (!role.Equals("Accountant") && !role.Equals("SUPERADMIN"))
+                if (!mUserInfo.isInRole(userId, "SUPERADMIN") && !mUserInfo.isInRole(userId, "Accountant"))
                 {
                     es = es.Where(w => w.EmployeeID == employee.EmployeeID);
                 }

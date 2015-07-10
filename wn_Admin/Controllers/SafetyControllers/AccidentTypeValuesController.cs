@@ -11,108 +11,107 @@ using wn_Admin.Models.Safety;
 
 namespace wn_Admin.Controllers.SafetyControllers
 {
-    [Authorize()]
-    public class SafetyCategoriesController : Controller
+    public class AccidentTypeValuesController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
 
-        // GET: SafetyCategories
+        // GET: AccidentTypeValues
         public ActionResult Index()
         {
-            return View(db.SafetyCategories.ToList());
+            return View(db.AccidentTypeValues.ToList());
         }
 
-        // GET: SafetyCategories/Details/5
+        // GET: AccidentTypeValues/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SafetyCategory safetyCategory = db.SafetyCategories.Find(id);
-            if (safetyCategory == null)
+            AccidentTypeValue accidentTypeValue = db.AccidentTypeValues.Find(id);
+            if (accidentTypeValue == null)
             {
                 return HttpNotFound();
             }
-            return View(safetyCategory);
+            return View(accidentTypeValue);
         }
 
-        // GET: SafetyCategories/Create
+        // GET: AccidentTypeValues/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: SafetyCategories/Create
+        // POST: AccidentTypeValues/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SafetyCategoryID,SafetyCategoryName")] SafetyCategory safetyCategory)
+        public ActionResult Create([Bind(Include = "AccidentTypeValueID,AccidentTypeValueName")] AccidentTypeValue accidentTypeValue)
         {
             if (ModelState.IsValid)
             {
-                db.SafetyCategories.Add(safetyCategory);
+                db.AccidentTypeValues.Add(accidentTypeValue);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(safetyCategory);
+            return View(accidentTypeValue);
         }
 
-        // GET: SafetyCategories/Edit/5
+        // GET: AccidentTypeValues/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SafetyCategory safetyCategory = db.SafetyCategories.Find(id);
-            if (safetyCategory == null)
+            AccidentTypeValue accidentTypeValue = db.AccidentTypeValues.Find(id);
+            if (accidentTypeValue == null)
             {
                 return HttpNotFound();
             }
-            return View(safetyCategory);
+            return View(accidentTypeValue);
         }
 
-        // POST: SafetyCategories/Edit/5
+        // POST: AccidentTypeValues/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SafetyCategoryID,SafetyCategoryName")] SafetyCategory safetyCategory)
+        public ActionResult Edit([Bind(Include = "AccidentTypeValueID,AccidentTypeValueName")] AccidentTypeValue accidentTypeValue)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(safetyCategory).State = EntityState.Modified;
+                db.Entry(accidentTypeValue).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(safetyCategory);
+            return View(accidentTypeValue);
         }
 
-        // GET: SafetyCategories/Delete/5
+        // GET: AccidentTypeValues/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SafetyCategory safetyCategory = db.SafetyCategories.Find(id);
-            if (safetyCategory == null)
+            AccidentTypeValue accidentTypeValue = db.AccidentTypeValues.Find(id);
+            if (accidentTypeValue == null)
             {
                 return HttpNotFound();
             }
-            return View(safetyCategory);
+            return View(accidentTypeValue);
         }
 
-        // POST: SafetyCategories/Delete/5
+        // POST: AccidentTypeValues/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            SafetyCategory safetyCategory = db.SafetyCategories.Find(id);
-            db.SafetyCategories.Remove(safetyCategory);
+            AccidentTypeValue accidentTypeValue = db.AccidentTypeValues.Find(id);
+            db.AccidentTypeValues.Remove(accidentTypeValue);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

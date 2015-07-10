@@ -14,7 +14,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace wn_Admin.Controllers.SafetyControllers
 {
-    [Authorize(Roles="SUPERADMIN")]
+    [Authorize(Roles = "SUPERADMIN")]
     public class SafetyMeetingsController : Controller
     {
         private wn_admin_db db = new wn_admin_db();

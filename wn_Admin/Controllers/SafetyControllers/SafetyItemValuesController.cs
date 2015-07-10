@@ -11,6 +11,7 @@ using wn_Admin.Models.Safety;
 
 namespace wn_Admin.Controllers.SafetyControllers
 {
+    [Authorize(Roles = "SUPERADMIN")]
     public class SafetyItemValuesController : Controller
     {
         private wn_admin_db db = new wn_admin_db();

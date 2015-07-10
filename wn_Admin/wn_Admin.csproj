@@ -210,7 +210,10 @@
     <Compile Include="Controllers\CompanyControllers\WorksForsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SafetyControllers\AccidentTypesController.cs" />
+    <Compile Include="Controllers\SafetyControllers\AccidentTypeValuesController.cs" />
     <Compile Include="Controllers\SafetyControllers\EmployeeSafetyMeetingsController.cs" />
+    <Compile Include="Controllers\SafetyControllers\MajorAccidentFormsController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyCategoriesController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyInterfaceController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyItemsController.cs" />
@@ -348,6 +351,22 @@
     <Compile Include="Migrations\201507061758234_dsaklfnmqe12345678.Designer.cs">
       <DependentUpon>201507061758234_dsaklfnmqe12345678.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507091755261_MajorAccidentForm.cs" />
+    <Compile Include="Migrations\201507091755261_MajorAccidentForm.Designer.cs">
+      <DependentUpon>201507091755261_MajorAccidentForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507101857409_ldknioweru.cs" />
+    <Compile Include="Migrations\201507101857409_ldknioweru.Designer.cs">
+      <DependentUpon>201507101857409_ldknioweru.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507101912335_ldknioweru1.cs" />
+    <Compile Include="Migrations\201507101912335_ldknioweru1.Designer.cs">
+      <DependentUpon>201507101912335_ldknioweru1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507101917444_ldknioweru2.cs" />
+    <Compile Include="Migrations\201507101917444_ldknioweru2.Designer.cs">
+      <DependentUpon>201507101917444_ldknioweru2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -362,7 +381,15 @@
     <Compile Include="Models\CompanyModels\Department.cs" />
     <Compile Include="Models\CompanyModels\Employee.cs" />
     <Compile Include="Models\CompanyModels\Expense.cs" />
+    <Compile Include="Models\Safety\AccidentPhoto.cs" />
+    <Compile Include="Models\Safety\AccidentPPEOption.cs" />
+    <Compile Include="Models\Safety\AccidentType.cs" />
+    <Compile Include="Models\Safety\AccidentTypeValue.cs" />
+    <Compile Include="Models\Safety\AdvEff.cs" />
     <Compile Include="Models\Safety\EmployeeSafetyMeeting.cs" />
+    <Compile Include="Models\Safety\MajorAccidentForm.cs" />
+    <Compile Include="Models\Safety\MinorAccidentForm.cs" />
+    <Compile Include="Models\Safety\PotReoccur.cs" />
     <Compile Include="Models\Safety\SafetyCategory.cs" />
     <Compile Include="Models\Safety\SafetyItem.cs" />
     <Compile Include="Models\Safety\SafetyItemName.cs" />
@@ -414,6 +441,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\CustomJS\PhotoJS.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -578,6 +606,21 @@
     <Content Include="Views\EmployeeSafetyMeetings\Edit.cshtml" />
     <Content Include="Views\EmployeeSafetyMeetings\Index.cshtml" />
     <Content Include="Views\SafetyInterface\Summary.cshtml" />
+    <Content Include="Views\MajorAccidentForms\Create.cshtml" />
+    <Content Include="Views\MajorAccidentForms\Delete.cshtml" />
+    <Content Include="Views\MajorAccidentForms\Details.cshtml" />
+    <Content Include="Views\MajorAccidentForms\Edit.cshtml" />
+    <Content Include="Views\MajorAccidentForms\Index.cshtml" />
+    <Content Include="Views\AccidentTypeValues\Create.cshtml" />
+    <Content Include="Views\AccidentTypeValues\Delete.cshtml" />
+    <Content Include="Views\AccidentTypeValues\Details.cshtml" />
+    <Content Include="Views\AccidentTypeValues\Edit.cshtml" />
+    <Content Include="Views\AccidentTypeValues\Index.cshtml" />
+    <Content Include="Views\AccidentTypes\Create.cshtml" />
+    <Content Include="Views\AccidentTypes\Delete.cshtml" />
+    <Content Include="Views\AccidentTypes\Details.cshtml" />
+    <Content Include="Views\AccidentTypes\Edit.cshtml" />
+    <Content Include="Views\AccidentTypes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -688,6 +731,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507061758234_dsaklfnmqe12345678.resx">
       <DependentUpon>201507061758234_dsaklfnmqe12345678.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507091755261_MajorAccidentForm.resx">
+      <DependentUpon>201507091755261_MajorAccidentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507101857409_ldknioweru.resx">
+      <DependentUpon>201507101857409_ldknioweru.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507101912335_ldknioweru1.resx">
+      <DependentUpon>201507101912335_ldknioweru1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507101917444_ldknioweru2.resx">
+      <DependentUpon>201507101917444_ldknioweru2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

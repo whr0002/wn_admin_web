@@ -52,5 +52,10 @@ namespace wn_Admin.Models.UtilityModels
 
             return null;
         }
+
+        public bool isInRole(string userId, string role)
+        {
+            return mUserManager.IsInRole(userId, role);
+        }
     }
 }

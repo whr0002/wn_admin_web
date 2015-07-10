@@ -33,12 +33,9 @@ namespace wn_Admin.Controllers.CompanyControllers
             
 
             UserInfo ui = new UserInfo();
-            var role = ui.getFirstRole(User.Identity.GetUserId());
-            
+            string userId = User.Identity.GetUserId();  
 
-            
-
-            if (role.Equals("Accountant") || role.Equals("SUPERADMIN"))
+            if (ui.isInRole(userId, "Accountant") || ui.isInRole(userId, "SUPERADMIN"))
             {
                 ViewBag.hasFullControl = true;
             }
@@ -227,10 +224,9 @@ namespace wn_Admin.Controllers.CompanyControllers
 
             string[] sids = ids.Split(',');
             UserInfo ui = new UserInfo();
-            var role = ui.getFirstRole(User.Identity.GetUserId());
+            string userId = User.Identity.GetUserId();
 
-           
-            if (role.Equals("Accountant") || role.Equals("SUPERADMIN"))
+            if (ui.isInRole(userId, "Accountant") || ui.isInRole(userId, "SUPERADMIN"))
             {
 
                 List<int> idList = new List<int>();
@@ -266,13 +262,12 @@ namespace wn_Admin.Controllers.CompanyControllers
             UserInfo ui = new UserInfo();
             string userId = User.Identity.GetUserId();
             var employee = ui.getEmployee(userId);
-            var role = ui.getFirstRole(userId);
 
             if (employee != null)
             {
                 IQueryable<Employee> es = db.Employees;
 
-                if (!role.Equals("Accountant") && !role.Equals("SUPERADMIN"))
+                if (!ui.isInRole(userId, "Accountant") && !ui.isInRole(userId, "SUPERADMIN"))
                 {
                     es = es.Where(w => w.EmployeeID == employee.EmployeeID);
                 }

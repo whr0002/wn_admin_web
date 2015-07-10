@@ -11,108 +11,112 @@ using wn_Admin.Models.Safety;
 
 namespace wn_Admin.Controllers.SafetyControllers
 {
-    [Authorize()]
-    public class SafetyCategoriesController : Controller
+    public class AccidentTypesController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
 
-        // GET: SafetyCategories
+        // GET: AccidentTypes
         public ActionResult Index()
         {
-            return View(db.SafetyCategories.ToList());
+            var accidentTypes = db.AccidentTypes.Include(a => a.MajorAccidentForm);
+            return View(accidentTypes.ToList());
         }
 
-        // GET: SafetyCategories/Details/5
+        // GET: AccidentTypes/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SafetyCategory safetyCategory = db.SafetyCategories.Find(id);
-            if (safetyCategory == null)
+            AccidentType accidentType = db.AccidentTypes.Find(id);
+            if (accidentType == null)
             {
                 return HttpNotFound();
             }
-            return View(safetyCategory);
+            return View(accidentType);
         }
 
-        // GET: SafetyCategories/Create
+        // GET: AccidentTypes/Create
         public ActionResult Create()
         {
+            ViewBag.MajorAccidentFormID = new SelectList(db.MajorAccidentForms, "MajorAccidentFormID", "Name");
             return View();
         }
 
-        // POST: SafetyCategories/Create
+        // POST: AccidentTypes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SafetyCategoryID,SafetyCategoryName")] SafetyCategory safetyCategory)
+        public ActionResult Create([Bind(Include = "AccidentTypeID,AccidentTypeName,MajorAccidentFormID")] AccidentType accidentType)
         {
             if (ModelState.IsValid)
             {
-                db.SafetyCategories.Add(safetyCategory);
+                db.AccidentTypes.Add(accidentType);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(safetyCategory);
+            ViewBag.MajorAccidentFormID = new SelectList(db.MajorAccidentForms, "MajorAccidentFormID", "Name", accidentType.MajorAccidentFormID);
+            return View(accidentType);
         }
 
-        // GET: SafetyCategories/Edit/5
+        // GET: AccidentTypes/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SafetyCategory safetyCategory = db.SafetyCategories.Find(id);
-            if (safetyCategory == null)
+            AccidentType accidentType = db.AccidentTypes.Find(id);
+            if (accidentType == null)
             {
                 return HttpNotFound();
             }
-            return View(safetyCategory);
+            ViewBag.MajorAccidentFormID = new SelectList(db.MajorAccidentForms, "MajorAccidentFormID", "Name", accidentType.MajorAccidentFormID);
+            return View(accidentType);
         }
 
-        // POST: SafetyCategories/Edit/5
+        // POST: AccidentTypes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SafetyCategoryID,SafetyCategoryName")] SafetyCategory safetyCategory)
+        public ActionResult Edit([Bind(Include = "AccidentTypeID,AccidentTypeName,MajorAccidentFormID")] AccidentType accidentType)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(safetyCategory).State = EntityState.Modified;
+                db.Entry(accidentType).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(safetyCategory);
+            ViewBag.MajorAccidentFormID = new SelectList(db.MajorAccidentForms, "MajorAccidentFormID", "Name", accidentType.MajorAccidentFormID);
+            return View(accidentType);
         }
 
-        // GET: SafetyCategories/Delete/5
+        // GET: AccidentTypes/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SafetyCategory safetyCategory = db.SafetyCategories.Find(id);
-            if (safetyCategory == null)
+            AccidentType accidentType = db.AccidentTypes.Find(id);
+            if (accidentType == null)
             {
                 return HttpNotFound();
             }
-            return View(safetyCategory);
+            return View(accidentType);
         }
 
-        // POST: SafetyCategories/Delete/5
+        // POST: AccidentTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            SafetyCategory safetyCategory = db.SafetyCategories.Find(id);
-            db.SafetyCategories.Remove(safetyCategory);
+            AccidentType accidentType = db.AccidentTypes.Find(id);
+            db.AccidentTypes.Remove(accidentType);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
