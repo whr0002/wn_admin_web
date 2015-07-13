@@ -12,6 +12,9 @@
 <table class="table">
     <tr>
         <th>
+            @Html.DisplayName("Type of Accident")
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
@@ -157,6 +160,17 @@
 
 @foreach (var item in Model) {
     <tr>
+        <td>
+            <div>
+                <ul>
+                    @foreach (var type in item.AccidentTypes)
+                    {
+                        <li>@type.AccidentTypeName</li>
+                    }
+                </ul>
+
+            </div>
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.Name)
         </td>

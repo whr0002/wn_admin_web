@@ -9,6 +9,11 @@ using System.Web;
 using System.Web.Mvc;
 using wn_Admin.Models;
 using wn_Admin.Models.Safety;
+using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Blob;
+using wn_Admin.Models.UtilityModels;
 
 namespace wn_Admin.Controllers.SafetyControllers
 {
@@ -43,6 +48,13 @@ namespace wn_Admin.Controllers.SafetyControllers
             ViewBag.AcTypes = db.AccidentTypes.ToList();
             var atValues = db.AccidentTypeValues.ToList();
             ViewBag.ATValues = new MultiSelectList(atValues, "AccidentTypeValueName", "AccidentTypeValueName");
+            ViewBag.ImmeCauses = new MultiSelectList(db.ImmeCauses, "ImmeCauseName", "ImmeCauseName");
+            ViewBag.KeyStates = new MultiSelectList(db.KeyStates, "KeyStateName", "KeyStateName");
+            ViewBag.YesNo = new SelectList(db.YesNoNA.Where(w => w.YesNoNAName != "N/A"), "YesNoNAName", "YesNoNAName");
+            ViewBag.YesNoNA = new SelectList(db.YesNoNA, "YesNoNAName", "YesNoNAName");
+            ViewBag.PPEOpts = new SelectList(db.AccidentPPEOptions, "AccidentPPEOptionName", "AccidentPPEOptionName");
+            ViewBag.ReOpts = new SelectList(db.ReoccurOptions, "ReoccurOptionName", "ReoccurOptionName");
+            ViewBag.AdvEffOpts = new MultiSelectList(db.AdvEffs, "AdvEffName", "AdvEffName");
             return View();
         }
 
@@ -51,30 +63,74 @@ namespace wn_Admin.Controllers.SafetyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(string[] AccidentTypeValueID, IEnumerable<HttpPostedFileBase> aphotos, [Bind(Include = "MajorAccidentFormID,Name,TypeInjury,BodyLeft,BodyRight,HospitalName,DoctorName,FirstAidAttendent,EquipmentInvolved,WCBFormCompSubm,OHSNotified,OHSNameContact,DescLoss,InjuriesDueToIncident,LostTime,EquipOut,OtherLosses,WitnessesOccur,DateOccur,TimeOccur,LocationOccur,AccidentPPEOption,ListPPE,WasPersonTrained,PotReoccur,LossPotEval,LocationSpill,SourceSpill,TypeSubstance,AmountSubstance,AdvEffOn,AccidentDesc,PhotoTaken,WitnessStatement,ImmediateCauses,KeyStates,SubstandardActions,SubstandardConditions,BasicCauses,PersonalFactors,JobFactors,RiskAssess,TempActionTaken,SuggestedCorrActions,PreparedBy,PrepareDate,ApprovedBy,ApprovedDate")] MajorAccidentForm majorAccidentForm)
+        public ActionResult Create(string[] AccidentTypeValueID, string[] ImmeCauses, string[] KeyS, string[] AdvEffOpts, IEnumerable<HttpPostedFileBase> aphotos, [Bind(Include = "MajorAccidentFormID,Name,TypeInjury,BodyLeft,BodyRight,HospitalName,DoctorName,FirstAidAttendent,EquipmentInvolved,WCBFormCompSubm,OHSNotified,OHSNameContact,DescLoss,InjuriesDueToIncident,LostTime,EquipOut,OtherLosses,WitnessesOccur,DateOccur,TimeOccur,LocationOccur,AccidentPPEOption,ListPPE,WasPersonTrained,PotReoccur,LossPotEval,LocationSpill,SourceSpill,TypeSubstance,AmountSubstance,AdvEffOn,AccidentDesc,PhotoTaken,WitnessStatement,ImmediateCauses,KeyStates,SubstandardActions,SubstandardConditions,BasicCauses,PersonalFactors,JobFactors,RiskAssess,TempActionTaken,SuggestedCorrActions,PreparedBy,PrepareDate,ApprovedBy,ApprovedDate")] MajorAccidentForm majorAccidentForm)
         {
             if (ModelState.IsValid)
             {
+
+
+
+
+                if (AdvEffOpts != null)
+                {
+                    string content = string.Join(", ", AdvEffOpts);
+                    majorAccidentForm.AdvEffOn = content + " | Other: " + majorAccidentForm.AdvEffOn;
+                }
+
+
+
+                if (ImmeCauses != null)
+                {
+
+                    string content = string.Join(", ", ImmeCauses);
+
+                    majorAccidentForm.ImmediateCauses = content + " | Other: " + majorAccidentForm.ImmediateCauses;
+                }
+
+                if (KeyS != null)
+                {
+                    string content = string.Join(", ", KeyS);
+
+                    majorAccidentForm.KeyStates = content + " | Other: " + majorAccidentForm.KeyStates;
+                }
+
                 db.MajorAccidentForms.Add(majorAccidentForm);
                 db.SaveChanges();
 
-                foreach(var item in AccidentTypeValueID){
-                    AccidentType at = new AccidentType();
-                    at.MajorAccidentFormID = majorAccidentForm.MajorAccidentFormID;
-                    at.AccidentTypeName = item.ToString();
-                    db.AccidentTypes.Add(at);
-                    db.SaveChanges();
-                }
-
-                foreach (var file in aphotos)
+                if (AccidentTypeValueID != null)
                 {
-                    if (file.ContentLength > 0)
+                    foreach (var item in AccidentTypeValueID)
                     {
-                        var fileName = Path.GetFileName(file.FileName);
-                        var path = Path.Combine(Server.MapPath("~/App_Data"), fileName);
-                        file.SaveAs(path);
+                        AccidentType at = new AccidentType();
+                        at.MajorAccidentFormID = majorAccidentForm.MajorAccidentFormID;
+                        at.AccidentTypeName = item.ToString();
+                        db.AccidentTypes.Add(at);
+                        db.SaveChanges();
                     }
                 }
+
+                StorageController sc = new StorageController();
+                sc.setContainer("accidentphotos");
+
+                if (aphotos != null)
+                {
+                    foreach (var file in aphotos)
+                    {
+                        if (file.ContentLength > 0)
+                        {
+
+                            var path = sc.upload(file);
+
+                            AccidentPhoto acPhoto = new AccidentPhoto();
+                            acPhoto.MajorAccidentFormID = majorAccidentForm.MajorAccidentFormID;
+                            acPhoto.Url = path;
+                            db.AccidentPhotos.Add(acPhoto);
+                            db.SaveChanges();
+                        }
+                    }
+                }
+
+
                 return RedirectToAction("Index");
             }
 

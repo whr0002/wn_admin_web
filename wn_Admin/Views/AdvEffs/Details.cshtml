@@ -1,0 +1,26 @@
+﻿@model wn_Admin.Models.Safety.AdvEff
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>AdvEff</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AdvEffName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AdvEffName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.AdvEffID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

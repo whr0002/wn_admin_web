@@ -210,10 +210,15 @@
     <Compile Include="Controllers\CompanyControllers\WorksForsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SafetyControllers\AccidentPPEOptionsController.cs" />
     <Compile Include="Controllers\SafetyControllers\AccidentTypesController.cs" />
     <Compile Include="Controllers\SafetyControllers\AccidentTypeValuesController.cs" />
+    <Compile Include="Controllers\SafetyControllers\AdvEffsController.cs" />
     <Compile Include="Controllers\SafetyControllers\EmployeeSafetyMeetingsController.cs" />
+    <Compile Include="Controllers\SafetyControllers\ImmeCausesController.cs" />
+    <Compile Include="Controllers\SafetyControllers\KeyStatesController.cs" />
     <Compile Include="Controllers\SafetyControllers\MajorAccidentFormsController.cs" />
+    <Compile Include="Controllers\SafetyControllers\ReoccurOptionsController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyCategoriesController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyInterfaceController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyItemsController.cs" />
@@ -367,6 +372,14 @@
     <Compile Include="Migrations\201507101917444_ldknioweru2.Designer.cs">
       <DependentUpon>201507101917444_ldknioweru2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507131645282_keystates.cs" />
+    <Compile Include="Migrations\201507131645282_keystates.Designer.cs">
+      <DependentUpon>201507131645282_keystates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507131822163_option.cs" />
+    <Compile Include="Migrations\201507131822163_option.Designer.cs">
+      <DependentUpon>201507131822163_option.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -387,9 +400,12 @@
     <Compile Include="Models\Safety\AccidentTypeValue.cs" />
     <Compile Include="Models\Safety\AdvEff.cs" />
     <Compile Include="Models\Safety\EmployeeSafetyMeeting.cs" />
+    <Compile Include="Models\Safety\ImmeCause.cs" />
+    <Compile Include="Models\Safety\KeyState.cs" />
     <Compile Include="Models\Safety\MajorAccidentForm.cs" />
     <Compile Include="Models\Safety\MinorAccidentForm.cs" />
     <Compile Include="Models\Safety\PotReoccur.cs" />
+    <Compile Include="Models\Safety\ReoccurOption.cs" />
     <Compile Include="Models\Safety\SafetyCategory.cs" />
     <Compile Include="Models\Safety\SafetyItem.cs" />
     <Compile Include="Models\Safety\SafetyItemName.cs" />
@@ -408,6 +424,7 @@
     <Compile Include="Models\UtilityModels\PayPeriodCalculator.cs" />
     <Compile Include="Models\UtilityModels\SafetyStep.cs" />
     <Compile Include="Models\UtilityModels\SafetyViewModel.cs" />
+    <Compile Include="Models\UtilityModels\StorageController.cs" />
     <Compile Include="Models\UtilityModels\SummaryModel.cs" />
     <Compile Include="Models\UtilityModels\TimesheetDateValidator.cs" />
     <Compile Include="Models\UtilityModels\UserInfo.cs" />
@@ -423,6 +440,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Form.css" />
     <Content Include="Content\Images\next.png" />
     <Content Include="Content\Images\wn_logo.jpg" />
     <Content Include="Content\PagedList.css" />
@@ -621,6 +639,32 @@
     <Content Include="Views\AccidentTypes\Details.cshtml" />
     <Content Include="Views\AccidentTypes\Edit.cshtml" />
     <Content Include="Views\AccidentTypes\Index.cshtml" />
+    <Content Include="Views\ImmeCauses\Create.cshtml" />
+    <Content Include="Views\ImmeCauses\Delete.cshtml" />
+    <Content Include="Views\ImmeCauses\Details.cshtml" />
+    <Content Include="Views\ImmeCauses\Edit.cshtml" />
+    <Content Include="Views\ImmeCauses\Index.cshtml" />
+    <Content Include="Views\KeyStates\Create.cshtml" />
+    <Content Include="Views\KeyStates\Delete.cshtml" />
+    <Content Include="Views\KeyStates\Details.cshtml" />
+    <Content Include="Views\KeyStates\Edit.cshtml" />
+    <Content Include="Views\KeyStates\Index.cshtml" />
+    <Content Include="Views\AccidentPPEOptions\Create.cshtml" />
+    <Content Include="Views\AccidentPPEOptions\Delete.cshtml" />
+    <Content Include="Views\AccidentPPEOptions\Details.cshtml" />
+    <Content Include="Views\AccidentPPEOptions\Edit.cshtml" />
+    <Content Include="Views\AccidentPPEOptions\Index.cshtml" />
+    <Content Include="Views\ReoccurOptions\Create.cshtml" />
+    <Content Include="Views\ReoccurOptions\Delete.cshtml" />
+    <Content Include="Views\ReoccurOptions\Details.cshtml" />
+    <Content Include="Views\ReoccurOptions\Edit.cshtml" />
+    <Content Include="Views\ReoccurOptions\Index.cshtml" />
+    <Content Include="Views\AdvEffs\Create.cshtml" />
+    <Content Include="Views\AdvEffs\Delete.cshtml" />
+    <Content Include="Views\AdvEffs\Details.cshtml" />
+    <Content Include="Views\AdvEffs\Edit.cshtml" />
+    <Content Include="Views\AdvEffs\Index.cshtml" />
+    <Content Include="Views\SafetyInterface\OnePage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -743,6 +787,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507101917444_ldknioweru2.resx">
       <DependentUpon>201507101917444_ldknioweru2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507131645282_keystates.resx">
+      <DependentUpon>201507131645282_keystates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507131822163_option.resx">
+      <DependentUpon>201507131822163_option.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

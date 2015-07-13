@@ -1,4 +1,6 @@
 ﻿window.onload = function () {
+    $('#photoWrapper').hide();
+    $("#PhotoTaken").on('click', toggleAddPhotoBtn);
     $("#photoAdd").on('click', addPhotoItem);
 
 }
@@ -14,4 +16,15 @@ function addPhotoItem() {
         //+ "";
 
     section.append(content);
+}
+
+function toggleAddPhotoBtn() {
+    var box = $("#PhotoTaken");
+    if (box.is(':checked')) {
+        $('#photoWrapper').show();
+    } else {
+        $('#photoWrapper').hide();
+        $('#photos').empty();
+    }
+
 }

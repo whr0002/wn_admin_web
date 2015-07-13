@@ -76,5 +76,14 @@ namespace wn_Admin.Controllers.SafetyControllers
             return View(theMeeting);
            
         }
+
+        public ActionResult OnePage()
+        {
+            ViewBag.Items = db.SafetyItems.ToList();
+            ViewBag.YesNoNA = db.YesNoNA.ToList();
+            return View();
+        }
+
+
     }
 }

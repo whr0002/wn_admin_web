@@ -1,0 +1,26 @@
+﻿@model wn_Admin.Models.Safety.ReoccurOption
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ReoccurOption</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ReoccurOptionName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReoccurOptionName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ReoccurOptionID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

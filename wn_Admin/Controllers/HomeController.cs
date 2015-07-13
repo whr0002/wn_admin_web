@@ -37,6 +37,8 @@ namespace wn_Admin.Controllers
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Assign an Employee to a Department", Link = "/worksfors" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Assign a Supervisor to an Employee", Link = "/supervisions" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Safety", Link = "/SafetyInterface" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Major Accident Form", Link = "/MajorAccidentForms" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Minor Accident Form", Link = "/MinorAccidentForms" });
 
                     // Projects
                     ListLinkViewModel projects = new ListLinkViewModel();
@@ -60,7 +62,7 @@ namespace wn_Admin.Controllers
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Off Details", Link = "/offreasons" });
                     
 
-                    // Time
+                    // Resource
                     ListLinkViewModel resource = new ListLinkViewModel();
                     resource.ListName = "Resource";
                     resource.color = "Grey";

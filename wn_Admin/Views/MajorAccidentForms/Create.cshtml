@@ -5,6 +5,7 @@
 }
 
 <script src="~/Scripts/CustomJS/PhotoJS.js"></script>
+<link href="~/Content/Form.css" rel="stylesheet" />
 <h2>Create</h2>
 
 @using (Html.BeginForm("Create", "MajorAccidentForms", FormMethod.Post, new { enctype="multipart/form-data"}))
@@ -96,7 +97,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.WCBFormCompSubm, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.WCBFormCompSubm, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.EditorFor(model => model.WCBFormCompSubm, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.DropDownListFor(model => model.WCBFormCompSubm, ViewBag.YesNoNA as SelectList, "Choose ...", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.WCBFormCompSubm, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -104,7 +106,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.OHSNotified, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.OHSNotified, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.EditorFor(model => model.OHSNotified, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.DropDownListFor(model=>model.OHSNotified, ViewBag.YesNo as SelectList, "Choose ...", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.OHSNotified, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -128,7 +131,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.InjuriesDueToIncident, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.InjuriesDueToIncident, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.EditorFor(model => model.InjuriesDueToIncident, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.DropDownListFor(model=>model.InjuriesDueToIncident, ViewBag.YesNo as SelectList, "Choose ...", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.InjuriesDueToIncident, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -144,7 +148,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.EquipOut, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipOut, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.EditorFor(model => model.EquipOut, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.DropDownListFor(model => model.EquipOut, ViewBag.YesNoNA as SelectList, "Choose ...", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EquipOut, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -192,7 +197,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.AccidentPPEOption, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.AccidentPPEOption, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.EditorFor(model => model.AccidentPPEOption, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.DropDownListFor(model => model.AccidentPPEOption, ViewBag.PPEOpts as SelectList, "Choose ...", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.AccidentPPEOption, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -208,7 +214,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.WasPersonTrained, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.WasPersonTrained, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.EditorFor(model => model.WasPersonTrained, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.DropDownListFor(model => model.WasPersonTrained, ViewBag.YesNo as SelectList, "Choose ...", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.WasPersonTrained, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -216,7 +223,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PotReoccur, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PotReoccur, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.EditorFor(model => model.PotReoccur, new { htmlAttributes = new { @class = "form-control" } })*@
+               @Html.DropDownListFor(model => model.PotReoccur, ViewBag.ReOpts as SelectList, "Choose ...", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.PotReoccur, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -224,7 +232,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.LossPotEval, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.LossPotEval, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.LossPotEval, new { htmlAttributes = new { @class = "form-control cHeight" } })
                 @Html.ValidationMessageFor(model => model.LossPotEval, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -262,9 +270,18 @@
         </div>
 
         <div class="form-group">
+            @Html.Label("Adverse effect of spill", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                
+                @Html.DropDownList("AdvEffOpts", (MultiSelectList)ViewBag.AdvEffOpts, new { multiple = "multiple", @class = "form-control" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(model => model.AdvEffOn, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.AdvEffOn, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.AdvEffOn, new { htmlAttributes = new { @class = "form-control" } })          
                 @Html.ValidationMessageFor(model => model.AdvEffOn, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -272,7 +289,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.AccidentDesc, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.AccidentDesc, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.AccidentDesc, new { htmlAttributes = new { @class = "form-control cHeight" } })
                 @Html.ValidationMessageFor(model => model.AccidentDesc, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -288,7 +305,7 @@
         </div>
 
         <div class="form-group">
-            <div class="col-md-10">
+            <div class="col-md-10" id="photoWrapper">
                 <a id="photoAdd" class="btn btn-success" >+</a>
                 <div id="photos" class="row">
 
@@ -299,8 +316,17 @@
         <div class="form-group">
             @Html.LabelFor(model => model.WitnessStatement, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.WitnessStatement, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.WitnessStatement, new { htmlAttributes = new { @class = "form-control cHeight" } })
                 @Html.ValidationMessageFor(model => model.WitnessStatement, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Immediate causes/Critical Error", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @Html.DropDownList("ImmeCauses", (MultiSelectList)ViewBag.ImmeCauses, new { multiple = "multiple", @class = "form-control" })
+
             </div>
         </div>
 
@@ -309,6 +335,15 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.ImmediateCauses, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.ImmediateCauses, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Key States", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @Html.DropDownList("KeyS", (MultiSelectList)ViewBag.KeyStates, new { multiple = "multiple", @class = "form-control" })
+
             </div>
         </div>
 
@@ -363,7 +398,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RiskAssess, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.RiskAssess, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.RiskAssess, new { htmlAttributes = new { @class = "form-control cHeight" } })
                 @Html.ValidationMessageFor(model => model.RiskAssess, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -371,7 +406,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.TempActionTaken, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.TempActionTaken, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.TempActionTaken, new { htmlAttributes = new { @class = "form-control cHeight" } })
                 @Html.ValidationMessageFor(model => model.TempActionTaken, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -379,7 +414,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.SuggestedCorrActions, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.SuggestedCorrActions, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.SuggestedCorrActions, new { htmlAttributes = new { @class = "form-control cHeight" } })
                 @Html.ValidationMessageFor(model => model.SuggestedCorrActions, "", new { @class = "text-danger" })
             </div>
         </div>
