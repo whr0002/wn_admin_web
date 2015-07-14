@@ -11,7 +11,11 @@ namespace wn_Admin.Models.Safety
     public class EmployeeSafetyMeeting
     {
 
+        [Key]
+        [Column(Order=1)]
         public int EmployeeID { get; set; }
+        [Key]
+        [Column(Order = 2)]
         public int SafetyMeetingID { get; set; }
 
         public virtual Employee Employee { get; set; }

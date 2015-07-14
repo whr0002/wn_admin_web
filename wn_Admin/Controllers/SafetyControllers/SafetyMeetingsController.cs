@@ -23,6 +23,7 @@ namespace wn_Admin.Controllers.SafetyControllers
         // GET: SafetyMeetings
         public ActionResult Index()
         {
+
             var safetyMeetings = db.SafetyMeetings.Include(s => s.Project);
             return View(safetyMeetings.ToList());
         }
@@ -49,6 +50,10 @@ namespace wn_Admin.Controllers.SafetyControllers
 
             ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == e.EmployeeID), "EmployeeID", "FullName");
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
+            ViewBag.People = new SelectList(db.Employees, "EmployeeID", "FullName");
+            ViewBag.Items = db.SafetyItemValues.ToList();
+            ViewBag.YesNoNA = db.YesNoNA.ToList();
+
             return View();
         }
 
@@ -57,27 +62,74 @@ namespace wn_Admin.Controllers.SafetyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SafetyMeetingID,Date,EmployeeID, ProjectID,FieldLocation,SafeWorkPermitNum,ScopeOfWork,SafetyLeavingID,IsReviewedBySafetyManager")] SafetyMeeting safetyMeeting)
+        public ActionResult Create(int[] attendees, FormCollection fc, [Bind(Include = "SafetyMeetingID,Date,EmployeeID, ProjectID,FieldLocation,SafeWorkPermitNum,ScopeOfWork,SafetyLeavingID,IsReviewedBySafetyManager")] SafetyMeeting safetyMeeting)
         {
             if (ModelState.IsValid)
             {
                 db.SafetyMeetings.Add(safetyMeeting);
                 db.SaveChanges();
-                Session["MeetingID"] = safetyMeeting.SafetyMeetingID;
 
-                var model = Session["SafetyViewModel"] as SafetyViewModel;
-                if (model != null)
-                {
-                    model.finishedSections.Add(model.currentStep);
-                    model.currentStep += 1;
-                    Session["SafetyViewModel"] = model;
-                }
-
-                return RedirectToAction("Index", "SafetyInterface");
+                CreateMultiple(fc, safetyMeeting.SafetyMeetingID);
+                addAttendees(attendees, safetyMeeting.SafetyMeetingID);
+                return RedirectToAction("Index");
             }
 
+            ViewBag.Items = db.SafetyItemValues.ToList();
+            ViewBag.YesNoNA = db.YesNoNA.ToList();
+            ViewBag.People = new SelectList(db.Employees, "EmployeeID", "FullName");
+
+            var e = ui.getEmployee(User.Identity.GetUserId());
+            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == e.EmployeeID), "EmployeeID", "FullName");
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", safetyMeeting.ProjectID);
             return View(safetyMeeting);
+        }
+
+        private void addAttendees(int[] attendees, int mid)
+        {
+            if (attendees != null)
+            {
+                foreach (int id in attendees)
+                {
+                    EmployeeSafetyMeeting esm = new EmployeeSafetyMeeting();
+                    esm.SafetyMeetingID = mid;
+                    esm.EmployeeID = id;
+                    db.EmployeeSafetyMeetings.Add(esm);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        private void CreateMultiple(FormCollection fc, int mid)
+        {
+            
+            int numOfItems = Convert.ToInt32(fc["NumOfItems"]);
+            for (int i = 0; i < numOfItems; i++)
+            {
+                SafetyItem si = new SafetyItem();
+
+                int cid = Convert.ToInt32(fc["item_cate_" + i]);
+                string itemName = fc["item_name_" + i];
+                var tempValue = fc["item_answer_" + i];
+                var comment = fc["item_comment_" + i];
+
+                if (tempValue != null && !tempValue.Equals(""))
+                {
+                    int itemValue = Convert.ToInt32(tempValue);
+                    si.YesNoNAID = itemValue;
+                }
+
+
+                si.SafetyMeetingID = mid;
+                si.SafetyCategoryID = cid;
+                si.SafetyItemName = itemName;
+                si.Description = comment;
+
+                db.SafetyItems.Add(si);
+                db.SaveChanges();
+            }
+
+            
+
         }
 
         // GET: SafetyMeetings/Edit/5
@@ -97,6 +149,11 @@ namespace wn_Admin.Controllers.SafetyControllers
 
             ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == e.EmployeeID), "EmployeeID", "FullName");
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", safetyMeeting.ProjectID);
+            ViewBag.People = new SelectList(db.Employees, "EmployeeID", "FullName");
+            ViewBag.Atts = safetyMeeting.EmployeeSafetyMeetings.ToList();
+            ViewBag.Items = db.SafetyItems.Where(w => w.SafetyMeetingID == meetingID).ToList();
+            ViewBag.YesNoNA = db.YesNoNA.ToList();
+
             return View(safetyMeeting);
         }
 
@@ -105,16 +162,54 @@ namespace wn_Admin.Controllers.SafetyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SafetyMeetingID,Date,EmployeeID,ProjectID,FieldLocation,SafeWorkPermitNum,ScopeOfWork,SafetyLeavingID,IsReviewedBySafetyManager")] SafetyMeeting safetyMeeting)
+        public ActionResult Edit(FormCollection fc, [Bind(Include = "SafetyMeetingID,Date,EmployeeID,ProjectID,FieldLocation,SafeWorkPermitNum,ScopeOfWork,SafetyLeavingID,IsReviewedBySafetyManager")] SafetyMeeting safetyMeeting)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(safetyMeeting).State = EntityState.Modified;
                 db.SaveChanges();
+
+                EditMultiple(fc);
                 return RedirectToAction("Index");
             }
+
+            ViewBag.People = new SelectList(db.Employees, "EmployeeID", "FullName");
+            ViewBag.Atts = safetyMeeting.EmployeeSafetyMeetings.ToList();
+            ViewBag.Items = db.SafetyItems.Where(w => w.SafetyMeetingID == safetyMeeting.SafetyMeetingID).ToList();
+            ViewBag.YesNoNA = db.YesNoNA.ToList();
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", safetyMeeting.ProjectID);
             return View(safetyMeeting);
+        }
+
+        private void EditMultiple(FormCollection fc)
+        {
+
+            int numOfItems = Convert.ToInt32(fc["NumOfItems"]);
+            for (int i = 0; i < numOfItems; i++)
+            {
+
+                string itemName = fc["itemID_" + i];
+                var tempValue = fc["item_answer_" + i];
+                var comment = fc["item_comment_" + i];
+
+                if (tempValue != null && !tempValue.Equals(""))
+                {
+                    int itemID = Convert.ToInt32(itemName);
+                    int itemValue = Convert.ToInt32(tempValue);
+
+                    SafetyItem si = db.SafetyItems.Where(w => w.SafetyItemID == itemID).FirstOrDefault();
+
+                    if (si != null)
+                    {
+                        si.YesNoNAID = itemValue;
+                        si.Description = comment;
+                        db.SaveChanges();
+                    }
+
+                }
+
+
+            }
         }
 
         // GET: SafetyMeetings/Delete/5

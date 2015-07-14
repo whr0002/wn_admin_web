@@ -1,0 +1,147 @@
+﻿@model IEnumerable<wn_Admin.Models.Safety.MinorAccidentForm>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee.FirstMidName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Position)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateReported)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LocationOfEvent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TaskConducted)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AccidentType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RelatingTo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EventDesc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CauseAnalysis)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KeyStates)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CriticalErrors)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FreqExpo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HazardProb)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstAid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstAidDesc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CorrAction)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PersonRespCorrAct)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CorrActCompDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FurtherActReq)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.isReviewed)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Employee.FirstMidName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Position)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateReported)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LocationOfEvent)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TaskConducted)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AccidentType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RelatingTo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EventDesc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CauseAnalysis)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KeyStates)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CriticalErrors)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FreqExpo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HazardProb)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstAid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstAidDesc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CorrAction)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PersonRespCorrAct)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CorrActCompDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FurtherActReq)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.isReviewed)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.MinorAccidentFormID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.MinorAccidentFormID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.MinorAccidentFormID })
+        </td>
+    </tr>
+}
+
+</table>

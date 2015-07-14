@@ -1,0 +1,178 @@
+﻿@model wn_Admin.Models.Safety.MinorAccidentForm
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>MinorAccidentForm</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Employee.FirstMidName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Employee.FirstMidName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Position)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Position)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateReported)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateReported)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LocationOfEvent)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LocationOfEvent)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TaskConducted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TaskConducted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AccidentType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccidentType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RelatingTo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RelatingTo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EventDesc)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EventDesc)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CauseAnalysis)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CauseAnalysis)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KeyStates)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KeyStates)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CriticalErrors)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CriticalErrors)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FreqExpo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FreqExpo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HazardProb)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HazardProb)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstAid)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstAid)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstAidDesc)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstAidDesc)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CorrAction)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CorrAction)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PersonRespCorrAct)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PersonRespCorrAct)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CorrActCompDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CorrActCompDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FurtherActReq)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FurtherActReq)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.isReviewed)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.isReviewed)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MinorAccidentFormID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

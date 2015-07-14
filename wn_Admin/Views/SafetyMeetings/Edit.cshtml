@@ -9,7 +9,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>SafetyMeeting</h4>
         <hr />
@@ -74,6 +74,83 @@
             </div>
         </div>
 
+        @{
+    string lastCategory = "";
+    int i = 0;
+    var items = ViewBag.Items as List<wn_Admin.Models.Safety.SafetyItem>;
+    int itemCount = items.Count();
+        }
+        @Html.Hidden("NumOfItems", itemCount)
+        @foreach (var item in items)
+        {
+            if (lastCategory.Equals(""))
+            {
+                lastCategory = item.SafetyCategory.SafetyCategoryName;
+                <h3>@lastCategory</h3>
+
+            }
+            else
+            {
+                string currentCategory = item.SafetyCategory.SafetyCategoryName;
+                if (!lastCategory.Equals(currentCategory))
+                {
+                    lastCategory = currentCategory;
+                    <hr />
+                    <h3>@lastCategory</h3>
+                }
+            }
+            <div class="row">
+                <div class="col-md-3">
+                    @item.SafetyItemName
+                    @Html.Hidden("itemID_" + @i, @item.SafetyItemID)
+                    @Html.Hidden("item_cate_" + @i, @item.SafetyCategoryID)
+                    @Html.Hidden("item_name_" + @i, @item.SafetyItemName)
+                </div>
+                <div class="col-md-3">
+                    <select name="item_answer_@i" class="form-control">
+                        <option value="">Choose ...</option>
+                        @foreach (var option in ViewBag.YesNoNA as List<wn_Admin.Models.Safety.YesNoNA>)
+                        {
+                            if (item.YesNoNAID == option.YesNoNAID)
+                            {
+                                <option value="@option.YesNoNAID" selected>@option.YesNoNAName</option>
+                            }
+                            else
+                            {
+                                <option value="@option.YesNoNAID">@option.YesNoNAName</option>
+                            }
+                        }
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="item_comment_@i" value="@item.Description" style="max-width: 1000px !important" />
+                </div>
+            </div>
+
+
+                        i++;
+        }
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <h3>Attendees</h3>
+                @Html.DropDownList("People", null, htmlAttributes: new { @class = "form-control" })
+                <a class="btn btn-success" id="addEmployee">+</a>
+                <div id="attendeeList">
+                    @foreach (var att in ViewBag.Atts as List<wn_Admin.Models.Safety.EmployeeSafetyMeeting>)
+                    {
+                        <input type="hidden" name="attendees" value="@att.EmployeeID" />
+                        <span>[@att.Employee.FullName]</span>
+                    }
+                </div>
+            </div>
+
+        </div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />
@@ -85,3 +162,4 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+<script src="~/Scripts/CustomJS/Employee.js"></script>

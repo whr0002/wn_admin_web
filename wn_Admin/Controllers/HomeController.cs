@@ -36,7 +36,9 @@ namespace wn_Admin.Controllers
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Assign an Account to an Employee", Link = "/useremployees" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Assign an Employee to a Department", Link = "/worksfors" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Assign a Supervisor to an Employee", Link = "/supervisions" });
-                    people.ListLinks.Add(new LinkViewModel { LinkName = "Safety", Link = "/SafetyInterface" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Safety Meeting", Link = "/SafetyMeetings" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Safety Categories", Link = "/SafetyCategories" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Safety Item List", Link = "/SafetyItemValues" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Major Accident Form", Link = "/MajorAccidentForms" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Minor Accident Form", Link = "/MinorAccidentForms" });
 

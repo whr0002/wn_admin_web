@@ -14,7 +14,7 @@ namespace wn_Admin.Models.Safety
 
         [Index(IsUnique=true)]
         [StringLength(100)]
-        [DisplayName("Prior to leaving item")]
+        [DisplayName("Item Name")]
         public string SafetyItemValueName { get; set; }
 
         public int SafetyCategoryID { get; set; }
