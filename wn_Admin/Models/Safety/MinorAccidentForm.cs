@@ -64,6 +64,8 @@ namespace wn_Admin.Models.Safety
         public string PersonRespCorrAct { get; set; }
 
         [DisplayName("Date Corrective Action Completed")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CorrActCompDate { get; set; }
 
         [DisplayName("Further Action Required")]

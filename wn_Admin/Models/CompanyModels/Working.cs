@@ -44,10 +44,12 @@ namespace wn_Admin.Models.CompanyModels
         [Range(0, int.MaxValue)]
         public int? StartKm { get; set; }
 
+        //[KM("StartKm", ErrorMessage="EndKm must be greater than StartKm")]
         [DisplayName("End Km")]
         [Range(0, int.MaxValue)]
         public int? EndKm { get; set; }
-        public bool GPS { get; set; }
+
+        public string Equipment { get; set; }
 
         [DisplayName("Field Access")]
         public int Field { get; set; }
@@ -60,7 +62,7 @@ namespace wn_Admin.Models.CompanyModels
         [DisplayName("Off Details")]
         public int OffReason { get; set; }
 
-        [Range(0, 8)]
+        [Range(0, 24)]
         public double Hours { get; set; }
 
         [Range(0, 6)]
@@ -76,8 +78,6 @@ namespace wn_Admin.Models.CompanyModels
         public virtual Employee Employee { get; set; }
         public virtual Project Project { get; set; }
 
-        //[ForeignKey("ClientName")]
-        //public virtual Client Client { get; set; }
 
         [ForeignKey("Field")]
         public virtual FieldAccess FK_FieldAccess { get; set; }

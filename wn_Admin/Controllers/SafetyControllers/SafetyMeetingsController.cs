@@ -14,13 +14,14 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace wn_Admin.Controllers.SafetyControllers
 {
-    [Authorize(Roles = "SUPERADMIN")]
+    [Authorize()]
     public class SafetyMeetingsController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
         private UserInfo ui = new UserInfo();
 
         // GET: SafetyMeetings
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         public ActionResult Index()
         {
 
@@ -29,6 +30,7 @@ namespace wn_Admin.Controllers.SafetyControllers
         }
 
         // GET: SafetyMeetings/Details/5
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -46,9 +48,19 @@ namespace wn_Admin.Controllers.SafetyControllers
         // GET: SafetyMeetings/Create
         public ActionResult Create()
         {
-            var e = ui.getEmployee(User.Identity.GetUserId());
+            var uid = User.Identity.GetUserId();
 
-            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == e.EmployeeID), "EmployeeID", "FullName");
+            var e = ui.getEmployee(uid);
+
+            if (ui.isInRole(uid, "SafetyOfficer") || ui.isInRole(uid, "SUPERADMIN"))
+            {
+                ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName");
+            }
+            else
+            {
+                ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == e.EmployeeID), "EmployeeID", "FullName");
+            }
+            
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
             ViewBag.People = new SelectList(db.Employees, "EmployeeID", "FullName");
             ViewBag.Items = db.SafetyItemValues.ToList();
@@ -62,7 +74,7 @@ namespace wn_Admin.Controllers.SafetyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(int[] attendees, FormCollection fc, [Bind(Include = "SafetyMeetingID,Date,EmployeeID, ProjectID,FieldLocation,SafeWorkPermitNum,ScopeOfWork,SafetyLeavingID,IsReviewedBySafetyManager")] SafetyMeeting safetyMeeting)
+        public ActionResult Create(int[] attendees, FormCollection fc, [Bind(Include = "SafetyMeetingID,Date,EmployeeID, ProjectID,FieldLocation,SafeWorkPermitNum,ScopeOfWork,SafetyLeavingID")] SafetyMeeting safetyMeeting)
         {
             if (ModelState.IsValid)
             {
@@ -133,6 +145,7 @@ namespace wn_Admin.Controllers.SafetyControllers
         }
 
         // GET: SafetyMeetings/Edit/5
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         public ActionResult Edit(int? meetingID)
         {
             if (meetingID == null)
@@ -162,6 +175,7 @@ namespace wn_Admin.Controllers.SafetyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         public ActionResult Edit(FormCollection fc, [Bind(Include = "SafetyMeetingID,Date,EmployeeID,ProjectID,FieldLocation,SafeWorkPermitNum,ScopeOfWork,SafetyLeavingID,IsReviewedBySafetyManager")] SafetyMeeting safetyMeeting)
         {
             if (ModelState.IsValid)
@@ -213,6 +227,7 @@ namespace wn_Admin.Controllers.SafetyControllers
         }
 
         // GET: SafetyMeetings/Delete/5
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -230,6 +245,7 @@ namespace wn_Admin.Controllers.SafetyControllers
         // POST: SafetyMeetings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         public ActionResult DeleteConfirmed(int id)
         {
             SafetyMeeting safetyMeeting = db.SafetyMeetings.Find(id);
@@ -238,6 +254,7 @@ namespace wn_Admin.Controllers.SafetyControllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -245,6 +262,25 @@ namespace wn_Admin.Controllers.SafetyControllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
+        public ActionResult review([ModelBinder(typeof(IntArrayModelBinder))]int[] ids)
+        {
+            if (ids != null)
+            {
+                foreach (var id in ids)
+                {
+                    var meeting = db.SafetyMeetings.Find(id);
+                    if (meeting != null)
+                    {
+                        meeting.IsReviewedBySafetyManager = true;
+                        db.SaveChanges();
+                    }
+                }
+            }
+
+            return RedirectToAction("Index");
         }
 
 

@@ -100,7 +100,6 @@ namespace wn_Admin.Controllers.CompanyControllers
                         t.Crew,
                         t.StartKm,
                         t.EndKm,
-                        t.GPS,
                         t.FK_FieldAccess.FieldAccessName,
                         t.PD,
                         t.JobDescription,

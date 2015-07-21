@@ -1,6 +1,6 @@
 ﻿var projects = [];
 $(document).on('change', "#ClientName", function () {
-    
+
     $('#ProjectID').empty();
     projects = [];
 
@@ -16,7 +16,7 @@ $(document).on('change', "#ProjectID", function () {
 
     var pid = $('#ProjectID option:selected').val();
 
-    if(pid != null && pid.length > 0)
+    if (pid != null && pid.length > 0)
         pidSpan.text("Project ID: " + pid);
 });
 
@@ -29,7 +29,7 @@ function getProjectByClient(client) {
 
         projects = data;
 
-        
+
         for (var i = 0; i < data.length; i++) {
             //console.log(data[i]);
             var pID = data[i]["ProjectID"];
@@ -51,7 +51,7 @@ $(document).on('change', '#Date', function () {
         $('#PPYr').val(result["PPYear"]);
         $('#PP').val(result["PPNumber"]);
     });
-    
+
 });
 
 function toggleSearchPanel(checkbox) {
@@ -99,7 +99,7 @@ function submitReviews() {
         // submit 
         var json = JSON.stringify(selection);
         var ids = "";
-        for(var i=0;i<selection.length;i++){
+        for (var i = 0; i < selection.length; i++) {
             if (i == 0) {
                 ids += selection[i];
             } else {
@@ -125,3 +125,70 @@ function submitApproves() {
     //console.log(selection.join(","));
     window.location.href = "/expenses/review?ids=" + encodeURIComponent(selection.join(","));
 }
+
+
+
+
+
+function addForm() {
+    var formRow = $('#formRow');
+
+    var formBlock = $('div[id^="formBlock"]:last');
+    var num = parseInt(formBlock.prop("id").match(/\d+/g), 10) + 1;
+
+
+
+    var cloneForm = formBlock.clone();
+    cloneForm.prop('id', "formBlock" + num);
+
+    formRow.append(cloneForm);
+
+
+}
+
+function ajaxSubmit() {
+    var form = $('#__AjaxAntiForgeryForm');
+    var token = $('input[name="__RequestVerificationToken"]', form).val();
+
+    var forms = $('div[id^="formBlock"]');
+    forms.each(function (index) {
+        var formBlock = forms[index];
+        var formData =
+            {
+                __RequestVerificationToken: token,
+                EmployeeID: $('#EmployeeID option:selected', formBlock).val(),
+                Date: $('#Date', formBlock).val(),
+                PPYr: $('#PPYr', formBlock).val(),
+                PP: $('#PP', formBlock).val(),
+                ProjectID: $('#ProjectID option:selected', formBlock).val(),
+                Task: $('#Task option:selected', formBlock).val(),
+                identifier: $('#Identifier', formBlock).val(),
+                Veh: $('#Veh option:selected', formBlock).val(),
+                Crew: $('#Crew', formBlock).val(),
+                Field: $('#Field option:selected', formBlock).val(),
+                OffReason: $('#OffReason option:selected', formBlock).val(),
+                Hours: $('#Hours', formBlock).val(),
+                GPS: $('#GPS', formBlock).checked,
+                PD: $('#PD', formBlock).checked
+
+            };
+
+        $.ajax({
+            //url: $(this).data('url'),
+            url: "https://localhost:44300/workings/ajaxCreate",
+            type: 'POST',
+            data: formData,
+            success: function (result) {
+                if (result === "valid") {
+                    $(formBlock).empty();
+                } else {
+                    $("#validationErrors", formBlock).empty();
+                    $("#validationErrors", formBlock).append(result);
+                }
+            }
+        });
+
+    });
+
+}
+

@@ -17,5 +17,18 @@ namespace wn_Admin.Models.UtilityModels
 
             return new ValidationResult("Only 'Yes', 'No', or 'N/A' is allowed.");
         }
+
+        public static ValidationResult CheckKM(int? start, int? end)
+        {
+            if(start != null && end != null){
+
+                if(end < start){
+                 
+                    return new ValidationResult("EndKm must be greater than StartKM");
+                }
+            }
+
+            return ValidationResult.Success;
+        }
     }
 }

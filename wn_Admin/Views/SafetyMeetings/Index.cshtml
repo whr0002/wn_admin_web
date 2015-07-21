@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Index";
 }
-
+<script src="~/Scripts/CustomJS/SafetyMeeting.js"></script>
 <h2>Index</h2>
 
 <p>
@@ -32,6 +32,9 @@
         <th>
             @Html.DisplayNameFor(model => model.IsReviewedBySafetyManager)
         </th>
+        <th>
+            <button class="btn btn-primary" id="reviewbtn">Review</button>
+        </th>
         <th></th>
     </tr>
 
@@ -58,6 +61,8 @@
         <td>
             @Html.DisplayFor(modelItem => item.IsReviewedBySafetyManager)
         </td>
+        <td>
+            <input type="checkbox" class="reviewbox" value="@item.SafetyMeetingID" />
         <td>
             @Html.ActionLink("Edit", "Edit", new { meetingID=item.SafetyMeetingID }) |
             @Html.ActionLink("Details", "Details", new { id=item.SafetyMeetingID }) |

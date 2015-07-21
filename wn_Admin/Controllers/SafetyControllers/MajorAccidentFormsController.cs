@@ -17,17 +17,20 @@ using wn_Admin.Models.UtilityModels;
 
 namespace wn_Admin.Controllers.SafetyControllers
 {
+    [Authorize()]
     public class MajorAccidentFormsController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
 
         // GET: MajorAccidentForms
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         public ActionResult Index()
         {
             return View(db.MajorAccidentForms.ToList());
         }
 
         // GET: MajorAccidentForms/Details/5
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -138,6 +141,7 @@ namespace wn_Admin.Controllers.SafetyControllers
         }
 
         // GET: MajorAccidentForms/Edit/5
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -157,6 +161,7 @@ namespace wn_Admin.Controllers.SafetyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         public ActionResult Edit([Bind(Include = "MajorAccidentFormID,Name,TypeInjury,BodyLeft,BodyRight,HospitalName,DoctorName,FirstAidAttendent,EquipmentInvolved,WCBFormCompSubm,OHSNotified,OHSNameContact,DescLoss,InjuriesDueToIncident,LostTime,EquipOut,OtherLosses,WitnessesOccur,DateOccur,TimeOccur,LocationOccur,AccidentPPEOption,ListPPE,WasPersonTrained,PotReoccur,LossPotEval,LocationSpill,SourceSpill,TypeSubstance,AmountSubstance,AdvEffOn,AccidentDesc,PhotoTaken,WitnessStatement,ImmediateCauses,KeyStates,SubstandardActions,SubstandardConditions,BasicCauses,PersonalFactors,JobFactors,RiskAssess,TempActionTaken,SuggestedCorrActions,PreparedBy,PrepareDate,ApprovedBy,ApprovedDate")] MajorAccidentForm majorAccidentForm)
         {
             if (ModelState.IsValid)
@@ -169,6 +174,7 @@ namespace wn_Admin.Controllers.SafetyControllers
         }
 
         // GET: MajorAccidentForms/Delete/5
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -186,6 +192,7 @@ namespace wn_Admin.Controllers.SafetyControllers
         // POST: MajorAccidentForms/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         public ActionResult DeleteConfirmed(int id)
         {
             MajorAccidentForm majorAccidentForm = db.MajorAccidentForms.Find(id);
@@ -194,6 +201,7 @@ namespace wn_Admin.Controllers.SafetyControllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "SUPERADMIN,SafetyOfficer")]
         protected override void Dispose(bool disposing)
         {
             if (disposing)

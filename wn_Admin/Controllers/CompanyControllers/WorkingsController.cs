@@ -191,7 +191,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours,Bank,OT")] Working working)
+        public ActionResult Create([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours")] Working working)
         {
 
 
@@ -225,6 +225,7 @@ namespace wn_Admin.Controllers.CompanyControllers
 
             }
 
+
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             //ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
             setEmployeeDropdowns();
@@ -234,6 +235,53 @@ namespace wn_Admin.Controllers.CompanyControllers
             ViewBag.Veh = new SelectList(db.Vehicles, "VehicleID", "VehicleName", working.Veh);
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", working.ProjectID);
             return View(working);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public void ajaxCreate([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours,Bank,OT")] Working working)
+        {
+
+
+            if (ModelState.IsValid)
+            {
+
+                // Check date to see if it is valid.
+                string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date);
+                string userId = User.Identity.GetUserId();
+
+                if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
+                {
+                    db.Workings.Add(working);
+                    db.SaveChanges();
+                    Response.Write("valid");
+
+                }
+                else
+                {
+                    if (validationError != null)
+                    {
+                        Response.Write(validationError);
+                        //ModelState.AddModelError("Date", validationError);
+                    }
+                    else
+                    {
+                        db.Workings.Add(working);
+                        db.SaveChanges();
+                        Response.Write("valid");
+                    }
+
+                }
+               
+
+            }
+            else
+            {
+                var errors = string.Join("<br />", this.ModelState.Keys.SelectMany(key => this.ModelState[key].Errors).Select(s => s.ErrorMessage).ToArray());
+
+                Response.Write(errors);
+            }
+
         }
 
         // GET: Workings/Edit/5
@@ -449,7 +497,6 @@ namespace wn_Admin.Controllers.CompanyControllers
                         t.Crew,
                         t.StartKm,
                         t.EndKm,
-                        t.GPS,
                         t.FK_FieldAccess.FieldAccessName,
                         t.PD,
                         t.JobDescription,

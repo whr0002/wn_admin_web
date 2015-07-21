@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 namespace wn_Admin.Controllers
 {
     [Authorize()]
+    //[RequireHttps]
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -18,11 +19,13 @@ namespace wn_Admin.Controllers
             
             LinkGroupViewModel lModel = new LinkGroupViewModel();
 
-            
+            var uid = User.Identity.GetUserId();
             string role = ui.getFirstRole(User.Identity.GetUserId());
+            
+
             if (role != null)
             {
-                if (role.Equals("Accountant") || role.Equals("SUPERADMIN"))
+                if (ui.isInRole(uid, "Accountant") || ui.isInRole(uid, "SUPERADMIN"))
                 {
                     // People Section
                     ListLinkViewModel people = new ListLinkViewModel();
@@ -83,7 +86,7 @@ namespace wn_Admin.Controllers
                     lModel.sections.Add(resource);
 
                 }
-                else
+                else if (ui.isInRole(uid, "Employee") && ui.isInRole(uid, "SafetyOfficer"))
                 {
                     ListLinkViewModel time = new ListLinkViewModel();
                     time.ListName = "Time";
@@ -97,15 +100,44 @@ namespace wn_Admin.Controllers
                     resource.color = "Grey";
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Expense Form", Link = "/expenses" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Time Off Request", Link = "/timeoffrequests" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Daily Tailgate Safety Meeting", Link = "/SafetyInterface" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Daily Tailgate Safety Meeting", Link = "/SafetyMeetings" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Vehicle Inspection Form", Link = "/#" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Major Incident Report Form", Link = "/#" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Minor Incident Report Form", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Major Incident Report Form", Link = "/MajorAccidentForms" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Minor Incident Report Form", Link = "/MinorAccidentForms" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Employee Handbook", Link = "/#" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Health & Safety Manual", Link = "/#" });
 
+
                     lModel.sections.Add(time);
                     lModel.sections.Add(resource);
+
+                }
+                else if (ui.isInRole(uid, "Employee"))
+                {
+                    ListLinkViewModel time = new ListLinkViewModel();
+                    time.ListName = "Time";
+                    time.color = "Green";
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Daily Time Ticket", Link = "/workings/create" });
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Timesheets", Link = "/workings" });
+
+                    // Time
+                    ListLinkViewModel resource = new ListLinkViewModel();
+                    resource.ListName = "Resource";
+                    resource.color = "Grey";
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Expense Form", Link = "/expenses" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Time Off Request", Link = "/timeoffrequests" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Daily Tailgate Safety Meeting", Link = "/SafetyMeetings/create" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Vehicle Inspection Form", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Major Incident Report Form", Link = "/MajorAccidentForms/create" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Minor Incident Report Form", Link = "/MinorAccidentForms/create" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Employee Handbook", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Health & Safety Manual", Link = "/#" });
+
+                    
+
+                    lModel.sections.Add(time);
+                    lModel.sections.Add(resource);
+
                 }
             }
             
