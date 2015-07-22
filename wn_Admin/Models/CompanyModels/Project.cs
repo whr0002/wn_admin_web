@@ -18,6 +18,8 @@ namespace wn_Admin.Models
         public int Client { get; set; }
 
 
+        public int Status { get; set; }
+
         [ForeignKey("Client")]
         public virtual Client FK_Client { get; set; }
         

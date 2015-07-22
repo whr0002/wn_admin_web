@@ -1,4 +1,29 @@
-﻿var projects = [];
+﻿
+window.onload = function () {
+    
+}
+
+
+function initializeCalendar(events) {
+    var calendar = $('#mCldr');
+    calendar.fullCalendar({
+        defaultDate: new Date(),
+        editable: false,
+        eventLimit: true, // allow "more" link when too many events
+        //events: [
+        //    {
+        //        title: 'All Day Event',
+        //        start: '2015-02-01'
+        //    }
+        //]
+        events: events
+    });
+
+
+
+}
+
+var projects = [];
 $(document).on('change', "#ClientName", function () {
 
     $('#ProjectID').empty();
@@ -52,6 +77,13 @@ $(document).on('change', '#Date', function () {
         $('#PP').val(result["PPNumber"]);
     });
 
+});
+
+$(document).on('change', '#DateTo', function () {
+    var dateTo = new Date($('#DateTo').val());
+    dateTo.setDate(dateTo.getDate() + 2);
+    $('#returnDate').empty();
+    $('#returnDate').append("Return to work on: " + (dateTo.getMonth()+1) + "/" + dateTo.getDate() + "/" + dateTo.getYear());
 });
 
 function toggleSearchPanel(checkbox) {
@@ -165,11 +197,16 @@ function ajaxSubmit() {
                 identifier: $('#Identifier', formBlock).val(),
                 Veh: $('#Veh option:selected', formBlock).val(),
                 Crew: $('#Crew', formBlock).val(),
+                StartKm: $('#StartKm', formBlock).val(),
+                EndKm: $('#EndKm', formBlock).val(),
+                Equipment: $('#Equipment', formBlock).val(),
                 Field: $('#Field option:selected', formBlock).val(),
+                PD: $('#PD', formBlock).prop('checked'),
+                JobDescription: $('#JobDescription', formBlock).val(),
                 OffReason: $('#OffReason option:selected', formBlock).val(),
-                Hours: $('#Hours', formBlock).val(),
-                GPS: $('#GPS', formBlock).checked,
-                PD: $('#PD', formBlock).checked
+                Hours: $('#Hours', formBlock).val()
+                
+
 
             };
 

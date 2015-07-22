@@ -37,22 +37,44 @@ namespace wn_Admin.Models.CompanyModels
         public string Identifier { get; set; }
 
         [DisplayName("Vehicle")]
-        public int Veh { get; set; }
+        public string Veh { get; set; }
+
         public string Crew { get; set; }
 
         [DisplayName("Start Km")]
         [Range(0, int.MaxValue)]
         public int? StartKm { get; set; }
 
-        //[KM("StartKm", ErrorMessage="EndKm must be greater than StartKm")]
+        [KM("StartKm", ErrorMessage = "EndKm must be greater than StartKm")]
         [DisplayName("End Km")]
         [Range(0, int.MaxValue)]
         public int? EndKm { get; set; }
 
+ 
+        public int KmDiff 
+        { 
+            
+            get {
+                if (StartKm != null && EndKm != null)
+                {
+                    int diff = (int)(EndKm - StartKm);
+
+                    // Return only if distance >= 200 Km
+                    if (diff >= 200)
+                    {
+                        return diff;
+                    }
+                    
+                }
+                
+                return 0;
+            }
+        }
+
         public string Equipment { get; set; }
 
         [DisplayName("Field Access")]
-        public int Field { get; set; }
+        public string Field { get; set; }
         public bool PD { get; set; }
 
         [DisplayName("Job Description")]
@@ -79,15 +101,15 @@ namespace wn_Admin.Models.CompanyModels
         public virtual Project Project { get; set; }
 
 
-        [ForeignKey("Field")]
-        public virtual FieldAccess FK_FieldAccess { get; set; }
+        //[ForeignKey("Field")]
+        //public virtual FieldAccess FK_FieldAccess { get; set; }
 
         [ForeignKey("OffReason")]
         public virtual OffReason FK_OffReason { get; set; }
 
         [ForeignKey("Task")]
         public virtual Task FK_Task { get; set; }
-        [ForeignKey("Veh")]
-        public virtual Vehicle FK_Vehicle { get; set; }
+        //[ForeignKey("Veh")]
+        //public virtual Vehicle FK_Vehicle { get; set; }
     }
 }

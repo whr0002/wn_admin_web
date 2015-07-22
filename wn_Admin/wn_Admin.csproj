@@ -197,8 +197,10 @@
     <Compile Include="Controllers\CControllers\UsersController.cs" />
     <Compile Include="Controllers\CControllers\VehiclesController.cs" />
     <Compile Include="Controllers\CompanyControllers\AccountTypesController.cs" />
+    <Compile Include="Controllers\CompanyControllers\ApiController.cs" />
     <Compile Include="Controllers\CompanyControllers\DepartmentsController.cs" />
     <Compile Include="Controllers\CompanyControllers\EmployeesController.cs" />
+    <Compile Include="Controllers\CompanyControllers\EquipmentsController.cs" />
     <Compile Include="Controllers\CompanyControllers\ExcelController.cs" />
     <Compile Include="Controllers\CompanyControllers\ExpensesController.cs" />
     <Compile Include="Controllers\CompanyControllers\ProjectsController.cs" />
@@ -399,6 +401,30 @@
     <Compile Include="Migrations\201507212110466_rmGPS.Designer.cs">
       <DependentUpon>201507212110466_rmGPS.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507221448155_kmdiff.cs" />
+    <Compile Include="Migrations\201507221448155_kmdiff.Designer.cs">
+      <DependentUpon>201507221448155_kmdiff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507221517216_kmdiff2.cs" />
+    <Compile Include="Migrations\201507221517216_kmdiff2.Designer.cs">
+      <DependentUpon>201507221517216_kmdiff2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507221554329_prjstatus.cs" />
+    <Compile Include="Migrations\201507221554329_prjstatus.Designer.cs">
+      <DependentUpon>201507221554329_prjstatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507221629225_rmaccess.cs" />
+    <Compile Include="Migrations\201507221629225_rmaccess.Designer.cs">
+      <DependentUpon>201507221629225_rmaccess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507221636435_changestring.cs" />
+    <Compile Include="Migrations\201507221636435_changestring.Designer.cs">
+      <DependentUpon>201507221636435_changestring.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507221651150_addeqp.cs" />
+    <Compile Include="Migrations\201507221651150_addeqp.Designer.cs">
+      <DependentUpon>201507221651150_addeqp.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -406,6 +432,7 @@
     <Compile Include="Models\CModels\OffReason.cs" />
     <Compile Include="Models\CModels\PayPeriod.cs" />
     <Compile Include="Models\CModels\PPViewModel.cs" />
+    <Compile Include="Models\CompanyModels\Equipment.cs" />
     <Compile Include="Models\CompanyModels\Task.cs" />
     <Compile Include="Models\CModels\Vehicle.cs" />
     <Compile Include="Models\CompanyModels\AccountType.cs" />
@@ -441,6 +468,7 @@
     <Compile Include="Models\CompanyModels\Project.cs" />
     <Compile Include="Models\Safety\YesNoNA.cs" />
     <Compile Include="Models\UtilityModels\CustomValidators.cs" />
+    <Compile Include="Models\UtilityModels\EventModel.cs" />
     <Compile Include="Models\UtilityModels\IntArrayModelBinder.cs" />
     <Compile Include="Models\UtilityModels\KMAttribute.cs" />
     <Compile Include="Models\UtilityModels\LinkViewModel.cs" />
@@ -464,6 +492,8 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Form.css" />
+    <Content Include="Content\fullcalendar.css" />
+    <Content Include="Content\fullcalendar.print.css" />
     <Content Include="Content\Images\next.png" />
     <Content Include="Content\Images\wn_logo.jpg" />
     <Content Include="Content\PagedList.css" />
@@ -483,6 +513,10 @@
     </None>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\CustomJS\Employee.js" />
+    <Content Include="Scripts\CustomJS\fullcalendar.min.js" />
+    <Content Include="Scripts\CustomJS\jquery.min.js" />
+    <Content Include="Scripts\CustomJS\mCalendar.js" />
+    <Content Include="Scripts\CustomJS\moment.min.js" />
     <Content Include="Scripts\CustomJS\PhotoJS.js" />
     <Content Include="Scripts\CustomJS\SafetyMeeting.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -701,6 +735,13 @@
     <Content Include="Views\MinorRelToes\Details.cshtml" />
     <Content Include="Views\MinorRelToes\Edit.cshtml" />
     <Content Include="Views\MinorRelToes\Index.cshtml" />
+    <Content Include="Views\Equipments\Create.cshtml" />
+    <Content Include="Views\Equipments\Delete.cshtml" />
+    <Content Include="Views\Equipments\Details.cshtml" />
+    <Content Include="Views\Equipments\Edit.cshtml" />
+    <Content Include="Views\Equipments\Index.cshtml" />
+    <Content Include="Views\Workings\CreateOff.cshtml" />
+    <Content Include="Views\Workings\demo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -842,6 +883,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507212110466_rmGPS.resx">
       <DependentUpon>201507212110466_rmGPS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507221448155_kmdiff.resx">
+      <DependentUpon>201507221448155_kmdiff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507221517216_kmdiff2.resx">
+      <DependentUpon>201507221517216_kmdiff2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507221554329_prjstatus.resx">
+      <DependentUpon>201507221554329_prjstatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507221629225_rmaccess.resx">
+      <DependentUpon>201507221629225_rmaccess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507221636435_changestring.resx">
+      <DependentUpon>201507221636435_changestring.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507221651150_addeqp.resx">
+      <DependentUpon>201507221651150_addeqp.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -31,7 +31,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         {
 
 
-            var workings = db.Workings.Include(w => w.Employee).Include(w => w.FK_FieldAccess).Include(w => w.FK_OffReason).Include(w => w.FK_Task).Include(w => w.FK_Vehicle).Include(w => w.Project);
+            var workings = db.Workings.Include(w => w.Employee).Include(w => w.FK_OffReason).Include(w => w.FK_Task).Include(w => w.Project);
             string userId = User.Identity.GetUserId();
             string currentFilter = "";
 
@@ -143,6 +143,8 @@ namespace wn_Admin.Controllers.CompanyControllers
             int pageSize = 15;
             int pageNumber = (page ?? 1);
 
+            //events
+            ViewBag.Events = workings.Select(s => new EventModel { title = s.Employee.FullName + " " + s.Hours , start = s.Date}).ToList();
 
             return View(workings.ToPagedList(pageNumber, pageSize));
         }
@@ -167,11 +169,30 @@ namespace wn_Admin.Controllers.CompanyControllers
         public ActionResult Create()
         {
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
-            ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName");
+            ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessName", "FieldAccessName");
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName");
             ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName");
-            ViewBag.Veh = new SelectList(db.Vehicles, "VehicleID", "VehicleName");
+            ViewBag.Veh = new SelectList(db.Vehicles, "VehicleName", "VehicleName");
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
+            ViewBag.Equipment = new MultiSelectList(db.Equipments, "EquipmentName", "EquipmentName");
+
+            setEmployeeDropdowns();
+
+            Working working = new Working();
+
+            working.Date = DateTime.Today;
+            PayPeriodCalculator calc = new PayPeriodCalculator();
+            PPViewModel ppv = calc.getPayPeriod(working.Date);
+            working.PPYr = ppv.PPYear;
+            working.PP = ppv.PPNumber;
+            //working.OffReason = 2;
+
+            return View(working);
+        }
+
+        public ActionResult CreateOff()
+        {
+            ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName");
             setEmployeeDropdowns();
 
             Working working = new Working();
@@ -182,7 +203,58 @@ namespace wn_Admin.Controllers.CompanyControllers
             working.PPYr = ppv.PPYear;
             working.PP = ppv.PPNumber;
 
+            working.ProjectID = "0-0-2015";
+            working.Task = db.Tasks.Where(w => w.TaskName.Equals("Off")).FirstOrDefault().TaskID;
 
+
+            return View(working);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateOff([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP, ProjectID,Task, JobDescription,OffReason")] Working working, DateTime? DateTo = null)
+        {
+            if (ModelState.IsValid)
+            {
+                if(DateTo != null){
+                    if (DateTo >= working.Date)
+                    {
+                        //var totalDays = (DateTo - working.Date).TotalDays + 1;
+                        while (working.Date <= DateTo)
+                        {
+                            Working w = new Working();
+                            w.EmployeeID = working.EmployeeID;
+                            w.Date = working.Date;
+                            w.PPYr = working.PPYr;
+                            w.PP = working.PP;
+                            w.ProjectID = working.ProjectID;
+                            w.Task = working.Task;
+                            w.JobDescription = working.JobDescription;
+                            w.OffReason = working.OffReason;
+
+                            db.Workings.Add(w);
+                            db.SaveChanges();
+                            
+                            working.Date = working.Date.AddDays(1);
+                        }
+
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        // Date to is earlier than date
+                        ModelState.AddModelError("Date", "'Date To' must be later than 'Date From'");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("Date", "'Date To' cannot be empty");
+                }
+            }
+
+            ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName");
+            setEmployeeDropdowns();
             return View(working);
         }
 
@@ -239,7 +311,7 @@ namespace wn_Admin.Controllers.CompanyControllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public void ajaxCreate([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours,Bank,OT")] Working working)
+        public void ajaxCreate(string[] Equipment, [Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,Field,PD,JobDescription,OffReason,Hours")] Working working)
         {
 
 
@@ -249,6 +321,13 @@ namespace wn_Admin.Controllers.CompanyControllers
                 // Check date to see if it is valid.
                 string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date);
                 string userId = User.Identity.GetUserId();
+                
+                // Combine equipments
+                if (Equipment != null)
+                {
+                    string equipments = string.Join(", ", Equipment);
+                    working.Equipment = equipments;
+                }
 
                 if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
                 {
@@ -493,11 +572,11 @@ namespace wn_Admin.Controllers.CompanyControllers
                         t.Project.ProjectID,
                         t.FK_Task.TaskName,
                         t.Identifier,
-                        t.FK_Vehicle.VehicleName,
+                        //t.FK_Vehicle.VehicleName,
                         t.Crew,
                         t.StartKm,
                         t.EndKm,
-                        t.FK_FieldAccess.FieldAccessName,
+                        //t.FK_FieldAccess.FieldAccessName,
                         t.PD,
                         t.JobDescription,
                         t.FK_OffReason.OffReasonName,
@@ -531,6 +610,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             return sw.ToString();
         }
 
+
         private void setEmployeeDropdowns()
         {
             string userId = User.Identity.GetUserId();
@@ -552,6 +632,11 @@ namespace wn_Admin.Controllers.CompanyControllers
             {
                 ViewBag.EmployeeID = new SelectList(new List<Employee>(), "EmployeeID", "FullName");
             }
+        }
+
+        public ActionResult demo()
+        {
+            return View();
         }
     }
 }
