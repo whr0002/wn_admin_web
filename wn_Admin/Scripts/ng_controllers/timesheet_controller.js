@@ -1,53 +1,61 @@
-﻿
+﻿// Initializing change events on some input fields
 window.onload = function () {
-    
-}
+    var formBlock = $('#formBlock0');
+    // Add change event to clientName
+    $('#ClientName', formBlock).change(function () {
 
+        $('#ProjectID', formBlock).empty();
 
-function initializeCalendar(events) {
-    var calendar = $('#mCldr');
-    calendar.fullCalendar({
-        defaultDate: new Date(),
-        editable: false,
-        eventLimit: true, // allow "more" link when too many events
-        //events: [
-        //    {
-        //        title: 'All Day Event',
-        //        start: '2015-02-01'
-        //    }
-        //]
-        events: events
+        var client = $('#ClientName').find(":selected").text();
+
+        getProjectByClient(client, formBlock);
+    });
+
+    // Add change event to projectName
+    $('#ProjectID', formBlock).change(function () {
+        var pidSpan = $('#PID', formBlock);
+        pidSpan.empty();
+
+        var pid = $('#ProjectID option:selected', formBlock).val();
+
+        if (pid != null && pid.length > 0)
+            pidSpan.text("Project ID: " + pid);
+
+    });
+
+    // Add change event to date
+    $('#Date', formBlock).change(function () {
+
+        var ppyr = $('#PPYr', formBlock).val("");
+        var pp = $('#PP', formBlock).val("");
+
+        var date = $('#Date', formBlock).val();
+
+        $.getJSON("/api/PayPeriods/" + date, function (result) {
+            ppyr.val(result["PPYear"]);
+            pp.val(result["PPNumber"]);
+        });
     });
 
 
 
 }
 
-var projects = [];
-$(document).on('change', "#ClientName", function () {
+// Initializing calendar
+function initializeCalendar(events) {
 
-    $('#ProjectID').empty();
-    projects = [];
+    $('#mCldr').fullCalendar({
+        defaultDate: new Date(),
+        editable: false,
+        eventLimit: true, // allow "more" link when too many events
+        events: events // var 'events' is initialized on 'Index' page.
+    });
+}
 
-    var client = $('#ClientName').find(":selected").text();
-    var projects = getProjectByClient(client);
-
-
-});
-
-$(document).on('change', "#ProjectID", function () {
-    var pidSpan = $('#PID');
-    pidSpan.empty();
-
-    var pid = $('#ProjectID option:selected').val();
-
-    if (pid != null && pid.length > 0)
-        pidSpan.text("Project ID: " + pid);
-});
-
-function getProjectByClient(client) {
-    $('#ProjectID').val("");
-    var mySelect = $('#ProjectID');
+// Get a list of projects by a given client
+function getProjectByClient(client , formBlock) {
+    $('#ProjectID', formBlock).val("");
+    var mySelect = $('#ProjectID', formBlock);
     mySelect.append('<option value="">Choose ...</option>');
 
     $.getJSON("/api/projects/" + client, function (data) {
@@ -66,26 +74,15 @@ function getProjectByClient(client) {
     });
 }
 
-$(document).on('change', '#Date', function () {
-    $('#PPYr').val("");
-    $('#PP').val("");
-
-    var date = $('#Date').val();
-
-    $.getJSON("/api/PayPeriods/" + date, function (result) {
-        $('#PPYr').val(result["PPYear"]);
-        $('#PP').val(result["PPNumber"]);
-    });
-
-});
-
+// Show the date of returning
 $(document).on('change', '#EndDate', function () {
     var dateTo = new Date($('#EndDate').val());
     dateTo.setDate(dateTo.getDate() + 2);
     $('#returnDate').empty();
-    $('#returnDate').append("Return to work on: " + (dateTo.getMonth()+1) + "/" + dateTo.getDate() + "/" + dateTo.getYear());
+    $('#returnDate').append("Return to work on: " + (dateTo.getMonth()+1) + "/" + dateTo.getDate() + "/" + dateTo.getFullYear());
 });
 
+// Hide/Show Search Area
 function toggleSearchPanel(checkbox) {
     if (checkbox.checked) {
         $('#SearchPanel').slideDown();
@@ -94,27 +91,21 @@ function toggleSearchPanel(checkbox) {
     }
 }
 
-
+// Check all review boxes
 function checkAll(checkbox) {
-
-
     var subBoxes = $('.reviewBox');
 
     if (checkbox.checked) {
 
         subBoxes.prop('checked', true);
-        //subBoxes.each(function (index) {
-        //    if(subBoxes[index].checked){
-        //        var id = $(this).val();
-        //        console.log(id);
-        //    }  
-        //});
+
     } else {
         subBoxes.prop('checked', false);
     }
 
 }
 
+// Review time sheets
 function submitReviews() {
     var subBoxes = $('.reviewBox');
     var selection = [];
@@ -161,7 +152,7 @@ function submitApproves() {
 
 
 
-
+// Clone a form in the same page.
 function addForm() {
     var formRow = $('#formRow');
 
@@ -170,14 +161,52 @@ function addForm() {
 
 
 
-    var cloneForm = formBlock.clone();
-    cloneForm.prop('id', "formBlock" + num);
+    var formBlock = formBlock.clone();
+    formBlock.prop('id', "formBlock" + num);
+    //$(cloneForm).off("change", "#ClientName");
 
-    formRow.append(cloneForm);
+    // Add change event to clientName
+    $('#ClientName', formBlock).change(function () {
+
+        $('#ProjectID', formBlock).empty();
+
+        var client = $('#ClientName', formBlock).find(":selected").text();
+
+        getProjectByClient(client, formBlock);
+    });
+
+    // Add change event to projectName
+    $('#ProjectID', formBlock).change(function () {
+        var pidSpan = $('#PID', formBlock);
+        pidSpan.empty();
+
+        var pid = $('#ProjectID option:selected', formBlock).val();
+
+        if (pid != null && pid.length > 0)
+            pidSpan.text("Project ID: " + pid);
+
+    });
+
+    // Add change event to Date to get PPYr and PP
+    $('#Date', formBlock).change(function () {
+
+        var ppyr = $('#PPYr', formBlock).val("");
+        var pp = $('#PP', formBlock).val("");
+
+        var date = $('#Date', formBlock).val();
+
+        $.getJSON("/api/PayPeriods/" + date, function (result) {
+            ppyr.val(result["PPYear"]);
+            pp.val(result["PPNumber"]);
+        });
+    });
+
+    formRow.append(formBlock);
 
 
 }
 
+// Form Submission
 function ajaxSubmit() {
     var form = $('#__AjaxAntiForgeryForm');
     var token = $('input[name="__RequestVerificationToken"]', form).val();

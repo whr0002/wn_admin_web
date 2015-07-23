@@ -49,7 +49,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProjectID,ProjectName,Client")] Project project)
+        public ActionResult Create([Bind(Include = "ProjectID,ProjectName,Client,Status")] Project project)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +83,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProjectID,ProjectName,Client")] Project project)
+        public ActionResult Edit([Bind(Include = "ProjectID,ProjectName,Client,Status")] Project project)
         {
             if (ModelState.IsValid)
             {

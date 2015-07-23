@@ -106,6 +106,15 @@ namespace wn_Admin.Controllers.CompanyControllers
                 currentFilter += "&endDate=" + String.Format("{0:yyyy-MM-dd}", endDate);
             }
 
+            // Get working records within 2 months
+            if (startDate == null && endDate == null)
+            {
+                DateTime now = DateTime.Now;
+                DateTime preMonth = now.AddMonths(-2);
+                workings = workings.Where(w => w.Date >= preMonth || w.EndDate >= preMonth);
+
+            }
+
             // Pay Period Year
             if (ppYear != -1)
             {
@@ -165,7 +174,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             {
                 EventViewModel eventViewModel = new EventViewModel();
                 eventViewModel.start = e.startDT.ToString("yyyy-MM-dd");
-                eventViewModel.end = e.endDT.ToString("yyyy-MM-dd");
+                eventViewModel.end = e.endDT.AddDays(1).ToString("yyyy-MM-dd");
                 eventViewModel.backgroundColor = (e.totalHours == 0) ? "#004C99" : "#808080";
 
                 //e.start = e.startDT.ToString("yyyy-MM-dd");
@@ -215,7 +224,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName");
             ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName");
             ViewBag.Veh = new SelectList(db.Vehicles, "VehicleName", "VehicleName");
-            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
+            ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1), "ProjectID", "ProjectName");
             ViewBag.Equipment = new MultiSelectList(db.Equipments, "EquipmentName", "EquipmentName");
 
             setEmployeeDropdowns();
@@ -420,7 +429,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Accountant, SUPERADMIN")]
-        public ActionResult Edit([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours,Bank,OT")] Working working)
+        public ActionResult Edit([Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours,Bank,OT")] Working working)
         {
             if (ModelState.IsValid)
             {
