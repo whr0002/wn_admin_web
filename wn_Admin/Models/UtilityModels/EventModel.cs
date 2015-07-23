@@ -8,7 +8,10 @@ namespace wn_Admin.Models.UtilityModels
     public class EventModel
     {
         public string title { get; set; }
-        public DateTime start { get; set; }
-        public double Hours { get; set; }
+        public DateTime startDT { get; set; }
+        public DateTime endDT { get; set; }
+        public double totalHours { get; set; }
+        public string start { get; set; }
+        public string backgroundColor { get; set; }
     }
 }

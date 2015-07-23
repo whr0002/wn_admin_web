@@ -79,8 +79,8 @@ $(document).on('change', '#Date', function () {
 
 });
 
-$(document).on('change', '#DateTo', function () {
-    var dateTo = new Date($('#DateTo').val());
+$(document).on('change', '#EndDate', function () {
+    var dateTo = new Date($('#EndDate').val());
     dateTo.setDate(dateTo.getDate() + 2);
     $('#returnDate').empty();
     $('#returnDate').append("Return to work on: " + (dateTo.getMonth()+1) + "/" + dateTo.getDate() + "/" + dateTo.getYear());

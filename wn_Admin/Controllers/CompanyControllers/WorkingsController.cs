@@ -27,7 +27,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         private UserInfo mUserInfo = new UserInfo();
 
         // GET: Workings
-        public ActionResult Index(int? page, DateTime? startDate = null, DateTime? endDate = null, int ppYear = -1, int pp = -1, int clientId = -1, int employeeId = -1, string projectId = null, Boolean? exportToExcel = null)
+        public ActionResult Index(int[] employeeId, int? page, DateTime? startDate = null, DateTime? endDate = null, int ppYear = -1, int pp = -1, int clientId = -1, string projectId = null, Boolean? exportToExcel = null)
         {
 
 
@@ -40,14 +40,16 @@ namespace wn_Admin.Controllers.CompanyControllers
 
                 // User is an accoutant, he or she can search Timesheets by Employee ID
 
-                if (employeeId != -1)
+                if (employeeId != null && employeeId.Count() > 0)
                 {
-                    workings = workings.Where(w => w.EmployeeID == employeeId);
-                    currentFilter += "&employeeId=" + employeeId;
+                    workings = workings.Where(w => employeeId.Contains(w.EmployeeID));
+                    currentFilter += "&employeeId=" + string.Join("&employeeId=", employeeId);
                 }
                 ViewBag.hasReviewControl = true;
                 ViewBag.hasFullControl = true;
-                ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName");
+                //ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName");
+
+                ViewBag.EmployeeID = new MultiSelectList(db.Employees, "EmployeeID", "FullName");
                 ViewBag.clientId = new SelectList(db.Clients, "ClientID", "ClientName");
                 ViewBag.projectId = new SelectList(db.Projects, "ProjectID", "ProjectName");
             }
@@ -82,7 +84,8 @@ namespace wn_Admin.Controllers.CompanyControllers
                 }
 
                 ViewBag.hasFullControl = false;
-                ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == employee.EmployeeID), "EmployeeID", "FullName");
+                //ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == employee.EmployeeID), "EmployeeID", "FullName");
+                ViewBag.EmployeeID = new MultiSelectList(db.Employees.Where(w => w.EmployeeID == employee.EmployeeID), "EmployeeID", "FullName");
                 ViewBag.clientId = new SelectList(workings.Select(s => s.Project.FK_Client).Distinct(), "ClientID", "ClientName");
                 ViewBag.projectId = new SelectList(workings.Select(s => s.Project).Distinct(), "ProjectID", "ProjectName");
 
@@ -93,14 +96,13 @@ namespace wn_Admin.Controllers.CompanyControllers
             // Date
             if (startDate != null)
             {
-                workings = workings.Where(w => w.Date >= startDate);
-
+                workings = workings.Where(w => w.Date >= startDate || w.EndDate >= startDate);
                 currentFilter += "&startDate=" + String.Format("{0:yyyy-MM-dd}", startDate);
             }
 
             if (endDate != null)
             {
-                workings = workings.Where(w => w.Date <= endDate);
+                workings = workings.Where(w => w.Date <= endDate || w.EndDate <= endDate);
                 currentFilter += "&endDate=" + String.Format("{0:yyyy-MM-dd}", endDate);
             }
 
@@ -143,8 +145,48 @@ namespace wn_Admin.Controllers.CompanyControllers
             int pageSize = 15;
             int pageNumber = (page ?? 1);
 
-            //events
-            ViewBag.Events = workings.Select(s => new EventModel { title = s.Employee.FullName + " " + s.Hours , start = s.Date}).ToList();
+            // Group by events
+            var events = workings
+                .GroupBy(g => new{g.EmployeeID, g.Employee.FullName, g.Date, g.EndDate})
+                .Select(s => new EventModel
+                {
+                    title = s.Key.FullName, 
+                    totalHours = s.Sum(b => b.Hours),
+                    startDT = s.Key.Date,
+                    endDT = s.Key.EndDate
+                })
+                .ToList();
+
+
+            // Giving each event color and description.
+            List<EventViewModel> evm = new List<EventViewModel>();
+
+            foreach (var e in events)
+            {
+                EventViewModel eventViewModel = new EventViewModel();
+                eventViewModel.start = e.startDT.ToString("yyyy-MM-dd");
+                eventViewModel.end = e.endDT.ToString("yyyy-MM-dd");
+                eventViewModel.backgroundColor = (e.totalHours == 0) ? "#004C99" : "#808080";
+
+                //e.start = e.startDT.ToString("yyyy-MM-dd");
+                //e.backgroundColor = (e.totalHours == 0) ? "#004C99" : "#808080";
+                if (e.totalHours == 0)
+                {
+                    e.title += ": Off";
+                }
+                else
+                {
+                    e.title += ": " + e.totalHours + " h";
+                }
+
+                eventViewModel.title = e.title;
+
+                evm.Add(eventViewModel);
+            }
+
+            // Pass events to view
+            ViewBag.Events = evm;
+
 
             return View(workings.ToPagedList(pageNumber, pageSize));
         }
@@ -181,6 +223,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             Working working = new Working();
 
             working.Date = DateTime.Today;
+            working.EndDate = DateTime.Today;
             PayPeriodCalculator calc = new PayPeriodCalculator();
             PPViewModel ppv = calc.getPayPeriod(working.Date);
             working.PPYr = ppv.PPYear;
@@ -198,13 +241,14 @@ namespace wn_Admin.Controllers.CompanyControllers
             Working working = new Working();
 
             working.Date = DateTime.Today;
+            working.EndDate = working.Date;
             PayPeriodCalculator calc = new PayPeriodCalculator();
             PPViewModel ppv = calc.getPayPeriod(working.Date);
             working.PPYr = ppv.PPYear;
             working.PP = ppv.PPNumber;
 
             working.ProjectID = "0-0-2015";
-            working.Task = db.Tasks.Where(w => w.TaskName.Equals("Off")).FirstOrDefault().TaskID;
+            working.Task = db.Tasks.Where(w => w.TaskName.Equals("None")).FirstOrDefault().TaskID;
 
 
             return View(working);
@@ -213,44 +257,22 @@ namespace wn_Admin.Controllers.CompanyControllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOff([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP, ProjectID,Task, JobDescription,OffReason")] Working working, DateTime? DateTo = null)
+        public ActionResult CreateOff([Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP, ProjectID,Task, JobDescription,OffReason")] Working working)
         {
             if (ModelState.IsValid)
             {
-                if(DateTo != null){
-                    if (DateTo >= working.Date)
-                    {
-                        //var totalDays = (DateTo - working.Date).TotalDays + 1;
-                        while (working.Date <= DateTo)
-                        {
-                            Working w = new Working();
-                            w.EmployeeID = working.EmployeeID;
-                            w.Date = working.Date;
-                            w.PPYr = working.PPYr;
-                            w.PP = working.PP;
-                            w.ProjectID = working.ProjectID;
-                            w.Task = working.Task;
-                            w.JobDescription = working.JobDescription;
-                            w.OffReason = working.OffReason;
+                if(working.EndDate >= working.Date){
 
-                            db.Workings.Add(w);
-                            db.SaveChanges();
-                            
-                            working.Date = working.Date.AddDays(1);
-                        }
+                    db.Workings.Add(working);
+                    db.SaveChanges();
 
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        // Date to is earlier than date
-                        ModelState.AddModelError("Date", "'Date To' must be later than 'Date From'");
-                    }
+                    return RedirectToAction("Index");
                 }
                 else
                 {
-                    ModelState.AddModelError("Date", "'Date To' cannot be empty");
+                    ModelState.AddModelError("EndDate", "'Date To' must be later than 'Date From'");
                 }
+
             }
 
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName");
@@ -263,7 +285,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours")] Working working)
+        public ActionResult Create([Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours")] Working working)
         {
 
 
@@ -273,6 +295,9 @@ namespace wn_Admin.Controllers.CompanyControllers
                 // Check date to see if it is valid.
                 string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date);
                 string userId = User.Identity.GetUserId();
+
+                // For working days, set end date to start date
+                working.EndDate = working.Date;
 
                 if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
                 {
@@ -311,12 +336,14 @@ namespace wn_Admin.Controllers.CompanyControllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public void ajaxCreate(string[] Equipment, [Bind(Include = "WorkingID,EmployeeID,Date,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,Field,PD,JobDescription,OffReason,Hours")] Working working)
+        public void ajaxCreate(string[] Equipment, [Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,Field,PD,JobDescription,OffReason,Hours")] Working working)
         {
 
 
             if (ModelState.IsValid)
             {
+                // For working days, set end date to start date
+                working.EndDate = working.Date;
 
                 // Check date to see if it is valid.
                 string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date);

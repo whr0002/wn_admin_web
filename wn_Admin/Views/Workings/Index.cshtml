@@ -5,6 +5,7 @@
     Layout = null;
     ViewBag.Title = "Index";
 }
+
 @section cssSection{
 
     <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
@@ -37,307 +38,321 @@
     <script src="~/Scripts/ng_controllers/timesheet_controller.js"></script>
 
     <script type="text/javascript">
-    $(document).ready(function () {
+        $(document).ready(function () {
+            var events = @Html.Raw(Json.Encode(ViewBag.Events as List<wn_Admin.Models.UtilityModels.EventViewModel>));
 
-        var events = @Html.Raw(Json.Encode(ViewBag.Events as List<wn_Admin.Models.UtilityModels.EventModel>));
-        //console.log(events);
-        initializeCalendar(events);
-    });
+            //events.push({title:"hello", start:"2015-07-23"});
+            //console.log(events);
+            initializeCalendar(events);
+        });
     </script>
 </head>
 
-<h2>Index</h2>
+<body>
+    <div class="container">
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="col-md-12">
-            @Html.ActionLink("Create Working Time", "Create")
-        </div>
+        <h2>Index</h2>
 
-        <div class="col-md-12">
-            @Html.ActionLink("Create Off Time", "CreateOff")
-        </div>
-        <div class="col-md-12">
-            <button onclick="initializeCalendar()">Initialize</button>
-        </div>
-    </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-12">
+                    @Html.ActionLink("Create Working Time", "Create")
+                </div>
 
-    <div class="col-md-6">
-        <div class="col-md-12">
-            <div id="mCldr">
+                <div class="col-md-12">
+                    @Html.ActionLink("Create Off Time", "CreateOff")
+                </div>
 
             </div>
 
+
         </div>
-    </div>
-</div>
 
 
 
 
-<div class="row">
-    <div class="col-md-4">
-        Advanced Search
-        <input type="checkbox" id="SearchToggle" onclick="toggleSearchPanel(this)">
-        <div id="SearchPanel" class="panel panel-primary" style="display:none;">
-            <div class="panel-heading">
-                <h3 class="panel-title">Criterias</h3>
+        <div class="row">
+            <div class="col-md-5">
+                Advanced Search
+                <input type="checkbox" id="SearchToggle" onclick="toggleSearchPanel(this)" checked>
+                <div id="SearchPanel" class="panel panel-primary" style="">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Criterias</h3>
+                    </div>
+                    @using (Html.BeginForm("Index", "Workings", FormMethod.Get))
+                    {
+                        <div class="panel-body form-horizontal">
+
+                            <div class="form-group">
+                                @Html.Label("Employee", htmlAttributes: new { @class = "control-label col-md-2", @for = "EmployeeID" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("EmployeeID", (MultiSelectList)ViewBag.EmployeeID, htmlAttributes: new { @class = "form-control", multiple = "multiple" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label("Start Date", htmlAttributes: new { @class = "control-label col-md-2", @for = "startDate" })
+                                <div class="col-md-10">
+                                    @Html.TextBox("startDate", "", new { @type = "date", @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label("End Date", htmlAttributes: new { @class = "control-label col-md-2", @for = "endDate" })
+                                <div class="col-md-10">
+                                    @Html.TextBox("endDate", "", new { @type = "date", @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label("Period Year", htmlAttributes: new { @class = "control-label col-md-2", @for = "ppYear" })
+                                <div class="col-md-10">
+                                    @Html.TextBox("ppYear", "", new { @type = "number", @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label("Period", htmlAttributes: new { @class = "control-label col-md-2", @for = "pp" })
+                                <div class="col-md-10">
+                                    @Html.TextBox("pp", "", new { @type = "number", @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label("Client", htmlAttributes: new { @class = "control-label col-md-2", @for = "clientId" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("clientId", null, "Choose ...", htmlAttributes: new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label("Project", htmlAttributes: new { @class = "control-label col-md-2", @for = "projectId" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("projectId", null, "Choose ...", htmlAttributes: new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label("Export To Excel?", htmlAttributes: new { @class = "control-label col-md-2", @for = "exportToExcel" })
+                                <div class="col-md-10">
+                                    @Html.CheckBox("exportToExcel", false)
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="panel-footer clearfix">
+                            <div class="pull-right">
+                                <a href="/workings" class="btn btn-info">Clear</a>
+                                <input type="submit" value="Search" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
-            @using (Html.BeginForm("Index", "Workings", FormMethod.Get))
-            {
-                <div class="panel-body form-horizontal">
 
-                    <div class="form-group">
-                        @Html.Label("Employee", htmlAttributes: new { @class = "control-label col-md-2", @for = "EmployeeID" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("EmployeeID", null, "Choose ...", htmlAttributes: new { @class = "form-control" })
-                        </div>
-                    </div>
+            <div class="col-md-7">
+                <div class="col-md-12">
+                    <div id="mCldr">
 
-                    <div class="form-group">
-                        @Html.Label("Start Date", htmlAttributes: new { @class = "control-label col-md-2", @for = "startDate" })
-                        <div class="col-md-10">
-                            @Html.TextBox("startDate", "", new { @type = "date", @class = "form-control" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.Label("End Date", htmlAttributes: new { @class = "control-label col-md-2", @for = "endDate" })
-                        <div class="col-md-10">
-                            @Html.TextBox("endDate", "", new { @type = "date", @class = "form-control" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.Label("Period Year", htmlAttributes: new { @class = "control-label col-md-2", @for = "ppYear" })
-                        <div class="col-md-10">
-                            @Html.TextBox("ppYear", "", new { @type = "number", @class = "form-control" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.Label("Period", htmlAttributes: new { @class = "control-label col-md-2", @for = "pp" })
-                        <div class="col-md-10">
-                            @Html.TextBox("pp", "", new { @type = "number", @class = "form-control" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.Label("Client", htmlAttributes: new { @class = "control-label col-md-2", @for = "clientId" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("clientId", null, "Choose ...", htmlAttributes: new { @class = "form-control" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.Label("Project", htmlAttributes: new { @class = "control-label col-md-2", @for = "projectId" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("projectId", null, "Choose ...", htmlAttributes: new { @class = "form-control" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.Label("Export To Excel?", htmlAttributes: new { @class = "control-label col-md-2", @for = "exportToExcel" })
-                        <div class="col-md-10">
-                            @Html.CheckBox("exportToExcel", false)
-                        </div>
                     </div>
 
                 </div>
-                <div class="panel-footer clearfix">
-                    <div class="pull-right">
-                        <a href="/workings" class="btn btn-info">Clear</a>
-                        <input type="submit" value="Search" class="btn btn-primary" />
-                    </div>
-                </div>
-            }
+            </div>
         </div>
-    </div>
-</div>
-<table class="table" ng-controller="checkboxController">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Employee.FullName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Date)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().PPYr)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().PP)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Project.FK_Client.ClientName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Project.ProjectName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().FK_Task.TaskName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Identifier)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Veh)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Crew)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().StartKm)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().EndKm)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().KmDiff)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Equipment)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Field)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().PD)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().JobDescription)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().FK_OffReason.OffReasonName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Hours)
-        </th>
-        @*<th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Bank)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().OT)
-            </th>*@
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().isReviewed)
-        </th>
-        @if (ViewBag.hasReviewControl)
-        {
-            <th>
-                <input type="checkbox" onclick="checkAll(this)" />
-            </th>
-            <th><button class="btn btn-primary" onclick="submitReviews()">Review</button></th>
-        }
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Employee.FirstMidName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PPYr)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PP)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Project.FK_Client.ClientName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Project.ProjectName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FK_Task.TaskName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Identifier)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Veh)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Crew)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartKm)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndKm)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.KmDiff)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Equipment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Field)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PD)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JobDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FK_OffReason.OffReasonName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Hours)
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.Bank)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OT)
-                </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.isReviewed)
-            </td>
-
-
-            @if (ViewBag.hasReviewControl)
-            {
-                if (ViewBag.CurrentEID == null)
+        <table class="table" ng-controller="checkboxController">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Employee.FullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().EndDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().PPYr)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().PP)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Project.FK_Client.ClientName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Project.ProjectName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().FK_Task.TaskName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Identifier)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Veh)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Crew)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().StartKm)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().EndKm)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().KmDiff)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Equipment)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Field)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().PD)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().JobDescription)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().FK_OffReason.OffReasonName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Hours)
+                </th>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().Bank)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().OT)
+                    </th>*@
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().isReviewed)
+                </th>
+                @if (ViewBag.hasReviewControl)
                 {
-                    <td>
-                        <input type="checkbox" value="@item.WorkingID" class="reviewBox" />
-                    </td>
+                    <th>
+                        <input type="checkbox" onclick="checkAll(this)" />
+                    </th>
+                    <th><button class="btn btn-primary" onclick="submitReviews()">Review</button></th>
                 }
-                else
-                {
-                    if (ViewBag.CurrentEID != item.EmployeeID)
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Employee.FirstMidName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PPYr)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PP)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Project.FK_Client.ClientName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Project.ProjectName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FK_Task.TaskName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Identifier)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Veh)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Crew)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartKm)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndKm)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.KmDiff)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Equipment)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Field)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PD)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.JobDescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FK_OffReason.OffReasonName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Hours)
+                    </td>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.Bank)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OT)
+                        </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.isReviewed)
+                    </td>
+
+
+                    @if (ViewBag.hasReviewControl)
+                    {
+                        if (ViewBag.CurrentEID == null)
+                        {
+                            <td>
+                                <input type="checkbox" value="@item.WorkingID" class="reviewBox" />
+                            </td>
+                        }
+                        else
+                        {
+                            if (ViewBag.CurrentEID != item.EmployeeID)
+                            {
+                                <td>
+                                    <input type="checkbox" value="@item.WorkingID" class="reviewBox" />
+                                </td>
+                            }
+                        }
+
+                    }
+
+                    @if (ViewBag.hasFullControl)
                     {
                         <td>
-                            <input type="checkbox" value="@item.WorkingID" class="reviewBox" />
+                            @Html.ActionLink("Edit", "Edit", new { id = item.WorkingID }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.WorkingID }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.WorkingID })
                         </td>
                     }
-                }
 
+
+                </tr>
             }
 
-            @if (ViewBag.hasFullControl)
-            {
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.WorkingID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.WorkingID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.WorkingID })
-                </td>
-            }
+        </table>
+
+        <br />
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+        @Html.PagedListPager(Model, page => "/workings?page=" + page + ViewBag.CurrentFilter)
 
 
-        </tr>
-    }
-
-</table>
-
-<br />
-Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-
-@Html.PagedListPager(Model, page => "/workings?page=" + page + ViewBag.CurrentFilter)
+    </div>
+</body>

@@ -197,7 +197,6 @@
     <Compile Include="Controllers\CControllers\UsersController.cs" />
     <Compile Include="Controllers\CControllers\VehiclesController.cs" />
     <Compile Include="Controllers\CompanyControllers\AccountTypesController.cs" />
-    <Compile Include="Controllers\CompanyControllers\ApiController.cs" />
     <Compile Include="Controllers\CompanyControllers\DepartmentsController.cs" />
     <Compile Include="Controllers\CompanyControllers\EmployeesController.cs" />
     <Compile Include="Controllers\CompanyControllers\EquipmentsController.cs" />
@@ -425,6 +424,10 @@
     <Compile Include="Migrations\201507221651150_addeqp.Designer.cs">
       <DependentUpon>201507221651150_addeqp.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507231716207_addEndDate.cs" />
+    <Compile Include="Migrations\201507231716207_addEndDate.Designer.cs">
+      <DependentUpon>201507231716207_addEndDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -469,6 +472,7 @@
     <Compile Include="Models\Safety\YesNoNA.cs" />
     <Compile Include="Models\UtilityModels\CustomValidators.cs" />
     <Compile Include="Models\UtilityModels\EventModel.cs" />
+    <Compile Include="Models\UtilityModels\EventViewModel.cs" />
     <Compile Include="Models\UtilityModels\IntArrayModelBinder.cs" />
     <Compile Include="Models\UtilityModels\KMAttribute.cs" />
     <Compile Include="Models\UtilityModels\LinkViewModel.cs" />
@@ -515,7 +519,6 @@
     <Content Include="Scripts\CustomJS\Employee.js" />
     <Content Include="Scripts\CustomJS\fullcalendar.min.js" />
     <Content Include="Scripts\CustomJS\jquery.min.js" />
-    <Content Include="Scripts\CustomJS\mCalendar.js" />
     <Content Include="Scripts\CustomJS\moment.min.js" />
     <Content Include="Scripts\CustomJS\PhotoJS.js" />
     <Content Include="Scripts\CustomJS\SafetyMeeting.js" />
@@ -746,6 +749,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\Mobile\" />
+    <Folder Include="UnitTests\" />
     <Folder Include="Views\API\" />
     <Folder Include="Views\Excel\" />
     <Folder Include="Views\SafetyMeetingReview\" />
@@ -901,6 +905,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507221651150_addeqp.resx">
       <DependentUpon>201507221651150_addeqp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507231716207_addEndDate.resx">
+      <DependentUpon>201507231716207_addEndDate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

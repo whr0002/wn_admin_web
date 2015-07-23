@@ -22,6 +22,10 @@ namespace wn_Admin.Models.CompanyModels
         [DisplayFormat(DataFormatString="{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
 
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime EndDate { get; set; }
+
         [DisplayName("Period Year")]
         public int PPYr { get; set; }
 
