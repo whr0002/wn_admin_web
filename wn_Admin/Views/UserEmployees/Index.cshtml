@@ -1,4 +1,4 @@
-﻿@model IEnumerable<wn_Admin.Models.CompanyModels.UserEmployee>
+﻿@model IEnumerable<wn_Admin.Models.UtilityModels.UEViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -12,7 +12,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Employee.FirstMidName)
+            @Html.DisplayNameFor(model => model.accountName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fullName)
         </th>
         <th></th>
     </tr>
@@ -20,12 +23,15 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Employee.FirstMidName)
+            @Html.DisplayFor(modelItem => item.accountName)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.UserID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.UserID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.UserID })
+            @Html.DisplayFor(modelItem => item.fullName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id })
         </td>
     </tr>
 }

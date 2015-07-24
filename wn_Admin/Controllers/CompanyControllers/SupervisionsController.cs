@@ -24,13 +24,13 @@ namespace wn_Admin.Controllers.CompanyControllers
         }
 
         // GET: Supervisions/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? eid, int? mid, string pid)
         {
-            if (id == null)
+            if (eid == null || mid == null || pid == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Supervision supervision = db.Supervisions.Find(id);
+            Supervision supervision = db.Supervisions.Find(eid, mid, pid);
             if (supervision == null)
             {
                 return HttpNotFound();
@@ -41,8 +41,9 @@ namespace wn_Admin.Controllers.CompanyControllers
         // GET: Supervisions/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName");
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName");
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName");
+            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FullName");
+            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
             return View();
         }
 
@@ -51,7 +52,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "EmployeeID,SupervisorID,StartDate,EndDate")] Supervision supervision)
+        public ActionResult Create([Bind(Include = "EmployeeID,SupervisorID,ProjectID,StartDate,EndDate")] Supervision supervision)
         {
             if (ModelState.IsValid)
             {
@@ -60,25 +61,27 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.EmployeeID);
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.SupervisorID);
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", supervision.EmployeeID);
+            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FullName", supervision.SupervisorID);
+            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
             return View(supervision);
         }
 
         // GET: Supervisions/Edit/5
-        public ActionResult Edit(int? eid, int? mid)
+        public ActionResult Edit(int? eid, int? mid, string pid)
         {
-            if (eid == null)
+            if (eid == null || mid == null || pid == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Supervision supervision = db.Supervisions.Find(eid, mid);
+            Supervision supervision = db.Supervisions.Find(eid, mid, pid);
             if (supervision == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.EmployeeID);
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.SupervisorID);
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", supervision.EmployeeID);
+            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FullName", supervision.SupervisorID);
+            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
             return View(supervision);
         }
 
@@ -87,27 +90,31 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EmployeeID,SupervisorID,StartDate,EndDate")] Supervision supervision)
+        public ActionResult Edit(int oldEmployeeID, int oldSupervisorID, string oldProjectID, [Bind(Include = "EmployeeID,SupervisorID,ProjectID,StartDate,EndDate")] Supervision supervision)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(supervision).State = EntityState.Modified;
+                Supervision s = db.Supervisions.Find(oldEmployeeID, oldSupervisorID, oldProjectID);
+                db.Supervisions.Remove(s);
+                db.Supervisions.Add(supervision);
+                //db.Entry(supervision).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.EmployeeToID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.EmployeeID);
-            ViewBag.SupervisorToID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.SupervisorID);
+            ViewBag.EmployeeToID = new SelectList(db.Employees, "EmployeeID", "FullName", supervision.EmployeeID);
+            ViewBag.SupervisorToID = new SelectList(db.Employees, "EmployeeID", "FullName", supervision.SupervisorID);
+            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
             return View(supervision);
         }
 
         // GET: Supervisions/Delete/5
-        public ActionResult Delete(int? eid, int? mid)
+        public ActionResult Delete(int? eid, int? mid, string pid)
         {
-            if (eid == null)
+            if (eid == null || mid == null || pid == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Supervision supervision = db.Supervisions.Find(eid, mid);
+            Supervision supervision = db.Supervisions.Find(eid, mid, pid);
             if (supervision == null)
             {
                 return HttpNotFound();
@@ -118,9 +125,9 @@ namespace wn_Admin.Controllers.CompanyControllers
         // POST: Supervisions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int eid, int mid)
+        public ActionResult DeleteConfirmed(int eid, int mid, string pid)
         {
-            Supervision supervision = db.Supervisions.Find(eid, mid);
+            Supervision supervision = db.Supervisions.Find(eid, mid, pid);
             db.Supervisions.Remove(supervision);
             db.SaveChanges();
             return RedirectToAction("Index");

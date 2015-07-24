@@ -18,6 +18,9 @@
             @Html.DisplayName("Supervisor")
         </th>
         <th>
+            @Html.DisplayName("Project")
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.StartDate)
         </th>
         <th>
@@ -35,15 +38,18 @@
             @Html.DisplayFor(modelItem => item.Supervisor.FirstMidName)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.Project.ProjectName)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.StartDate)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.EndDate)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { eid=item.EmployeeID, mid=item.SupervisorID }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { eid=item.EmployeeID, mid=item.SupervisorID })
+            @Html.ActionLink("Edit", "Edit", new { eid=item.EmployeeID, mid=item.SupervisorID, pid=item.ProjectID }) |
+            @Html.ActionLink("Details", "Details", new { eid = item.EmployeeID, mid = item.SupervisorID, pid = item.ProjectID }) |
+            @Html.ActionLink("Delete", "Delete", new { eid = item.EmployeeID, mid = item.SupervisorID, pid = item.ProjectID })
         </td>
     </tr>
 }

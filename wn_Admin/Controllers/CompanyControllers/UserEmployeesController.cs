@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using wn_Admin.Models;
 using wn_Admin.Models.CompanyModels;
+using wn_Admin.Models.UtilityModels;
 
 namespace wn_Admin.Controllers.CompanyControllers
 {
@@ -20,9 +21,22 @@ namespace wn_Admin.Controllers.CompanyControllers
         // GET: UserEmployees
         public ActionResult Index()
         {
-            var userEmployees = db.UserEmployees.Include(u => u.Employee);
+            var userEmployees = db.UserEmployees.Include(u => u.Employee).ToList();
+            var uevm = new List<UEViewModel>();
 
-            return View(userEmployees.ToList());
+            foreach(var ue in userEmployees){
+                UEViewModel model = new UEViewModel();
+
+                var username = appDb.Users.Find(ue.UserID).UserName;
+
+                model.id = ue.UserID;
+                model.accountName = username;
+                model.fullName = ue.Employee.FullName;
+
+                uevm.Add(model);
+            }
+
+            return View(uevm);
         }
 
         // GET: UserEmployees/Details/5

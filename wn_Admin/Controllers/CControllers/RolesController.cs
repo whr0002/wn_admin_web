@@ -9,7 +9,7 @@ using wn_Admin.Models;
 
 namespace wn_Admin.Controllers.CControllers
 {
-    //[Authorize(Roles = "SUPERADMIN,Accountant")]
+    [Authorize(Roles = "SUPERADMIN,Accountant")]
     public class RolesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

@@ -28,21 +28,33 @@ namespace wn_Admin
             routes.MapRoute(
                 name: "PayPeroids",
                 url: "API/PayPeriods/{date}",
-                defaults: new { controller = "API", action = "PayPeriods", date = ""}
+                defaults: new { controller = "API", action = "PayPeriods", date = "" }
 
                 );
 
             routes.MapRoute(
                 name: "Supervision",
-                url: "Supervisions/Edit/{eid}/{mid}",
-                defaults: new { controller = "Supervisions", action = "Edit", eid="", mid=""}
+                url: "Supervisions/Edit/{eid}/{mid}/{pid}",
+                defaults: new { controller = "Supervisions", action = "Edit", eid = "", mid = "", pid = "" }
 
                 );
 
             routes.MapRoute(
                 name: "Supervision delete",
-                url: "Supervisions/Delete/{eid}/{mid}",
-                defaults: new { controller = "Supervisions", action = "Delete", eid="", mid="" }
+                url: "Supervisions/Delete/{eid}/{mid}/{pid}",
+                defaults: new { controller = "Supervisions", action = "Delete", eid = "", mid = "", pid = "" }
+                );
+
+            routes.MapRoute(
+                name: "Supervision delete confirm",
+                url: "Supervisions/DeleteConfirmed/{eid}/{mid}/{pid}",
+                defaults: new { controller = "Supervisions", action = "Delete", eid = "", mid = "", pid = "" }
+                );
+
+            routes.MapRoute(
+                name: "Supervision detail",
+                url: "Supervisions/Detail/{eid}/{mid}/{pid}",
+                defaults: new { controller = "Supervisions", action = "Detail", eid = "", mid = "", pid = "" }
                 );
 
 

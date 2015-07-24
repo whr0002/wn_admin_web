@@ -1,26 +1,12 @@
-﻿@model PagedList.IPagedList<wn_Admin.Models.CompanyModels.Working>
-@using PagedList.Mvc;
+﻿@model IEnumerable<wn_Admin.Models.CompanyModels.Working>
+
+@using GridMvc.Html;
 
 @{
     Layout = null;
     ViewBag.Title = "Index";
 }
 
-@*@section cssSection{
-
-    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/StyleSheet_Timesheet.css" type="text/css" rel="stylesheet" />
-    <link href="~/Content/fullcalendar.css" type="text/css" rel="stylesheet" />
-    <link href="~/Content/fullcalendar.print.css" type="text/css" rel="stylesheet" media='print' />
-
-}
-
-@section jsSection{
-    <script src="~/Scripts/CustomJS/jquery.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/CustomJS/moment.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/CustomJS/fullcalendar.min.js"></script>
-    <script src="~/Scripts/ng_controllers/timesheet_controller.js"></script>
-}*@
 <html>
 <head>
     <meta charset="utf-8" />
@@ -31,11 +17,13 @@
     <link href="~/Content/StyleSheet_Timesheet.css" type="text/css" rel="stylesheet" />
     <link href="~/Content/fullcalendar.css" type="text/css" rel="stylesheet" />
     <link href="~/Content/fullcalendar.print.css" type="text/css" rel="stylesheet" media='print' />
+    <link href="~/Content/Gridmvc.css" rel="stylesheet" />
 
     <script src="~/Scripts/CustomJS/jquery.min.js"></script>
     <script type="text/javascript" src="~/Scripts/CustomJS/moment.min.js"></script>
     <script type="text/javascript" src="~/Scripts/CustomJS/fullcalendar.min.js"></script>
     <script src="~/Scripts/ng_controllers/timesheet_controller.js"></script>
+    <script src="~/Scripts/gridmvc.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -49,6 +37,25 @@
 </head>
 
 <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <img src="~/Content/Images/wn_logo.jpg" class="img-responsive img-rounded" />
+                @*@Html.ActionLink("Woodlands Admin", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Dashboard", "Index", "Home")</li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
     <div class="container">
 
         <h2>Index</h2>
@@ -148,6 +155,23 @@
                         </div>
                     }
                 </div>
+
+                <div class="col-md-12">
+                    @foreach (var summary in ViewBag.TMSummary as List<wn_Admin.Models.UtilityModels.TimesheetSummaryViewModel>)
+                    {
+                        <div class="col-md-6" style="border:1px solid black;">
+                            <div class="col-md-12">
+                                Name: @summary.EmployeeName
+                            </div>
+                            <div class="col-md-12">
+                                Date: @summary.DateRange
+                            </div>
+                            <div class="col-md-12">
+                                Time: @summary.TotalHours hours
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
 
             <div class="col-md-7">
@@ -159,201 +183,79 @@
                 </div>
             </div>
         </div>
-        <table class="table" ng-controller="checkboxController">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Employee.FullName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Date)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().EndDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().PPYr)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().PP)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Project.FK_Client.ClientName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Project.ProjectName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().FK_Task.TaskName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Identifier)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Veh)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Crew)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().StartKm)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().EndKm)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().KmDiff)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Equipment)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Field)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().PD)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().JobDescription)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().FK_OffReason.OffReasonName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Hours)
-                </th>
-                @*<th>
-                        @Html.DisplayNameFor(model => model.FirstOrDefault().Bank)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.FirstOrDefault().OT)
-                    </th>*@
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().isReviewed)
-                </th>
-                @if (ViewBag.hasReviewControl)
-                {
-                    <th>
-                        <input type="checkbox" onclick="checkAll(this)" />
-                    </th>
-                    <th><button class="btn btn-primary" onclick="submitReviews()">Review</button></th>
-                }
-            </tr>
-
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Employee.FirstMidName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EndDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PPYr)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PP)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Project.FK_Client.ClientName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Project.ProjectName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FK_Task.TaskName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Identifier)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Veh)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Crew)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartKm)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EndKm)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.KmDiff)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Equipment)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Field)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PD)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.JobDescription)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FK_OffReason.OffReasonName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Hours)
-                    </td>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.Bank)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.OT)
-                        </td>*@
-                    <td>
-                        @Html.DisplayFor(modelItem => item.isReviewed)
-                    </td>
 
 
-                    @if (ViewBag.hasReviewControl)
+        <div class="row">
+            <div class="col-md-12">
+                @Html.Grid(Model).Columns(columns =>
                     {
-                        if (ViewBag.CurrentEID == null)
+                        columns.Add(c => c.Employee.FullName).Titled("Name").Filterable(true);
+                        columns.Add(c => c.Date).Format("{0:yyyy-MM-dd}");
+                        columns.Add(c => c.EndDate).Format("{0:yyyy-MM-dd}");
+                        columns.Add(c => c.PPYr);
+                        columns.Add(c => c.PP);
+                        columns.Add(c => c.Project.FK_Client.ClientName).Titled("Client");
+                        columns.Add(c => c.Project.ProjectName).Titled("Project");
+                        columns.Add(c => c.FK_Task.TaskName).Titled("Task");
+                        columns.Add(c => c.Identifier);
+                        columns.Add(c => c.Veh);
+                        columns.Add(c => c.Crew);
+                        columns.Add(c => c.StartKm);
+                        columns.Add(c => c.EndKm);
+                        columns.Add(c => c.KmDiff);
+                        columns.Add(c => c.Equipment);
+                        columns.Add(c => c.Field);
+                        columns.Add(c => c.PD).RenderValueAs(c => c.PD ? "Yes" : "No");
+                        columns.Add(c => c.JobDescription).Titled("Job Description");
+                        columns.Add(c => c.FK_OffReason.OffReasonName).Titled("Off Detail");
+                        columns.Add(c => c.Hours);
+                        columns.Add(c => c.isReviewed).RenderValueAs(c => c.isReviewed ? "Yes" : "No");
+                        
+                        if (ViewBag.hasFullControl)
                         {
-                            <td>
-                                <input type="checkbox" value="@item.WorkingID" class="reviewBox" />
-                            </td>
+                            columns.Add()
+                                .Encoded(false)
+                                .Sanitized(false)
+                                .RenderValueAs(c => Html.CheckBox("box", false, new { value = @c.WorkingID, @class = "reviewBox" })).Titled("<input type=\"checkbox\" onclick=\"checkAll(this)\" />");
+
+                            columns
+                                .Add()
+                                .Encoded(false)
+                                .Sanitized(false)
+                                .RenderValueAs(c =>
+                                Html.ActionLink("Edit", "Edit", new { id = c.WorkingID }) + "|" +
+                                Html.ActionLink("Details", "Details", new { id = c.WorkingID }) + "|" +
+                                Html.ActionLink("Delete", "Delete", new { id = c.WorkingID })
+                                )
+                                .Titled("<button class=\"btn btn-primary\" onclick=\"submitReviews()\">Review</button>");
                         }
-                        else
+                        else if (ViewBag.hasReviewControl)
                         {
-                            if (ViewBag.CurrentEID != item.EmployeeID)
-                            {
-                                <td>
-                                    <input type="checkbox" value="@item.WorkingID" class="reviewBox" />
-                                </td>
-                            }
+
+                            // A supervisor cannot review his own timesheet
+                            columns.Add()
+                            .Encoded(false)
+                            .Sanitized(false)
+                            .RenderValueAs(c => (ViewBag.CurrentEID == null || ViewBag.CurrentEID != c.EmployeeID) ?
+                                    Html.CheckBox("box", false, new { value = @c.WorkingID, @class = "reviewBox" }) + "" : ""
+                                );
+
+
+                            columns
+                                .Add()
+                                .Encoded(false)
+                                .Sanitized(false)
+                                .RenderValueAs(c => "")
+                                .Titled("<button class=\"btn btn-primary\" onclick=\"submitReviews()\">Review</button>");
                         }
 
-                    }
 
-                    @if (ViewBag.hasFullControl)
-                    {
-                        <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = item.WorkingID }) |
-                            @Html.ActionLink("Details", "Details", new { id = item.WorkingID }) |
-                            @Html.ActionLink("Delete", "Delete", new { id = item.WorkingID })
-                        </td>
-                    }
-
-
-                </tr>
-            }
-
-        </table>
-
-        <br />
-        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-
-        @Html.PagedListPager(Model, page => "/workings?page=" + page + ViewBag.CurrentFilter)
-
-
+                    }).WithPaging(10).Sortable(true)
+            </div>
+        </div>
     </div>
+
+
 </body>
+
 </html>

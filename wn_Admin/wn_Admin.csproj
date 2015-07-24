@@ -39,6 +39,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GridMvc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Grid.Mvc.3.0.0\lib\net40\GridMvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -428,6 +432,10 @@
     <Compile Include="Migrations\201507231716207_addEndDate.Designer.cs">
       <DependentUpon>201507231716207_addEndDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507241519358_addpidtosupervision.cs" />
+    <Compile Include="Migrations\201507241519358_addpidtosupervision.Designer.cs">
+      <DependentUpon>201507241519358_addpidtosupervision.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -482,6 +490,8 @@
     <Compile Include="Models\UtilityModels\StorageController.cs" />
     <Compile Include="Models\UtilityModels\SummaryModel.cs" />
     <Compile Include="Models\UtilityModels\TimesheetDateValidator.cs" />
+    <Compile Include="Models\UtilityModels\TimesheetSummaryViewModel.cs" />
+    <Compile Include="Models\UtilityModels\UEViewModel.cs" />
     <Compile Include="Models\UtilityModels\UserInfo.cs" />
     <Compile Include="Models\wn_admin_db.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -498,6 +508,7 @@
     <Content Include="Content\Form.css" />
     <Content Include="Content\fullcalendar.css" />
     <Content Include="Content\fullcalendar.print.css" />
+    <Content Include="Content\Gridmvc.css" />
     <Content Include="Content\Images\next.png" />
     <Content Include="Content\Images\wn_logo.jpg" />
     <Content Include="Content\PagedList.css" />
@@ -510,6 +521,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ClassDiagram1.cd" />
     <Content Include="ClassDiagram2.cd" />
+    <Content Include="Grid.mvc.readme" />
     <None Include="Properties\PublishProfiles\wnasap.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -522,6 +534,9 @@
     <Content Include="Scripts\CustomJS\moment.min.js" />
     <Content Include="Scripts\CustomJS\PhotoJS.js" />
     <Content Include="Scripts\CustomJS\SafetyMeeting.js" />
+    <Content Include="Scripts\gridmvc.js" />
+    <Content Include="Scripts\gridmvc.lang.ru.js" />
+    <Content Include="Scripts\gridmvc.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -745,6 +760,14 @@
     <Content Include="Views\Equipments\Index.cshtml" />
     <Content Include="Views\Workings\CreateOff.cshtml" />
     <Content Include="Views\Workings\demo.cshtml" />
+    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Manage\ManageLogins.cshtml" />
+    <Content Include="Views\Manage\SetPassword.cshtml" />
+    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Shared\_GridPager.cshtml" />
+    <Content Include="Views\Shared\_Grid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -908,6 +931,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507231716207_addEndDate.resx">
       <DependentUpon>201507231716207_addEndDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507241519358_addpidtosupervision.resx">
+      <DependentUpon>201507241519358_addpidtosupervision.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

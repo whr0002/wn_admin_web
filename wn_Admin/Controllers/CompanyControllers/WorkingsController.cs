@@ -34,6 +34,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             var workings = db.Workings.Include(w => w.Employee).Include(w => w.FK_OffReason).Include(w => w.FK_Task).Include(w => w.Project);
             string userId = User.Identity.GetUserId();
             string currentFilter = "";
+            string dateRange = "";
 
             if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
             {
@@ -65,8 +66,10 @@ namespace wn_Admin.Controllers.CompanyControllers
                               where s.SupervisorID == employee.EmployeeID
                               select s.EmployeeID;
 
+                    var pids = db.Supervisions.Where(w => w.SupervisorID == employee.EmployeeID).Select(s => s.ProjectID);
 
-                    workings = workings.Where(w => w.EmployeeID == employee.EmployeeID || (ids.Contains(w.EmployeeID) && w.isReviewed == false));
+
+                    workings = workings.Where(w => w.EmployeeID == employee.EmployeeID || (ids.Contains(w.EmployeeID) && pids.Contains(w.ProjectID) && w.isReviewed == false));
 
                     if (ids.Count() > 0)
                     {
@@ -98,12 +101,16 @@ namespace wn_Admin.Controllers.CompanyControllers
             {
                 workings = workings.Where(w => w.Date >= startDate || w.EndDate >= startDate);
                 currentFilter += "&startDate=" + String.Format("{0:yyyy-MM-dd}", startDate);
+
+                dateRange = "From " + String.Format("{0:yyyy-MM-dd}", startDate);
             }
 
             if (endDate != null)
             {
                 workings = workings.Where(w => w.Date <= endDate || w.EndDate <= endDate);
                 currentFilter += "&endDate=" + String.Format("{0:yyyy-MM-dd}", endDate);
+
+                dateRange += " To " + String.Format("{0:yyyy-MM-dd}", endDate);
             }
 
             // Get working records within 2 months
@@ -112,6 +119,9 @@ namespace wn_Admin.Controllers.CompanyControllers
                 DateTime now = DateTime.Now;
                 DateTime preMonth = now.AddMonths(-2);
                 workings = workings.Where(w => w.Date >= preMonth || w.EndDate >= preMonth);
+
+                // Used by timesheet summary
+                dateRange = "From " + preMonth.ToString("yyyy-MM-dd") + " to " + now.ToString("yyyy-MM-dd");
 
             }
 
@@ -151,10 +161,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             ViewBag.CurrentFilter = currentFilter;
             workings = workings.OrderByDescending(o => o.Date);
 
-            int pageSize = 15;
-            int pageNumber = (page ?? 1);
-
-            // Group by events
+            // Group by Date for events
             var events = workings
                 .GroupBy(g => new{g.EmployeeID, g.Employee.FullName, g.Date, g.EndDate})
                 .Select(s => new EventModel
@@ -193,11 +200,23 @@ namespace wn_Admin.Controllers.CompanyControllers
                 evm.Add(eventViewModel);
             }
 
+            // Generate time sheet summary
+            var tempE = mUserInfo.getEmployee(userId);
+
+            ViewBag.TMSummary = workings.Where(w => w.EmployeeID == tempE.EmployeeID).GroupBy(g => new {g.EmployeeID, g.Employee.FullName}).Select(
+                s => new TimesheetSummaryViewModel
+                {
+                    EmployeeName = s.Key.FullName,
+                    TotalHours = s.Sum(b => b.Hours),
+                    DateRange = dateRange
+                }).ToList();
+            
+
             // Pass events to view
             ViewBag.Events = evm;
 
 
-            return View(workings.ToPagedList(pageNumber, pageSize));
+            return View(workings.ToList());
         }
 
         // GET: Workings/Details/5
@@ -486,10 +505,10 @@ namespace wn_Admin.Controllers.CompanyControllers
         }
 
 
-        public ActionResult Review(string ids)
+        public ActionResult Review([ModelBinder(typeof(IntArrayModelBinder))] int[] ids)
         {
 
-            string[] sids = ids.Split(',');
+            //string[] sids = ids.Split(',');
 
             // Get current supervisor
             Employee employee = mUserInfo.getEmployee(User.Identity.GetUserId());
@@ -501,20 +520,20 @@ namespace wn_Admin.Controllers.CompanyControllers
                 if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
                 {
                     // User is Accountant or Superadmin, they can review everyone's timesheet
-                    List<int> list = new List<int>();
+                    //List<int> list = new List<int>();
 
-                    foreach (var id in sids)
-                    {
-                        try
-                        {
-                            int i = Convert.ToInt32(id);
-                            list.Add(i);
-                        }
-                        catch { }
-                    }
+                    //foreach (var id in sids)
+                    //{
+                    //    try
+                    //    {
+                    //        int i = Convert.ToInt32(id);
+                    //        list.Add(i);
+                    //    }
+                    //    catch { }
+                    //}
 
                     var wlist = from work in db.Workings
-                                where list.Contains(work.WorkingID)
+                                where ids.Contains(work.WorkingID)
                                 select work;
 
 
@@ -536,25 +555,35 @@ namespace wn_Admin.Controllers.CompanyControllers
                                  where super.SupervisorID == employee.EmployeeID
                                  select work;
 
-                    foreach (string id in sids)
+                    foreach (var work in result)
                     {
-                        try
+                        if (ids.Contains(work.WorkingID))
                         {
-                            int i = Convert.ToInt32(id);
-                            // check the input IDs whether are in employee IDs which are under supervised by this supervisor
-                            foreach (var work in result)
-                            {
-                                if (work.WorkingID == i)
-                                {
-                                    work.isReviewed = true;
-                                }
-                            }
-
-                            db.SaveChanges();
-
+                            work.isReviewed = true;
                         }
-                        catch { }
                     }
+
+                    db.SaveChanges();
+
+                    //foreach (string id in sids)
+                    //{
+                    //    try
+                    //    {
+                    //        int i = Convert.ToInt32(id);
+                    //        // check the input IDs whether are in employee IDs which are under supervised by this supervisor
+                    //        foreach (var work in result)
+                    //        {
+                    //            if (work.WorkingID == i)
+                    //            {
+                    //                work.isReviewed = true;
+                    //            }
+                    //        }
+
+                    //        db.SaveChanges();
+
+                    //    }
+                    //    catch { }
+                    //}
                 }
                 else
                 {
@@ -573,6 +602,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             var table = new System.Data.DataTable("teste");
             table.Columns.Add("Name", typeof(string));
             table.Columns.Add("Date", typeof(DateTime));
+            table.Columns.Add("End Date", typeof(DateTime));
             table.Columns.Add("PPyr", typeof(int));
             table.Columns.Add("PP", typeof(int));
             table.Columns.Add("Client", typeof(string));
@@ -584,14 +614,14 @@ namespace wn_Admin.Controllers.CompanyControllers
             table.Columns.Add("Crew", typeof(string));
             table.Columns.Add("StartKm", typeof(double));
             table.Columns.Add("EndKm", typeof(double));
-            table.Columns.Add("GPS", typeof(bool));
+            table.Columns.Add("KmDiff", typeof(double));
+            table.Columns.Add("Equipments", typeof(string));
             table.Columns.Add("Field", typeof(string));
             table.Columns.Add("PD", typeof(bool));
             table.Columns.Add("JobDescription", typeof(string));
             table.Columns.Add("Off", typeof(string));
             table.Columns.Add("Hours", typeof(double));
-            table.Columns.Add("Bank", typeof(int));
-            table.Columns.Add("OT", typeof(int));
+
 
             if (timesheets != null)
             {
@@ -601,6 +631,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                         (
                         t.Employee.FullName,
                         t.Date,
+                        t.EndDate,
                         t.PPYr,
                         t.PP,
                         t.Project.FK_Client.ClientName,
@@ -608,17 +639,17 @@ namespace wn_Admin.Controllers.CompanyControllers
                         t.Project.ProjectID,
                         t.FK_Task.TaskName,
                         t.Identifier,
-                        //t.FK_Vehicle.VehicleName,
+                        t.Veh,
                         t.Crew,
                         t.StartKm,
                         t.EndKm,
-                        //t.FK_FieldAccess.FieldAccessName,
+                        t.KmDiff,
+                        t.Equipment,
+                        t.Field,
                         t.PD,
                         t.JobDescription,
                         t.FK_OffReason.OffReasonName,
-                        t.Hours,
-                        t.Bank,
-                        t.OT
+                        t.Hours
                         );
 
                 }

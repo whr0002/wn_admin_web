@@ -20,6 +20,11 @@ namespace wn_Admin.Models.CompanyModels
         [DisplayName("Supervisor Name")]
         public int SupervisorID { get; set; }
 
+        [Key]
+        [Column(Order=2)]
+        [DisplayName("Project")]
+        public string ProjectID { get; set; }
+
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString="{0:yyyy-MM-dd}", ApplyFormatInEditMode=true)]
         public DateTime StartDate { get; set; }
@@ -33,5 +38,8 @@ namespace wn_Admin.Models.CompanyModels
 
         [ForeignKey("SupervisorID")]
         public virtual Employee Supervisor { get; set; }
+
+        [ForeignKey("ProjectID")]
+        public virtual Project Project { get; set; }
     }
 }
