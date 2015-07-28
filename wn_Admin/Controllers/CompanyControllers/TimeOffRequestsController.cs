@@ -22,7 +22,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // GET: TimeOffRequests
         public ActionResult Index()
         {
-            var timeOffRequests = db.TimeOffRequests.Include(t => t.Employee).Include(t => t.OffReason);
+            var timeOffRequests = db.TimeOffRequests.Include(t => t.Employee);
 
 
             if (ui.isInRole(User.Identity.GetUserId(), "Employee"))

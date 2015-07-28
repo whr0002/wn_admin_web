@@ -32,12 +32,12 @@ namespace wn_Admin.Models.CompanyModels
         [DisplayName("# of days off")]
         public int NumberOfDays { get; set; }
 
-        public int OffReasonID { get; set; }
+        public string OffReasonID { get; set; }
 
         public string Notes { get; set; }
 
 
         public virtual Employee Employee { get; set; }
-        public virtual OffReason OffReason { get; set; }
+        //public virtual OffReason OffReason { get; set; }
     }
 }

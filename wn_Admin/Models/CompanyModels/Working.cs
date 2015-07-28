@@ -36,8 +36,8 @@ namespace wn_Admin.Models.CompanyModels
         [Required]
         public string ProjectID { get; set; }
 
-        [Required]
-        public int Task { get; set; }
+
+        public string Task { get; set; }
         public string Identifier { get; set; }
 
         [DisplayName("Vehicle")]
@@ -46,12 +46,12 @@ namespace wn_Admin.Models.CompanyModels
         public string Crew { get; set; }
 
         [DisplayName("Start Km")]
-        [Range(0, int.MaxValue)]
+        [Range(0, 500000)]
         public int? StartKm { get; set; }
 
         [KM("StartKm", ErrorMessage = "EndKm must be greater than StartKm")]
         [DisplayName("End Km")]
-        [Range(0, int.MaxValue)]
+        [Range(0, 500000)]
         public int? EndKm { get; set; }
 
  
@@ -86,7 +86,7 @@ namespace wn_Admin.Models.CompanyModels
         public string JobDescription { get; set; }
 
         [DisplayName("Off Details")]
-        public int OffReason { get; set; }
+        public string OffReason { get; set; }
 
         [Range(0, 24)]
         public double Hours { get; set; }
@@ -108,11 +108,11 @@ namespace wn_Admin.Models.CompanyModels
         //[ForeignKey("Field")]
         //public virtual FieldAccess FK_FieldAccess { get; set; }
 
-        [ForeignKey("OffReason")]
-        public virtual OffReason FK_OffReason { get; set; }
+        //[ForeignKey("OffReason")]
+        //public virtual OffReason FK_OffReason { get; set; }
 
-        [ForeignKey("Task")]
-        public virtual Task FK_Task { get; set; }
+        //[ForeignKey("Task")]
+        //public virtual Task FK_Task { get; set; }
         //[ForeignKey("Veh")]
         //public virtual Vehicle FK_Vehicle { get; set; }
     }

@@ -94,7 +94,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                         t.Project.Client,
                         t.Project.ProjectName,
                         t.Project.ProjectID,
-                        t.FK_Task.TaskName,
+                        t.Task,
                         t.Identifier,
                         //t.FK_Vehicle.VehicleName,
                         t.Crew,
@@ -103,7 +103,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                         //t.FK_FieldAccess.FieldAccessName,
                         t.PD,
                         t.JobDescription,
-                        t.FK_OffReason.OffReasonName,
+                        t.OffReason,
                         t.Hours,
                         t.Bank,
                         t.OT

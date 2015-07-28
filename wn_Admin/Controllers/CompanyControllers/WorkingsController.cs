@@ -27,11 +27,11 @@ namespace wn_Admin.Controllers.CompanyControllers
         private UserInfo mUserInfo = new UserInfo();
 
         // GET: Workings
-        public ActionResult Index(int[] employeeId, int? page, DateTime? startDate = null, DateTime? endDate = null, int ppYear = -1, int pp = -1, int clientId = -1, string projectId = null, Boolean? exportToExcel = null)
+        public ActionResult Index(int[] employeeId, int? page, DateTime? startDate = null, DateTime? endDate = null, int ppYear = -1, int pp = -1, int clientId = -1, string projectId = null, string isReviewed = null, Boolean? exportToExcel = null)
         {
 
 
-            var workings = db.Workings.Include(w => w.Employee).Include(w => w.FK_OffReason).Include(w => w.FK_Task).Include(w => w.Project);
+            var workings = db.Workings.Include(w => w.Employee).Include(w => w.Project);
             string userId = User.Identity.GetUserId();
             string currentFilter = "";
             string dateRange = "";
@@ -93,6 +93,8 @@ namespace wn_Admin.Controllers.CompanyControllers
                 ViewBag.projectId = new SelectList(workings.Select(s => s.Project).Distinct(), "ProjectID", "ProjectName");
 
             }
+            ViewBag.isReviewed = new SelectList(db.YesNoNA.Where(w => w.YesNoNAName != "N/A"), "YesNoNAName", "YesNoNAName");
+
 
             // Search Filters
 
@@ -151,6 +153,13 @@ namespace wn_Admin.Controllers.CompanyControllers
             {
                 workings = workings.Where(w => w.ProjectID.Equals(projectId));
                 currentFilter += "&projectId=" + projectId;
+            }
+
+            // Aprovel
+            if (!String.IsNullOrWhiteSpace(isReviewed))
+            {
+                workings = workings.Where(w => w.isReviewed == (isReviewed.Equals("Yes")));
+                currentFilter += "&isReviewed=" + isReviewed;
             }
 
             if (exportToExcel != null && exportToExcel == true)
@@ -240,8 +249,8 @@ namespace wn_Admin.Controllers.CompanyControllers
         {
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessName", "FieldAccessName");
-            ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName");
-            ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName");
+            ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
+            ViewBag.Task = new SelectList(db.Tasks, "TaskName", "TaskName");
             ViewBag.Veh = new SelectList(db.Vehicles, "VehicleName", "VehicleName");
             ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1), "ProjectID", "ProjectName");
             ViewBag.Equipment = new MultiSelectList(db.Equipments, "EquipmentName", "EquipmentName");
@@ -256,14 +265,14 @@ namespace wn_Admin.Controllers.CompanyControllers
             PPViewModel ppv = calc.getPayPeriod(working.Date);
             working.PPYr = ppv.PPYear;
             working.PP = ppv.PPNumber;
-            //working.OffReason = 2;
+            //working.OffReason = 1;
 
             return View(working);
         }
 
         public ActionResult CreateOff()
         {
-            ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName");
+            ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
             setEmployeeDropdowns();
 
             Working working = new Working();
@@ -276,7 +285,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             working.PP = ppv.PPNumber;
 
             working.ProjectID = "0-0-2015";
-            working.Task = db.Tasks.Where(w => w.TaskName.Equals("None")).FirstOrDefault().TaskID;
+            //working.Task = "None";
 
 
             return View(working);
@@ -520,18 +529,6 @@ namespace wn_Admin.Controllers.CompanyControllers
                 if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
                 {
                     // User is Accountant or Superadmin, they can review everyone's timesheet
-                    //List<int> list = new List<int>();
-
-                    //foreach (var id in sids)
-                    //{
-                    //    try
-                    //    {
-                    //        int i = Convert.ToInt32(id);
-                    //        list.Add(i);
-                    //    }
-                    //    catch { }
-                    //}
-
                     var wlist = from work in db.Workings
                                 where ids.Contains(work.WorkingID)
                                 select work;
@@ -564,26 +561,6 @@ namespace wn_Admin.Controllers.CompanyControllers
                     }
 
                     db.SaveChanges();
-
-                    //foreach (string id in sids)
-                    //{
-                    //    try
-                    //    {
-                    //        int i = Convert.ToInt32(id);
-                    //        // check the input IDs whether are in employee IDs which are under supervised by this supervisor
-                    //        foreach (var work in result)
-                    //        {
-                    //            if (work.WorkingID == i)
-                    //            {
-                    //                work.isReviewed = true;
-                    //            }
-                    //        }
-
-                    //        db.SaveChanges();
-
-                    //    }
-                    //    catch { }
-                    //}
                 }
                 else
                 {
@@ -637,7 +614,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                         t.Project.FK_Client.ClientName,
                         t.Project.ProjectName,
                         t.Project.ProjectID,
-                        t.FK_Task.TaskName,
+                        t.Task,
                         t.Identifier,
                         t.Veh,
                         t.Crew,
@@ -648,7 +625,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                         t.Field,
                         t.PD,
                         t.JobDescription,
-                        t.FK_OffReason.OffReasonName,
+                        t.OffReason,
                         t.Hours
                         );
 

@@ -436,6 +436,10 @@
     <Compile Include="Migrations\201507241519358_addpidtosupervision.Designer.cs">
       <DependentUpon>201507241519358_addpidtosupervision.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507281654586_rmFK.cs" />
+    <Compile Include="Migrations\201507281654586_rmFK.Designer.cs">
+      <DependentUpon>201507281654586_rmFK.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -759,7 +763,6 @@
     <Content Include="Views\Equipments\Edit.cshtml" />
     <Content Include="Views\Equipments\Index.cshtml" />
     <Content Include="Views\Workings\CreateOff.cshtml" />
-    <Content Include="Views\Workings\demo.cshtml" />
     <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
     <Content Include="Views\Manage\ChangePassword.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
@@ -934,6 +937,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507241519358_addpidtosupervision.resx">
       <DependentUpon>201507241519358_addpidtosupervision.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507281654586_rmFK.resx">
+      <DependentUpon>201507281654586_rmFK.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

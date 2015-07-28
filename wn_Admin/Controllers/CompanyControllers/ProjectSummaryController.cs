@@ -22,7 +22,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         public ActionResult Index(int ClientID = -1, string ProjectID = "", DateTime? startDate = null, DateTime? endDate = null)
         {
             SummaryModel model = new SummaryModel();
-            var workings = db.Workings.Include(w => w.Employee).Include(w => w.FK_OffReason).Include(w => w.FK_Task).Include(w => w.Project);
+            var workings = db.Workings.Include(w => w.Employee).Include(w => w.Project);
             var expenses = db.Expenses.Include(e => e.AccountType).Include(e => e.Employee).Include(e => e.Project);
 
             if (ClientID == -1 && ProjectID.Equals("") && startDate == null && endDate == null)

@@ -73,7 +73,7 @@ namespace wn_Admin.Controllers
                     resource.color = "Grey";
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Vehicles", Link = "/vehicles" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Departments", Link = "/departments" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Equipments", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Equipments", Link = "/equipments" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Account Types", Link = "/accounttypes" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Time Off Request", Link = "/timeoffrequests" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Costs", Link = "/#" });

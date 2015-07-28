@@ -246,7 +246,7 @@ function ajaxSubmit() {
 
         $.ajax({
             //url: $(this).data('url'),
-            url: "https://localhost:44300/workings/ajaxCreate",
+            url: "/workings/ajaxCreate",
             type: 'POST',
             data: formData,
             success: function (result) {
