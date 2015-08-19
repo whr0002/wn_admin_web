@@ -1,45 +1,89 @@
 ﻿@model IEnumerable<wn_Admin.Models.Project>
-
+@using GridMvc.Html;
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FK_Client.ClientName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ProjectName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Status)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.FK_Client.ClientName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProjectName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ProjectID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ProjectID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ProjectID })
-        </td>
-    </tr>
+@section jsSection{
+    <script src="~/Scripts/gridmvc.min.js"></script>
 }
 
-</table>
+@section cssSection{
+    <link href="~/Content/Gridmvc.css" rel="stylesheet" />
+}
+
+<h2>Index</h2>
+@if (ViewBag.hasControl)
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+    @*<table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FK_Client.ClientName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProjectName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProjectID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                @if(ViewBag.hasControl){
+                    <th></th>
+                }
+            </tr>
+
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FK_Client.ClientName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProjectName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProjectID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                @if(ViewBag.hasControl){
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id=item.ProjectID }) |
+                        @Html.ActionLink("Details", "Details", new { id=item.ProjectID }) |
+                        @Html.ActionLink("Delete", "Delete", new { id=item.ProjectID })
+                    </td>
+                }
+            </tr>
+        }
+
+        </table>*@
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Grid(Model).Columns(columns =>
+       {
+           columns.Add(c => c.FK_Client.ClientName).Titled("Client").Filterable(true);
+           columns.Add(c => c.ProjectName).Filterable(true);
+           columns.Add(c => c.ProjectID).Filterable(true);
+           columns.Add(c => c.Status).Filterable(true);
+
+           if (ViewBag.hasControl)
+           {
+               columns
+                   .Add()
+                   .Encoded(false)
+                   .Sanitized(false)
+                   .RenderValueAs(c =>
+                       Html.ActionLink("[Edit]", "Edit", new { id = c.ProjectID }) + " " +
+                       Html.ActionLink("[Details]", "Details", new { id = c.ProjectID }) + " " +
+                       Html.ActionLink("[Delete]", "Delete", new { id = c.ProjectID })
+                   );
+           }
+       }).Sortable(true)
+        </div>
+    </div>

@@ -1,5 +1,22 @@
-﻿// Initializing change events on some input fields
+﻿
+
+function setDatetiempicker($, formBlock) {
+    $('.b-datepicker').datetimepicker();
+    
+    $('#Date', formBlock).on("dp.change", function (e) {
+        var endDate = new Date(e.date);
+        //endDate.setDate(endDate.getDate() + 1);
+        endDate.setHours(23, 59, 59, 999);
+        $('#EndDate', formBlock).data("DateTimePicker").minDate(e.date);
+        $('#EndDate', formBlock).data("DateTimePicker").maxDate(endDate);
+
+        refreshPayPeriod(formBlock);
+    });
+}
+
+// Initializing change events on some input fields
 window.onload = function () {
+
     var formBlock = $('#formBlock0');
     // Add change event to clientName
     $('#ClientName', formBlock).change(function () {
@@ -24,22 +41,31 @@ window.onload = function () {
     });
 
     // Add change event to date
-    $('#Date', formBlock).change(function () {
-
-        var ppyr = $('#PPYr', formBlock).val("");
-        var pp = $('#PP', formBlock).val("");
-
-        var date = $('#Date', formBlock).val();
-
-        $.getJSON("/api/PayPeriods/" + date, function (result) {
-            ppyr.val(result["PPYear"]);
-            pp.val(result["PPNumber"]);
-        });
-    });
+    //$('#Date', formBlock).change(refreshPayPeriod(formBlock));
 
 
 
 }
+
+function refreshPayPeriod(formBlock) {
+    var ppyr = $('#PPYr', formBlock).val("");
+    var pp = $('#PP', formBlock).val("");
+
+    var date = $('#Date', formBlock).val();
+    //console.log(date);
+
+    $.ajax({
+        url: "/api/payperiods",
+        type: "POST",
+        data: { date: date },
+        success: function (result) {
+            ppyr.val(result["PPYear"]);
+            pp.val(result["PPNumber"]);
+        }
+    });
+}
+
+
 
 // Initializing calendar
 function initializeCalendar(events) {
@@ -170,6 +196,13 @@ function addForm() {
     formBlock.prop('id', "formBlock" + num);
     //$(cloneForm).off("change", "#ClientName");
 
+    //(function ($) {
+    //    $(document).ready(function () {
+    //        $('#Date', formBlock).datetimepicker();
+    //    });
+    //}(jq14));
+    
+
     // Add change event to clientName
     $('#ClientName', formBlock).change(function () {
 
@@ -193,22 +226,20 @@ function addForm() {
     });
 
     // Add change event to Date to get PPYr and PP
-    $('#Date', formBlock).change(function () {
+    //$('#Date', formBlock).change(function () {
 
-        var ppyr = $('#PPYr', formBlock).val("");
-        var pp = $('#PP', formBlock).val("");
+    //    $('#EndDate', formBlock).data("DateTimePicker").minDate(e.date);
 
-        var date = $('#Date', formBlock).val();
+    //    refreshPayPeriod(formBlock);
 
-        $.getJSON("/api/PayPeriods/" + date, function (result) {
-            ppyr.val(result["PPYear"]);
-            pp.val(result["PPNumber"]);
-        });
-    });
+    //});
+
+
 
     formRow.append(formBlock);
 
-
+    formBlock = jq14('#formBlock' + num);
+    setDatetiempicker(jq14, formBlock);
 }
 
 // Form Submission
@@ -224,6 +255,7 @@ function ajaxSubmit() {
                 __RequestVerificationToken: token,
                 EmployeeID: $('#EmployeeID option:selected', formBlock).val(),
                 Date: $('#Date', formBlock).val(),
+                EndDate: $('#EndDate', formBlock).val(),
                 PPYr: $('#PPYr', formBlock).val(),
                 PP: $('#PP', formBlock).val(),
                 ProjectID: $('#ProjectID option:selected', formBlock).val(),
@@ -256,7 +288,8 @@ function ajaxSubmit() {
                     $("#validationErrors", formBlock).empty();
                     $("#validationErrors", formBlock).append(result);
                 }
-            }
+            },
+            async: false
         });
 
     });

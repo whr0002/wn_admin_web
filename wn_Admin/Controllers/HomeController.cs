@@ -119,6 +119,7 @@ namespace wn_Admin.Controllers
                     time.color = "Green";
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Daily Time Ticket", Link = "/workings/create" });
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Timesheets", Link = "/workings" });
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Projects", Link = "/projects"});
 
                     // Time
                     ListLinkViewModel resource = new ListLinkViewModel();

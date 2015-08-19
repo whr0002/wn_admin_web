@@ -17,6 +17,7 @@ using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Newtonsoft.Json;
+using System.Data.Entity.Core.Objects;
 
 namespace wn_Admin.Controllers.CompanyControllers
 {
@@ -62,16 +63,28 @@ namespace wn_Admin.Controllers.CompanyControllers
                 {
 
                     // Query out all timesheets from this user and the timesheets of users under his supervision
-                    var ids = from s in db.Supervisions
-                              where s.SupervisorID == employee.EmployeeID
-                              select s.EmployeeID;
+                    //var ids = from s in db.Supervisions
+                    //          where s.SupervisorID == employee.EmployeeID
+                    //          select s.EmployeeID;
 
-                    var pids = db.Supervisions.Where(w => w.SupervisorID == employee.EmployeeID).Select(s => s.ProjectID);
+                    //var pids = db.Supervisions.Where(w => w.SupervisorID == employee.EmployeeID).Select(s => s.ProjectID);
 
 
-                    workings = workings.Where(w => w.EmployeeID == employee.EmployeeID || (ids.Contains(w.EmployeeID) && pids.Contains(w.ProjectID) && w.isReviewed == false));
+                    var tempSupers = db.Supervisions.Where(w => w.SupervisorID == employee.EmployeeID);
+                    // Select all time sheets under one's supervision
+                    var tempWorkings = from supers in tempSupers
+                                       join works in workings
+                                       on supers.EmployeeID equals works.EmployeeID
+                                       where works.isReviewed == false &&
+                                       supers.ProjectID.Equals(works.ProjectID)
+                                       select works;
 
-                    if (ids.Count() > 0)
+                    var personalWorkings = db.Workings.Where(w => w.EmployeeID == employee.EmployeeID);
+
+                    workings = tempWorkings.Union(personalWorkings);
+                    //workings = workings.Where(w => w.EmployeeID == employee.EmployeeID || (ids.Contains(w.EmployeeID) && pids.Contains(w.ProjectID) && w.isReviewed == false));
+
+                    if (tempWorkings.Count() > 0)
                     {
                         ViewBag.hasReviewControl = true;
                         ViewBag.CurrentEID = employee.EmployeeID;
@@ -171,16 +184,39 @@ namespace wn_Admin.Controllers.CompanyControllers
             workings = workings.OrderByDescending(o => o.Date);
 
             // Group by Date for events
-            var events = workings
-                .GroupBy(g => new{g.EmployeeID, g.Employee.FullName, g.Date, g.EndDate})
-                .Select(s => new EventModel
-                {
-                    title = s.Key.FullName, 
-                    totalHours = s.Sum(b => b.Hours),
-                    startDT = s.Key.Date,
-                    endDT = s.Key.EndDate
-                })
-                .ToList();
+            //var events = workings
+            //    .GroupBy(g => new 
+            //    { g.EmployeeID, 
+            //        g.Employee.FullName, 
+            //        g.Date, 
+            //        g.EndDate
+            //    })
+            //    .Select(s => new EventModel
+            //    {
+            //        title = s.Key.FullName,
+            //        totalHours = s.Sum(b => b.Hours),
+            //        startDT = s.Key.Date,
+            //        endDT = s.Key.EndDate
+            //    })
+            //    .ToList();
+
+            var events = (from s in workings
+                          group s by new
+                          {
+                              s.EmployeeID,
+                              s.Employee.FullName,
+                              Date = DbFunctions.TruncateTime(s.Date),
+                              EndDate = DbFunctions.TruncateTime(s.EndDate)
+                          }
+                            into g
+                            select new EventModel
+                            {
+                                title = g.Key.FullName,
+                                totalHours = g.Sum(b => b.Hours),
+                                startDT = (DateTime)g.Key.Date,
+                                endDT = (DateTime)g.Key.EndDate
+                            }).ToList();
+
 
 
             // Giving each event color and description.
@@ -212,14 +248,14 @@ namespace wn_Admin.Controllers.CompanyControllers
             // Generate time sheet summary
             var tempE = mUserInfo.getEmployee(userId);
 
-            ViewBag.TMSummary = workings.Where(w => w.EmployeeID == tempE.EmployeeID).GroupBy(g => new {g.EmployeeID, g.Employee.FullName}).Select(
+            ViewBag.TMSummary = workings.Where(w => w.EmployeeID == tempE.EmployeeID).GroupBy(g => new { g.EmployeeID, g.Employee.FullName }).Select(
                 s => new TimesheetSummaryViewModel
                 {
                     EmployeeName = s.Key.FullName,
                     TotalHours = s.Sum(b => b.Hours),
                     DateRange = dateRange
                 }).ToList();
-            
+
 
             // Pass events to view
             ViewBag.Events = evm;
@@ -252,7 +288,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
             ViewBag.Task = new SelectList(db.Tasks, "TaskName", "TaskName");
             ViewBag.Veh = new SelectList(db.Vehicles, "VehicleName", "VehicleName");
-            ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1), "ProjectID", "ProjectName");
+            ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1 || w.Status == 0), "ProjectID", "ProjectName");
             ViewBag.Equipment = new MultiSelectList(db.Equipments, "EquipmentName", "EquipmentName");
 
             setEmployeeDropdowns();
@@ -272,8 +308,22 @@ namespace wn_Admin.Controllers.CompanyControllers
 
         public ActionResult CreateOff()
         {
-            ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
+
             setEmployeeDropdowns();
+            var userId = User.Identity.GetUserId();
+            if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
+            {
+                ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
+            }
+            else
+            {
+                ViewBag.OffReason = new SelectList(db.OffReasons.Where(
+                    w => w.OffReasonName.Equals("Regular Day Off") ||
+                        w.OffReasonName.Equals("Off w/o Pay") ||
+                        w.OffReasonName.Equals("Sick")
+                    ), "OffReasonName", "OffReasonName");
+            }
+
 
             Working working = new Working();
 
@@ -298,7 +348,8 @@ namespace wn_Admin.Controllers.CompanyControllers
         {
             if (ModelState.IsValid)
             {
-                if(working.EndDate >= working.Date){
+                if (working.EndDate >= working.Date)
+                {
 
                     db.Workings.Add(working);
                     db.SaveChanges();
@@ -380,12 +431,14 @@ namespace wn_Admin.Controllers.CompanyControllers
             if (ModelState.IsValid)
             {
                 // For working days, set end date to start date
-                working.EndDate = working.Date;
+                //working.EndDate = working.Date;
 
                 // Check date to see if it is valid.
                 string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date);
                 string userId = User.Identity.GetUserId();
-                
+                UserTimesheetUtil ut = new UserTimesheetUtil(working.EmployeeID);
+                var totalHours = ut.getTotalHoursByDate(working.Date) + working.Hours;
+
                 // Combine equipments
                 if (Equipment != null)
                 {
@@ -393,29 +446,37 @@ namespace wn_Admin.Controllers.CompanyControllers
                     working.Equipment = equipments;
                 }
 
-                if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
-                {
-                    db.Workings.Add(working);
-                    db.SaveChanges();
-                    Response.Write("valid");
 
-                }
-                else
+                if (totalHours <= 18)
                 {
-                    if (validationError != null)
-                    {
-                        Response.Write(validationError);
-                        //ModelState.AddModelError("Date", validationError);
-                    }
-                    else
+                    if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
                     {
                         db.Workings.Add(working);
                         db.SaveChanges();
                         Response.Write("valid");
-                    }
 
+                    }
+                    else
+                    {
+                        if (validationError != null)
+                        {
+                            Response.Write(validationError);
+                            //ModelState.AddModelError("Date", validationError);
+                        }
+                        else
+                        {
+                            db.Workings.Add(working);
+                            db.SaveChanges();
+                            Response.Write("valid");
+                        }
+
+                    }
                 }
-               
+                else
+                {
+                    Response.Write("Total hours for one day must not be exceed 18 hours.");
+                }
+
 
             }
             else
@@ -443,11 +504,19 @@ namespace wn_Admin.Controllers.CompanyControllers
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             //ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
             setEmployeeDropdowns();
-            ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName", working.Field);
-            ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", working.OffReason);
-            ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName", working.Task);
-            ViewBag.Veh = new SelectList(db.Vehicles, "VehicleID", "VehicleName", working.Veh);
-            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", working.ProjectID);
+            //ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName", working.Field);
+            //ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName", working.OffReason);
+            //ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName", working.Task);
+            //ViewBag.Veh = new SelectList(db.Vehicles, "VehicleID", "VehicleName", working.Veh);
+            //ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", working.ProjectID);
+
+            //ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
+            ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessName", "FieldAccessName");
+            ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
+            ViewBag.Task = new SelectList(db.Tasks, "TaskName", "TaskName");
+            ViewBag.Veh = new SelectList(db.Vehicles, "VehicleName", "VehicleName");
+            ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1 || w.Status == 0), "ProjectID", "ProjectName");
+            ViewBag.Equipment = new MultiSelectList(db.Equipments, "EquipmentName", "EquipmentName");
             return View(working);
         }
 
@@ -468,11 +537,18 @@ namespace wn_Admin.Controllers.CompanyControllers
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             //ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
             setEmployeeDropdowns();
-            ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName", working.Field);
-            ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", working.OffReason);
-            ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName", working.Task);
-            ViewBag.Veh = new SelectList(db.Vehicles, "VehicleID", "VehicleName", working.Veh);
-            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", working.ProjectID);
+            //ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName", working.Field);
+            //ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", working.OffReason);
+            //ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName", working.Task);
+            //ViewBag.Veh = new SelectList(db.Vehicles, "VehicleID", "VehicleName", working.Veh);
+            //ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", working.ProjectID);
+
+            ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessName", "FieldAccessName");
+            ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
+            ViewBag.Task = new SelectList(db.Tasks, "TaskName", "TaskName");
+            ViewBag.Veh = new SelectList(db.Vehicles, "VehicleName", "VehicleName");
+            ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1 || w.Status == 0), "ProjectID", "ProjectName");
+            ViewBag.Equipment = new MultiSelectList(db.Equipments, "EquipmentName", "EquipmentName");
             return View(working);
         }
 

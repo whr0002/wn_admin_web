@@ -61,7 +61,7 @@ namespace wn_Admin.Models.CompanyModels
             get {
                 if (StartKm != null && EndKm != null)
                 {
-                    int diff = (int)(EndKm - StartKm);
+                    int diff = (int)(EndKm - StartKm) - 200;
 
                     // Return only if distance >= 200 Km
                     if (diff >= 200)

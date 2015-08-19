@@ -7,10 +7,12 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using wn_Admin.Models;
+using Microsoft.AspNet.Identity;
+using wn_Admin.Models.UtilityModels;
 
 namespace wn_Admin.Controllers.CompanyControllers
 {
-    [Authorize(Roles = "SUPERADMIN, Accountant")]
+    
     public class ProjectsController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
@@ -18,11 +20,23 @@ namespace wn_Admin.Controllers.CompanyControllers
         // GET: Projects
         public ActionResult Index()
         {
+            string userId = User.Identity.GetUserId();
+            UserInfo userInfo = new UserInfo();
+            if (userInfo.isInRole(userId, "SUPERADMIN") || userInfo.isInRole(userId, "Accountant"))
+            {
+                ViewBag.hasControl = true;
+            }
+            else
+            {
+                ViewBag.hasControl = false;
+            }
+
             var projects = db.Projects.Include(p => p.FK_Client);
             return View(projects.ToList());
         }
 
         // GET: Projects/Details/5
+        [Authorize(Roles = "SUPERADMIN, Accountant")]
         public ActionResult Details(string id)
         {
             if (id == null)
@@ -38,6 +52,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         }
 
         // GET: Projects/Create
+        [Authorize(Roles = "SUPERADMIN, Accountant")]
         public ActionResult Create()
         {
             ViewBag.Client = new SelectList(db.Clients, "ClientID", "ClientName");
@@ -49,6 +64,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "SUPERADMIN, Accountant")]
         public ActionResult Create([Bind(Include = "ProjectID,ProjectName,Client,Status")] Project project)
         {
             if (ModelState.IsValid)
@@ -63,6 +79,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         }
 
         // GET: Projects/Edit/5
+        [Authorize(Roles = "SUPERADMIN, Accountant")]
         public ActionResult Edit(string id)
         {
             if (id == null)
@@ -83,6 +100,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "SUPERADMIN, Accountant")]
         public ActionResult Edit([Bind(Include = "ProjectID,ProjectName,Client,Status")] Project project)
         {
             if (ModelState.IsValid)
@@ -96,6 +114,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         }
 
         // GET: Projects/Delete/5
+        [Authorize(Roles = "SUPERADMIN, Accountant")]
         public ActionResult Delete(string id)
         {
             if (id == null)
@@ -113,6 +132,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // POST: Projects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "SUPERADMIN, Accountant")]
         public ActionResult DeleteConfirmed(string id)
         {
             Project project = db.Projects.Find(id);
@@ -121,6 +141,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "SUPERADMIN, Accountant")]
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -16,11 +16,12 @@ namespace wn_Admin.Controllers.CControllers
 
         public ActionResult Projects(string client)
         {
-            var projects = db.Projects.Where(w => w.FK_Client.ClientName.Equals(client) && w.Status == 1).Select(s => new { s.ProjectID, s.ProjectName}).ToList();
+            var projects = db.Projects.Where(w => w.FK_Client.ClientName.Equals(client) && (w.Status == 1 || w.Status == 0)).Select(s => new { s.ProjectID, s.ProjectName}).ToList();
 
             return Content(JsonConvert.SerializeObject(projects), "application/json");
         }
 
+        [HttpPost]
         public ActionResult PayPeriods(DateTime date)
         {
             PayPeriodCalculator calc = new PayPeriodCalculator();
