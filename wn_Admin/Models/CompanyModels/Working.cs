@@ -19,11 +19,11 @@ namespace wn_Admin.Models.CompanyModels
         public int EmployeeID { get; set; }
 
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString="{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString="{0:MM/dd/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
 
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
 
         [DisplayName("Period Year")]
@@ -100,6 +100,8 @@ namespace wn_Admin.Models.CompanyModels
 
         [DisplayName("Is Reviewed?")]
         public bool isReviewed { get; set; }
+
+        public string Reviewer { get; set; }
 
         public virtual Employee Employee { get; set; }
         public virtual Project Project { get; set; }

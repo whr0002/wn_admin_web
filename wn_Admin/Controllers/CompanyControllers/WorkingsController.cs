@@ -295,8 +295,8 @@ namespace wn_Admin.Controllers.CompanyControllers
 
             Working working = new Working();
 
-            working.Date = DateTime.Today;
-            working.EndDate = DateTime.Today;
+            working.Date = DateTime.Now;
+            working.EndDate = DateTime.Now;
             PayPeriodCalculator calc = new PayPeriodCalculator();
             PPViewModel ppv = calc.getPayPeriod(working.Date);
             working.PPYr = ppv.PPYear;
@@ -381,7 +381,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             {
 
                 // Check date to see if it is valid.
-                string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date);
+                string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date, working.EndDate);
                 string userId = User.Identity.GetUserId();
 
                 // For working days, set end date to start date
@@ -434,7 +434,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                 //working.EndDate = working.Date;
 
                 // Check date to see if it is valid.
-                string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date);
+                string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date, working.EndDate);
                 string userId = User.Identity.GetUserId();
                 UserTimesheetUtil ut = new UserTimesheetUtil(working.EmployeeID);
                 var totalHours = ut.getTotalHoursByDate(working.Date) + working.Hours;
@@ -502,15 +502,8 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return HttpNotFound();
             }
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
-            //ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
             setEmployeeDropdowns();
-            //ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName", working.Field);
-            //ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName", working.OffReason);
-            //ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName", working.Task);
-            //ViewBag.Veh = new SelectList(db.Vehicles, "VehicleID", "VehicleName", working.Veh);
-            //ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", working.ProjectID);
 
-            //ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessName", "FieldAccessName");
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
             ViewBag.Task = new SelectList(db.Tasks, "TaskName", "TaskName");
@@ -530,18 +523,15 @@ namespace wn_Admin.Controllers.CompanyControllers
         {
             if (ModelState.IsValid)
             {
+                // When modified by someone, clear the reviewer name to this person.
+                working.isReviewed = false;
+                working.Reviewer = "";
                 db.Entry(working).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
-            //ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
             setEmployeeDropdowns();
-            //ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName", working.Field);
-            //ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", working.OffReason);
-            //ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName", working.Task);
-            //ViewBag.Veh = new SelectList(db.Vehicles, "VehicleID", "VehicleName", working.Veh);
-            //ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", working.ProjectID);
 
             ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessName", "FieldAccessName");
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
@@ -614,6 +604,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                     foreach (Working work in wlist)
                     {
                         work.isReviewed = true;
+                        work.Reviewer = employee.FullName;
                     }
 
                     db.SaveChanges();
@@ -633,6 +624,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                         if (ids.Contains(work.WorkingID))
                         {
                             work.isReviewed = true;
+                            work.Reviewer = employee.FullName;
                         }
                     }
 

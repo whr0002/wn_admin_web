@@ -20,6 +20,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         public ActionResult Index()
         {
             var supervisions = db.Supervisions.Include(s => s.Employee).Include(s => s.Supervisor);
+            supervisions = supervisions.OrderBy(o => o.Supervisor.FullName);
             return View(supervisions.ToList());
         }
 

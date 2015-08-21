@@ -6,7 +6,7 @@
 
 @section jsSection{
 
-    <script src="~/Scripts/ng_controllers/timesheet_controller.js"></script>
+    <script src="~/Scripts/ng_controllers/timesheet_controller.js?v=1.2"></script>
 
 }
 
@@ -52,7 +52,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control b-datepicker", @type = "text" } })
+                        @Html.Editor("Date", new { htmlAttributes = new { @class = "form-control b-datepicker", @type = "text" } })
                         @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -198,7 +198,7 @@
                 <div class="form-group" style="display:none;">
                     @Html.LabelFor(model => model.OffReason, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.DropDownList("OffReason", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.DropDownList("OffReason", null, "Choose ...",htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.OffReason, "", new { @class = "text-danger" })
                     </div>
 

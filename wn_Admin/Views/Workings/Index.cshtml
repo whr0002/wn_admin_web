@@ -23,7 +23,7 @@
     <script src="~/Scripts/CustomJS/jquery.min.js"></script>
     <script type="text/javascript" src="~/Scripts/CustomJS/moment.min.js"></script>
     <script type="text/javascript" src="~/Scripts/CustomJS/fullcalendar.min.js"></script>
-    <script src="~/Scripts/ng_controllers/timesheet_controller.js?v=1"></script>
+    <script src="~/Scripts/ng_controllers/timesheet_controller.js?v=1.2"></script>
     <script src="~/Scripts/gridmvc.min.js"></script>
 
     <script type="text/javascript">
@@ -199,8 +199,8 @@
                 @Html.Grid(Model).Columns(columns =>
                     {
                         columns.Add(c => c.Employee.FullName).Titled("Name").Filterable(true);
-                        columns.Add(c => c.Date).Format("{0:yyyy-MM-dd}");
-                        columns.Add(c => c.EndDate).Format("{0:yyyy-MM-dd}");
+                        columns.Add(c => c.Date).Format("{0:yyyy-MM-dd HH:mm}");
+                        columns.Add(c => c.EndDate).Format("{0:yyyy-MM-dd HH:mm}");
                         columns.Add(c => c.PPYr);
                         columns.Add(c => c.PP);
                         columns.Add(c => c.Project.FK_Client.ClientName).Titled("Client");
@@ -219,6 +219,7 @@
                         columns.Add(c => c.OffReason).Titled("Off Detail");
                         columns.Add(c => c.Hours);
                         columns.Add(c => c.isReviewed).RenderValueAs(c => c.isReviewed ? "Yes" : "No").Titled("Is Reviewed?").SetWidth(5);
+                        columns.Add(c => c.Reviewer);
                         
                         if (ViewBag.hasFullControl)
                         {

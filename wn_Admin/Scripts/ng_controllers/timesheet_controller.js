@@ -2,16 +2,33 @@
 
 function setDatetiempicker($, formBlock) {
     $('.b-datepicker').datetimepicker();
-    
+    //var startDate = $('#Date', formBlock).data('DateTimePicker');
+    //startDate.clear();
+    //startDate.setStartDate(new Date());
+    //setDateLimits(startDate, formBlock);
     $('#Date', formBlock).on("dp.change", function (e) {
-        var endDate = new Date(e.date);
-        //endDate.setDate(endDate.getDate() + 1);
-        endDate.setHours(23, 59, 59, 999);
-        $('#EndDate', formBlock).data("DateTimePicker").minDate(e.date);
-        $('#EndDate', formBlock).data("DateTimePicker").maxDate(endDate);
 
-        refreshPayPeriod(formBlock);
+        setDateLimits(e, formBlock);
+
+
+        
     });
+}
+
+function setDateLimits(e, formBlock) {
+    var endDate = new Date(e.date);
+    var endDatepicker = $('#EndDate', formBlock).data("DateTimePicker");
+
+    endDate.setHours(23, 59, 59, 999);
+    //endDatepicker.clear();
+    if (e.date > endDatepicker.maxDate()) {
+        endDatepicker.maxDate(endDate);
+        endDatepicker.minDate(e.date);
+    } else {
+        endDatepicker.minDate(e.date);
+        endDatepicker.maxDate(endDate);
+    }
+    refreshPayPeriod(formBlock);
 }
 
 // Initializing change events on some input fields

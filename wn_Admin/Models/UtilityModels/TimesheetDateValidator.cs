@@ -8,7 +8,7 @@ namespace wn_Admin.Models.UtilityModels
 {
     public class TimesheetDateValidator
     {
-        public static string ValidateTimesheetDateRange(DateTime date)
+        public static string ValidateTimesheetDateRange(DateTime date, DateTime endDate)
         {      
             DateTime current = DateTime.Now;
             if (date > current)
@@ -23,6 +23,17 @@ namespace wn_Admin.Models.UtilityModels
                 }
 
                 
+            }
+
+            if (endDate < date)
+            {
+                return "End Date must be later than Start Date";
+            }
+
+
+            if (endDate.AddDays(-1) > date)
+            {
+                return "End Date must be within 1 day of Start Date";
             }
 
             return null;

@@ -39,6 +39,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="GridMvc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Grid.Mvc.3.0.0\lib\net40\GridMvc.dll</HintPath>
       <Private>True</Private>
@@ -138,12 +146,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -192,6 +194,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CControllers\APIController.cs" />
+    <Compile Include="Controllers\CControllers\APITreeController.cs" />
     <Compile Include="Controllers\CControllers\ClientsController.cs" />
     <Compile Include="Controllers\CControllers\FieldAccessesController.cs" />
     <Compile Include="Controllers\CControllers\OffReasonsController.cs" />
@@ -440,6 +443,14 @@
     <Compile Include="Migrations\201507281654586_rmFK.Designer.cs">
       <DependentUpon>201507281654586_rmFK.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508201409335_reviewer.cs" />
+    <Compile Include="Migrations\201508201409335_reviewer.Designer.cs">
+      <DependentUpon>201508201409335_reviewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508201640398_nulldate.cs" />
+    <Compile Include="Migrations\201508201640398_nulldate.Designer.cs">
+      <DependentUpon>201508201640398_nulldate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -523,6 +534,16 @@
     <Content Include="Content\Images\wn_logo.jpg" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\StyleSheet_Timesheet.css" />
+    <Content Include="Content\themes\default-dark\32px.png" />
+    <Content Include="Content\themes\default-dark\40px.png" />
+    <Content Include="Content\themes\default-dark\style.css" />
+    <Content Include="Content\themes\default-dark\style.min.css" />
+    <Content Include="Content\themes\default-dark\throbber.gif" />
+    <Content Include="Content\themes\default\32px.png" />
+    <Content Include="Content\themes\default\40px.png" />
+    <Content Include="Content\themes\default\style.css" />
+    <Content Include="Content\themes\default\style.min.css" />
+    <Content Include="Content\themes\default\throbber.gif" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -626,6 +647,7 @@
     <Content Include="Scripts\CustomJS\fullcalendar.min.js" />
     <Content Include="Scripts\CustomJS\jquery.min.js" />
     <Content Include="Scripts\CustomJS\moment.min.js" />
+    <Content Include="Scripts\CustomJS\mytree.js" />
     <Content Include="Scripts\CustomJS\PhotoJS.js" />
     <Content Include="Scripts\CustomJS\SafetyMeeting.js" />
     <Content Include="Scripts\gridmvc.js" />
@@ -638,6 +660,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jstree.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\moment-with-locales.js" />
@@ -872,6 +895,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\Mobile\" />
     <Folder Include="UnitTests\" />
+    <Folder Include="Views\APITree\" />
     <Folder Include="Views\API\" />
     <Folder Include="Views\Excel\" />
     <Folder Include="Views\SafetyMeetingReview\" />
@@ -1033,6 +1057,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507281654586_rmFK.resx">
       <DependentUpon>201507281654586_rmFK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508201409335_reviewer.resx">
+      <DependentUpon>201508201409335_reviewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508201640398_nulldate.resx">
+      <DependentUpon>201508201640398_nulldate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

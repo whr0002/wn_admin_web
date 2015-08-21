@@ -1,57 +1,56 @@
 ﻿@model IEnumerable<wn_Admin.Models.CompanyModels.Supervision>
+@using GridMvc.Html;
 
 @{
+
     ViewBag.Title = "Index";
 }
+
+@section jsSection{
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Content/themes/default/style.min.css" rel="stylesheet" />
+<link href="~/Content/Gridmvc.css" rel="stylesheet" />
+<script src="~/Scripts/gridmvc.min.js"></script>    
+<script src="~/Scripts/jstree.min.js"></script>
+<script src="~/Scripts/CustomJS/mytree.js?v=1.2"></script>
+}
+
 
 <h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayName("Employee")
-        </th>
-        <th>
-            @Html.DisplayName("Supervisor")
-        </th>
-        <th>
-            @Html.DisplayName("Project")
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EndDate)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Employee.FirstMidName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Supervisor.FirstMidName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Project.ProjectName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EndDate)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { eid=item.EmployeeID, mid=item.SupervisorID, pid=item.ProjectID }) |
-            @Html.ActionLink("Details", "Details", new { eid = item.EmployeeID, mid = item.SupervisorID, pid = item.ProjectID }) |
-            @Html.ActionLink("Delete", "Delete", new { eid = item.EmployeeID, mid = item.SupervisorID, pid = item.ProjectID })
-        </td>
-    </tr>
-}
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" id="treeSearch" placeholder="Search ..." />
+    </div>
+    <div class="col-md-12">
+        <div id="tree">
+        </div>
 
-</table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.Grid(Model).Columns(columns =>
+   {
+       columns.Add(c => c.Supervisor.FullName).Titled("Supervisor").Filterable(true);
+       columns.Add(c => c.Employee.FullName).Titled("Employee").Filterable(true);    
+       columns.Add(c => c.Project.ProjectName).Titled("Project").Filterable(true);
+       columns.Add(c => c.StartDate).Format("{0:MM/dd/yyyy}");
+       columns.Add(c => c.EndDate).Format("{0:MM/dd/yyyy}");
+       columns
+            .Add()
+            .Encoded(false)
+            .Sanitized(false)
+            .RenderValueAs(c =>
+            Html.ActionLink("[Edit]", "Edit", new { eid = c.EmployeeID, mid = c.SupervisorID, pid = c.ProjectID }) + " " +
+            Html.ActionLink("[Details]", "Details", new { eid = c.EmployeeID, mid = c.SupervisorID, pid = c.ProjectID }) + " " +
+            Html.ActionLink("[Delete]", "Delete", new { eid = c.EmployeeID, mid = c.SupervisorID, pid = c.ProjectID })
+            );
+   }).WithPaging(10).Sortable(true)
+    </div>
+</div>
