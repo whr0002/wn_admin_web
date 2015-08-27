@@ -20,10 +20,12 @@ namespace wn_Admin.Models.CompanyModels
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString="{0:MM/dd/yyyy HH:mm}", ApplyFormatInEditMode = true)]
+        [DisplayName("Time - Start of the day")]
         public DateTime Date { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy HH:mm}", ApplyFormatInEditMode = true)]
+        [DisplayName("Time - End of the day")]
         public DateTime EndDate { get; set; }
 
         [DisplayName("Period Year")]
@@ -79,6 +81,8 @@ namespace wn_Admin.Models.CompanyModels
 
         [DisplayName("Field Access")]
         public string Field { get; set; }
+
+        [DisplayName("Per Diem")]
         public bool PD { get; set; }
 
         [DisplayName("Job Description")]
@@ -88,7 +92,8 @@ namespace wn_Admin.Models.CompanyModels
         [DisplayName("Off Details")]
         public string OffReason { get; set; }
 
-        [Range(0, 24)]
+        [Range(0, 18)]
+        [TotalHours("EmployeeID", "Date", "WorkingID", ErrorMessage="Total hours for a day must not be over 18 hours")]
         public double Hours { get; set; }
 
         [Range(0, 6)]

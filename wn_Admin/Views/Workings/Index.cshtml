@@ -143,7 +143,7 @@
                             <div class="form-group">
                                 @Html.Label("Is Reviewed?", htmlAttributes: new { @class = "control-label col-md-2", @for = "isReviewed" })
                                 <div class="col-md-10">
-                                    @Html.DropDownList("isReviewed", null, "Choose ...", htmlAttributes: new { @class= "form-control"})
+                                    @Html.DropDownList("isReviewed", null, "Choose ...", htmlAttributes: new { @class = "form-control" })
                                 </div>
                             </div>
 
@@ -199,28 +199,28 @@
                 @Html.Grid(Model).Columns(columns =>
                     {
                         columns.Add(c => c.Employee.FullName).Titled("Name").Filterable(true);
-                        columns.Add(c => c.Date).Format("{0:yyyy-MM-dd HH:mm}");
-                        columns.Add(c => c.EndDate).Format("{0:yyyy-MM-dd HH:mm}");
-                        columns.Add(c => c.PPYr);
-                        columns.Add(c => c.PP);
+                        columns.Add(c => c.Date).Format("{0:yyyy-MM-dd HH:mm}").Titled("Time - Start of the day");
+                        columns.Add(c => c.EndDate).Format("{0:yyyy-MM-dd HH:mm}").Titled("Time - End of the day");
+                        columns.Add(c => c.PPYr).Titled("Period Year");
+                        columns.Add(c => c.PP).Titled("Pay Period");
                         columns.Add(c => c.Project.FK_Client.ClientName).Titled("Client");
                         columns.Add(c => c.Project.ProjectName).Titled("Project");
                         columns.Add(c => c.Task);
                         columns.Add(c => c.Identifier);
-                        columns.Add(c => c.Veh);
+                        columns.Add(c => c.Veh).Titled("Vehicle");
                         columns.Add(c => c.Crew);
-                        columns.Add(c => c.StartKm);
-                        columns.Add(c => c.EndKm);
-                        columns.Add(c => c.KmDiff);
+                        columns.Add(c => c.StartKm).Titled("Start Km");
+                        columns.Add(c => c.EndKm).Titled("End Km");
+                        columns.Add(c => c.KmDiff).Titled("Km Difference");
                         columns.Add(c => c.Equipment);
-                        columns.Add(c => c.Field);
-                        columns.Add(c => c.PD).RenderValueAs(c => c.PD ? "Yes" : "No");
+                        columns.Add(c => c.Field).Titled("Field Access");
+                        columns.Add(c => c.PD).RenderValueAs(c => c.PD ? "Yes" : "No").Titled("Per Diem");
                         columns.Add(c => c.JobDescription).Titled("Job Description").Filterable(true);
                         columns.Add(c => c.OffReason).Titled("Off Detail");
                         columns.Add(c => c.Hours);
                         columns.Add(c => c.isReviewed).RenderValueAs(c => c.isReviewed ? "Yes" : "No").Titled("Is Reviewed?").SetWidth(5);
                         columns.Add(c => c.Reviewer);
-                        
+
                         if (ViewBag.hasFullControl)
                         {
                             columns.Add()
@@ -257,6 +257,31 @@
                                 .Sanitized(false)
                                 .RenderValueAs(c => "")
                                 .Titled("<button class=\"btn btn-primary\" onclick=\"submitReviews()\">Review</button>");
+
+                            columns
+                                .Add()
+                                .Encoded(false)
+                                .Sanitized(false)
+                                .RenderValueAs(c => (!c.isReviewed && c.EmployeeID == ViewBag.EID) ?
+                                    (Html.ActionLink("[Edit]", "Edit", new { id = c.WorkingID }) + " " +
+                                Html.ActionLink("[Delete]", "Delete", new { id = c.WorkingID })) : ""
+                                )
+                                .Titled("");
+                            
+                  
+                        }
+                        else
+                        {
+
+                            columns
+                                .Add()
+                                .Encoded(false)
+                                .Sanitized(false)
+                                .RenderValueAs(c => (!c.isReviewed && c.EmployeeID == ViewBag.EID) ?
+                                    (Html.ActionLink("[Edit]", "Edit", new { id = c.WorkingID }) + " " +
+                                Html.ActionLink("[Delete]", "Delete", new { id = c.WorkingID })) : ""
+                                )
+                                .Titled("");
                         }
 
 
@@ -268,5 +293,8 @@
     <hr />
 
 </body>
+
+
+
 
 </html>

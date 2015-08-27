@@ -494,6 +494,7 @@
     <Compile Include="Models\CompanyModels\Project.cs" />
     <Compile Include="Models\Safety\YesNoNA.cs" />
     <Compile Include="Models\UtilityModels\CustomValidators.cs" />
+    <Compile Include="Models\UtilityModels\DateDiffAttribute.cs" />
     <Compile Include="Models\UtilityModels\EventModel.cs" />
     <Compile Include="Models\UtilityModels\EventViewModel.cs" />
     <Compile Include="Models\UtilityModels\IntArrayModelBinder.cs" />
@@ -506,6 +507,7 @@
     <Compile Include="Models\UtilityModels\SummaryModel.cs" />
     <Compile Include="Models\UtilityModels\TimesheetDateValidator.cs" />
     <Compile Include="Models\UtilityModels\TimesheetSummaryViewModel.cs" />
+    <Compile Include="Models\UtilityModels\TotalHoursAttribute.cs" />
     <Compile Include="Models\UtilityModels\UEViewModel.cs" />
     <Compile Include="Models\UtilityModels\UserInfo.cs" />
     <Compile Include="Models\UtilityModels\UserTimesheetUtil.cs" />

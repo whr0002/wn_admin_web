@@ -99,6 +99,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                     return View(new List<Working>());
                 }
 
+                ViewBag.EID = employee.EmployeeID;
                 ViewBag.hasFullControl = false;
                 //ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == employee.EmployeeID), "EmployeeID", "FullName");
                 ViewBag.EmployeeID = new MultiSelectList(db.Employees.Where(w => w.EmployeeID == employee.EmployeeID), "EmployeeID", "FullName");
@@ -208,14 +209,14 @@ namespace wn_Admin.Controllers.CompanyControllers
                               Date = DbFunctions.TruncateTime(s.Date),
                               EndDate = DbFunctions.TruncateTime(s.EndDate)
                           }
-                            into g
-                            select new EventModel
-                            {
-                                title = g.Key.FullName,
-                                totalHours = g.Sum(b => b.Hours),
-                                startDT = (DateTime)g.Key.Date,
-                                endDT = (DateTime)g.Key.EndDate
-                            }).ToList();
+                              into g
+                              select new EventModel
+                              {
+                                  title = g.Key.FullName,
+                                  totalHours = g.Sum(b => b.Hours),
+                                  startDT = (DateTime)g.Key.Date,
+                                  endDT = (DateTime)g.Key.EndDate
+                              }).ToList();
 
 
 
@@ -430,14 +431,11 @@ namespace wn_Admin.Controllers.CompanyControllers
 
             if (ModelState.IsValid)
             {
-                // For working days, set end date to start date
-                //working.EndDate = working.Date;
+
 
                 // Check date to see if it is valid.
                 string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date, working.EndDate);
                 string userId = User.Identity.GetUserId();
-                UserTimesheetUtil ut = new UserTimesheetUtil(working.EmployeeID);
-                var totalHours = ut.getTotalHoursByDate(working.Date) + working.Hours;
 
                 // Combine equipments
                 if (Equipment != null)
@@ -447,35 +445,30 @@ namespace wn_Admin.Controllers.CompanyControllers
                 }
 
 
-                if (totalHours <= 18)
+
+                if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
                 {
-                    if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
+                    db.Workings.Add(working);
+                    db.SaveChanges();
+                    Response.Write("valid");
+
+                }
+                else
+                {
+                    if (validationError != null)
+                    {
+                        Response.Write(validationError);
+                        //ModelState.AddModelError("Date", validationError);
+                    }
+                    else
                     {
                         db.Workings.Add(working);
                         db.SaveChanges();
                         Response.Write("valid");
-
                     }
-                    else
-                    {
-                        if (validationError != null)
-                        {
-                            Response.Write(validationError);
-                            //ModelState.AddModelError("Date", validationError);
-                        }
-                        else
-                        {
-                            db.Workings.Add(working);
-                            db.SaveChanges();
-                            Response.Write("valid");
-                        }
 
-                    }
                 }
-                else
-                {
-                    Response.Write("Total hours for one day must not be exceed 18 hours.");
-                }
+
 
 
             }
@@ -489,7 +482,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         }
 
         // GET: Workings/Edit/5
-        [Authorize(Roles = "Accountant, SUPERADMIN")]
+        [Authorize(Roles = "Accountant, SUPERADMIN, Employee")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -501,6 +494,14 @@ namespace wn_Admin.Controllers.CompanyControllers
             {
                 return HttpNotFound();
             }
+
+            var employee = mUserInfo.getEmployee(User.Identity.GetUserId());
+            if (mUserInfo.isInRole(User.Identity.GetUserId(), "Employee") && employee.EmployeeID != working.EmployeeID)
+            {
+                // Only allow users to edit their own time sheets, exception for Accountant, Superadmin
+                return HttpNotFound();
+            }
+
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             setEmployeeDropdowns();
 
@@ -518,17 +519,52 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Accountant, SUPERADMIN")]
+        [Authorize(Roles = "Accountant, SUPERADMIN, Employee")]
         public ActionResult Edit([Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours,Bank,OT")] Working working)
         {
+            var employee = mUserInfo.getEmployee(User.Identity.GetUserId());
+            if (mUserInfo.isInRole(User.Identity.GetUserId(), "Employee") && employee.EmployeeID != working.EmployeeID)
+            {
+                // Only allow users to edit their own time sheets, exception for Accountant, Superadmin
+                return HttpNotFound();
+            }
+
             if (ModelState.IsValid)
             {
-                // When modified by someone, clear the reviewer name to this person.
-                working.isReviewed = false;
-                working.Reviewer = "";
-                db.Entry(working).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+
+                // Check date to see if it is valid.
+                string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date, working.EndDate);
+                string userId = User.Identity.GetUserId();
+
+                if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
+                {
+                    // When modified by someone, clear the reviewer name to this person.
+                    working.isReviewed = false;
+                    working.Reviewer = "";
+                    db.Entry(working).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    if (validationError != null)
+                    {
+                        ModelState.AddModelError("Date", validationError);
+                    }
+                    else
+                    {
+                        // When modified by someone, clear the reviewer name to this person.
+                        working.isReviewed = false;
+                        working.Reviewer = "";
+                        db.Entry(working).State = EntityState.Modified;
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+
+                }
+
+
+                
             }
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             setEmployeeDropdowns();
@@ -543,7 +579,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         }
 
         // GET: Workings/Delete/5
-        [Authorize(Roles = "Accountant, SUPERADMIN")]
+        [Authorize(Roles = "Accountant, SUPERADMIN, Employee")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -555,16 +591,34 @@ namespace wn_Admin.Controllers.CompanyControllers
             {
                 return HttpNotFound();
             }
+
+            var employee = mUserInfo.getEmployee(User.Identity.GetUserId());
+            if (mUserInfo.isInRole(User.Identity.GetUserId(), "Employee") && employee.EmployeeID != working.EmployeeID)
+            {
+                // Only allow users to edit their own time sheets, exception for Accountant, Superadmin
+                return HttpNotFound();
+            }
+
             return View(working);
         }
 
         // POST: Workings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Accountant, SUPERADMIN")]
+        [Authorize(Roles = "Accountant, SUPERADMIN, Employee")]
         public ActionResult DeleteConfirmed(int id)
         {
+
+
             Working working = db.Workings.Find(id);
+
+            var employee = mUserInfo.getEmployee(User.Identity.GetUserId());
+            if (mUserInfo.isInRole(User.Identity.GetUserId(), "Employee") && employee.EmployeeID != working.EmployeeID)
+            {
+                // Only allow users to edit their own time sheets, exception for Accountant, Superadmin
+                return HttpNotFound();
+            }
+
             db.Workings.Remove(working);
             db.SaveChanges();
             return RedirectToAction("Index");

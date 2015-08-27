@@ -8,10 +8,12 @@ namespace wn_Admin.Models.UtilityModels
     public class UserTimesheetUtil
     {
         private int mEmployeeId;
+        private int mWorkingId;
         private wn_admin_db db;
-        public UserTimesheetUtil(int employeeId)
+        public UserTimesheetUtil(int employeeId, int workingId)
         {
             mEmployeeId = employeeId;
+            mWorkingId = workingId;
             db = new wn_admin_db();
         }
 
@@ -21,7 +23,7 @@ namespace wn_Admin.Models.UtilityModels
 
             var dateFrom = new DateTime(date.Year, date.Month, date.Day);
             var dateTo = new DateTime(date.Year, date.Month, date.Day+1);
-            var timesheets = db.Workings.Where(w => w.EmployeeID == mEmployeeId && w.Date >= dateFrom && w.EndDate < dateTo);
+            var timesheets = db.Workings.Where(w => w.EmployeeID == mEmployeeId && w.Date >= dateFrom && w.EndDate < dateTo && w.WorkingID != mWorkingId);
 
             var total = timesheets.GroupBy(g => g.EmployeeID).Select(s => new { TotalHour = s.Sum(u => u.Hours) }).FirstOrDefault();
 

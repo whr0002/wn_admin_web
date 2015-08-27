@@ -57,5 +57,11 @@ namespace wn_Admin.Models.UtilityModels
         {
             return mUserManager.IsInRole(userId, role);
         }
+
+        public bool isInRole(int employeeID, string role)
+        {
+            var userId = mDb.UserEmployees.Where(w => w.EmployeeID == employeeID).Select(s => s.UserID).FirstOrDefault();
+            return mUserManager.IsInRole(userId, role);
+        }
     }
 }
