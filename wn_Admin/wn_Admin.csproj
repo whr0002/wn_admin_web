@@ -546,6 +546,7 @@
     <Content Include="Content\themes\default\style.css" />
     <Content Include="Content\themes\default\style.min.css" />
     <Content Include="Content\themes\default\throbber.gif" />
+    <Content Include="Content\timesheet_create.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -651,6 +652,7 @@
     <Content Include="Scripts\CustomJS\moment.min.js" />
     <Content Include="Scripts\CustomJS\mytree.js" />
     <Content Include="Scripts\CustomJS\PhotoJS.js" />
+    <Content Include="Scripts\CustomJS\project_summary.js" />
     <Content Include="Scripts\CustomJS\SafetyMeeting.js" />
     <Content Include="Scripts\gridmvc.js" />
     <Content Include="Scripts\gridmvc.lang.ru.js" />

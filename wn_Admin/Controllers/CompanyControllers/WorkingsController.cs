@@ -62,14 +62,6 @@ namespace wn_Admin.Controllers.CompanyControllers
                 if (employee != null)
                 {
 
-                    // Query out all timesheets from this user and the timesheets of users under his supervision
-                    //var ids = from s in db.Supervisions
-                    //          where s.SupervisorID == employee.EmployeeID
-                    //          select s.EmployeeID;
-
-                    //var pids = db.Supervisions.Where(w => w.SupervisorID == employee.EmployeeID).Select(s => s.ProjectID);
-
-
                     var tempSupers = db.Supervisions.Where(w => w.SupervisorID == employee.EmployeeID);
                     // Select all time sheets under one's supervision
                     var tempWorkings = from supers in tempSupers
@@ -289,8 +281,8 @@ namespace wn_Admin.Controllers.CompanyControllers
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
             ViewBag.Task = new SelectList(db.Tasks, "TaskName", "TaskName");
             ViewBag.Veh = new SelectList(db.Vehicles, "VehicleName", "VehicleName");
-            ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1 || w.Status == 0), "ProjectID", "ProjectName");
-            ViewBag.Equipment = new MultiSelectList(db.Equipments, "EquipmentName", "EquipmentName");
+            ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1 || w.Status == 0).OrderBy(o => o.ProjectName), "ProjectID", "ProjectName");
+            ViewBag.Equipment = new MultiSelectList(db.Equipments.OrderBy(o => o.EquipmentName), "EquipmentName", "EquipmentName");
 
             setEmployeeDropdowns();
 

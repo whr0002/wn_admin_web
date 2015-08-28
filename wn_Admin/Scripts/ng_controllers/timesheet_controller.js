@@ -1,5 +1,5 @@
 ﻿
-
+var token;
 function setDatetiempicker($, formBlock) {
     $('.b-datepicker').datetimepicker();
     //var startDate = $('#Date', formBlock).data('DateTimePicker');
@@ -57,6 +57,10 @@ window.onload = function () {
 
     });
 
+    $('#close', formBlock).click({param: formBlock}, closeForm);
+   
+
+    token = $('input[name="__RequestVerificationToken"]', formBlock).val();
     // Add change event to date
     //$('#Date', formBlock).change(refreshPayPeriod(formBlock));
 
@@ -204,22 +208,13 @@ function submitApproves() {
 function addForm() {
     var formRow = $('#formRow');
 
-    var formBlock = $('div[id^="formBlock"]:last');
-    var num = parseInt(formBlock.prop("id").match(/\d+/g), 10) + 1;
+    var formBlockLast = $('div[id^="formBlock"]:last');
+    var num = parseInt(formBlockLast.prop("id").match(/\d+/g), 10) + 1;
+    //var token = $('input[name="__RequestVerificationToken"]', formBlockLast).val();
 
-
-
-    var formBlock = formBlock.clone();
+    var formBlock = formBlockLast.clone();
     formBlock.prop('id', "formBlock" + num);
-    //$(cloneForm).off("change", "#ClientName");
-
-    //(function ($) {
-    //    $(document).ready(function () {
-    //        $('#Date', formBlock).datetimepicker();
-    //    });
-    //}(jq14));
     
-
     // Add change event to clientName
     $('#ClientName', formBlock).change(function () {
 
@@ -242,27 +237,38 @@ function addForm() {
 
     });
 
-    // Add change event to Date to get PPYr and PP
-    //$('#Date', formBlock).change(function () {
 
-    //    $('#EndDate', formBlock).data("DateTimePicker").minDate(e.date);
-
-    //    refreshPayPeriod(formBlock);
-
-    //});
-
+    $('#close', formBlock).click({param: formBlock},closeForm);
+    $('#close', formBlock).show();
 
 
     formRow.append(formBlock);
 
     formBlock = jq14('#formBlock' + num);
     setDatetiempicker(jq14, formBlock);
+
+    clearForm(formBlock);
+}
+
+function closeForm(event) {
+    var result = confirm("Do you want to delete this form?");
+    if(result){
+        event.data.param.remove();
+    }
+}
+
+function clearForm(formBlock) {
+    $(':input', formBlock)
+        .not('#EmployeeID, #Date, #EndDate, #PPYr, #PP')
+        .val('')
+        .removeAttr('selected');
+    $('#PID', formBlock).empty();
 }
 
 // Form Submission
 function ajaxSubmit() {
-    var form = $('#__AjaxAntiForgeryForm');
-    var token = $('input[name="__RequestVerificationToken"]', form).val();
+    //var form = $('#__AjaxAntiForgeryForm');
+    //var token = $('input[name="__RequestVerificationToken"]', form).val();
 
     var forms = $('div[id^="formBlock"]');
     forms.each(function (index) {

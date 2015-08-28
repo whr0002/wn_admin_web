@@ -6,12 +6,13 @@
 
 @section jsSection{
 
-    <script src="~/Scripts/ng_controllers/timesheet_controller.js?v=1.2"></script>
+    <script src="~/Scripts/ng_controllers/timesheet_controller.js?v=1.4"></script>
 
 }
 
 @section cssSection{
     <link rel="stylesheet" href="/Content/bootstrap-datetimepicker.css" />
+    <link rel="stylesheet" href="~/Content/timesheet_create.css?v=1.0" />
 }
 
 <script type="text/javascript">
@@ -37,8 +38,18 @@
         {
             @Html.AntiForgeryToken()
 
-            <div class="form-horizontal">
-                <h4>Working</h4>
+            <div class="form-horizontal my_box_shadow my_padding my_margin">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h4>Working</h4>
+                    </div>
+
+                    <div class="col-md-2">
+                        <a class="btn btn-danger pull-right" id="close">Close</a>
+                    </div>
+                </div>
+                
+                
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
@@ -163,7 +174,7 @@
                     @Html.LabelFor(model => model.Equipment, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         <div>
-                            @Html.DropDownList("Equipment", (MultiSelectList)ViewBag.Equipment, new { multiple = "multiple", @class = "form-control" })
+                            @Html.DropDownList("Equipment", (MultiSelectList)ViewBag.Equipment, new { multiple = "multiple", @class = "form-control my_selectlist" })
                             @Html.ValidationMessageFor(model => model.Equipment, "", new { @class = "text-danger" })
                         </div>
                     </div>

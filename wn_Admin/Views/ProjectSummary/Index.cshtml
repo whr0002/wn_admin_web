@@ -1,8 +1,19 @@
 ﻿@model wn_Admin.Models.UtilityModels.SummaryModel
-
+@using GridMvc.Html;
 @{
     ViewBag.Title = "Index";
 }
+
+@section cssSection{
+    <link href="~/Content/Gridmvc.css" rel="stylesheet" />
+}
+
+@section jsSection{
+    <script src="~/Scripts/gridmvc.min.js"></script>
+    <script src="~/Scripts/CustomJS/project_summary.js"></script>
+}
+
+
 
 <h2>Project Summary</h2>
 
@@ -23,7 +34,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             Client
-                            @Html.DropDownList("ClientID", null, "Choose ...", htmlAttributes: new { @class="form-control"})
+                            @Html.DropDownList("ClientID", null, "Choose ...", htmlAttributes: new { @class = "form-control" })
                         </div>
 
                         <div class="col-md-3">
@@ -32,7 +43,7 @@
                         </div>
                         <div class="col-md-3">
                             Date From
-                            @Html.TextBox("startDate", null, htmlAttributes: new { @class="form-control", @type="date"})
+                            @Html.TextBox("startDate", null, htmlAttributes: new { @class = "form-control", @type = "date" })
                         </div>
                         <div class="col-md-3">
                             Date To
@@ -46,7 +57,7 @@
                 </div>
             </div>
         }
-        
+
     </div>
 </div>
 
@@ -54,7 +65,7 @@
     var mixedWorkings = Model.MixedWorkings;
     var individualWorkings = Model.IndividualWorkings;
     var expenses = Model.ProjectExpenses;
-    
+
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-danger">
@@ -65,30 +76,19 @@
                 </div>
 
                 <div class="panel-body">
-                    <table class="table">
-                        <tr>
-                            <th>@Html.DisplayNameFor(model => model.MixedWorkings.FirstOrDefault().Employee.FullName)</th>
-                            <th>@Html.DisplayNameFor(model => model.MixedWorkings.FirstOrDefault().Project.ProjectName)</th>
-                            <th>@Html.DisplayNameFor(model => model.MixedWorkings.FirstOrDefault().Date)</th>
-                            <th>@Html.DisplayNameFor(model => model.MixedWorkings.FirstOrDefault().JobDescription)</th>
-                            <th>@Html.DisplayNameFor(model => model.MixedWorkings.FirstOrDefault().Hours)</th>
-                            <th>@Html.DisplayNameFor(model => model.MixedWorkings.FirstOrDefault().Bank)</th>
-                            <th>@Html.DisplayNameFor(model => model.MixedWorkings.FirstOrDefault().OT)</th>
-                        </tr>
 
-                        @foreach (var w in mixedWorkings)
-                        {
-                            <tr>
-                                <td>@Html.DisplayFor(modelItem => w.Employee.FullName)</td>
-                                <td>@Html.DisplayFor(modelItem => w.Project.ProjectName)</td>
-                                <td>@Html.DisplayFor(modelItem => w.Date)</td>
-                                <td>@Html.DisplayFor(modelItem => w.JobDescription)</td>
-                                <td>@Html.DisplayFor(modelItem => w.Hours)</td>
-                                <td>@Html.DisplayFor(modelItem => w.Bank)</td>
-                                <td>@Html.DisplayFor(modelItem => w.OT)</td>
-                            </tr>
-                        }
-                    </table>
+                    @Html.Grid(Model.MixedWorkings).Columns(c =>
+                   {
+                       c.Add(a => a.Employee.FullName).Filterable(true).Titled("Full Name");
+                       c.Add(a => a.Project.ProjectName).Filterable(true).Titled("Project Name");
+                       c.Add(a => a.Date).Filterable(true).Titled("Start Time of the Day");
+                       c.Add(a => a.EndDate).Filterable(true).Titled("End Time of the Day");
+                       c.Add(a => a.Hours).Filterable(true);
+                   }).WithPaging(10).Sortable(true)
+
+                </div>
+                <div class="panel-footer">
+                    <a class="btn btn-primary" id="export">Export into Excel</a>
                 </div>
             </div>
         </div>
@@ -171,6 +171,6 @@
         </div>
     </div>
 
-    
+
 }
 
