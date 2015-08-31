@@ -9,8 +9,10 @@ namespace wn_Admin.Models.UtilityModels
     public class TimesheetDateValidator
     {
         public static string ValidateTimesheetDateRange(DateTime date, DateTime endDate)
-        {      
-            DateTime current = DateTime.Now;
+        {
+
+            DateTime current = getEdmontonTime();
+
             if (date > current)
             {
                 return "Date should not be in the future.";
@@ -38,6 +40,14 @@ namespace wn_Admin.Models.UtilityModels
 
             return null;
 
+        }
+
+        public static DateTime getEdmontonTime()
+        {
+            DateTimeOffset offset = new DateTimeOffset(DateTime.UtcNow).ToOffset(TimeSpan.FromHours(-6));
+            //DateTime current = offset.;
+
+            return offset.DateTime;
         }
 
 

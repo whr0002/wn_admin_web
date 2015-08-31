@@ -22,7 +22,7 @@ namespace wn_Admin.Models.UtilityModels
             if (date == null) return 0;
 
             var dateFrom = new DateTime(date.Year, date.Month, date.Day);
-            var dateTo = new DateTime(date.Year, date.Month, date.Day+1);
+            var dateTo = dateFrom.AddDays(1);
             var timesheets = db.Workings.Where(w => w.EmployeeID == mEmployeeId && w.Date >= dateFrom && w.EndDate < dateTo && w.WorkingID != mWorkingId);
 
             var total = timesheets.GroupBy(g => g.EmployeeID).Select(s => new { TotalHour = s.Sum(u => u.Hours) }).FirstOrDefault();

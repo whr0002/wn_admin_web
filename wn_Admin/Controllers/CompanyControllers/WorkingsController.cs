@@ -124,7 +124,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             // Get working records within 2 months
             if (startDate == null && endDate == null)
             {
-                DateTime now = DateTime.Now;
+                DateTime now = TimesheetDateValidator.getEdmontonTime();
                 DateTime preMonth = now.AddMonths(-2);
                 workings = workings.Where(w => w.Date >= preMonth || w.EndDate >= preMonth);
 
@@ -288,8 +288,8 @@ namespace wn_Admin.Controllers.CompanyControllers
 
             Working working = new Working();
 
-            working.Date = DateTime.Now;
-            working.EndDate = DateTime.Now;
+            working.Date = TimesheetDateValidator.getEdmontonTime();
+            working.EndDate = TimesheetDateValidator.getEdmontonTime();
             PayPeriodCalculator calc = new PayPeriodCalculator();
             PPViewModel ppv = calc.getPayPeriod(working.Date);
             working.PPYr = ppv.PPYear;
@@ -647,7 +647,7 @@ namespace wn_Admin.Controllers.CompanyControllers
 
 
 
-                    foreach (Working work in wlist)
+                    foreach (var work in wlist)
                     {
                         work.isReviewed = true;
                         work.Reviewer = employee.FullName;

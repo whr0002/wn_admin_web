@@ -65,7 +65,23 @@ window.onload = function () {
     //$('#Date', formBlock).change(refreshPayPeriod(formBlock));
 
 
-
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
 }
 
 function refreshPayPeriod(formBlock) {
@@ -299,6 +315,7 @@ function ajaxSubmit() {
 
             };
 
+
         $.ajax({
             //url: $(this).data('url'),
             url: "/workings/ajaxCreate",
@@ -306,8 +323,10 @@ function ajaxSubmit() {
             data: formData,
             success: function (result) {
                 if (result === "valid") {
+                    toastr["success"]("Your time sheet has been submitted.", "Success");
                     $(formBlock).empty();
                 } else {
+                    toastr["error"]("Fail to submit your time sheet", "Fail");
                     $("#validationErrors", formBlock).empty();
                     $("#validationErrors", formBlock).append(result);
                 }
