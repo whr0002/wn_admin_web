@@ -19,7 +19,11 @@ namespace wn_Admin_Test
 
             ViewResult vr = ec.Index() as ViewResult;
 
+            var model = vr.ViewData.Model;
+            
             Assert.AreEqual("", vr.ViewName);
+            
+            
         }
     }
 }

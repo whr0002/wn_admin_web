@@ -12,19 +12,16 @@ namespace wn_Admin.Models.UtilityModels
         {
 
             DateTime current = getEdmontonTime();
+            DateTime minDate = current.AddDays(-10);
 
             if (date > current)
             {
                 return "Date should not be in the future.";
-            }else{
-                DateTime minDate = current.AddDays(-10);
+            }        
 
-                if (date <= minDate)
-                {
-                    return "Date must be within 10 days.";
-                }
-
-                
+            if (date <= minDate)
+            {
+                return "Date must be within 10 days.";
             }
 
             if (endDate < date)
@@ -32,11 +29,6 @@ namespace wn_Admin.Models.UtilityModels
                 return "End Date must be later than Start Date";
             }
 
-
-            if (endDate.AddDays(-1) > date)
-            {
-                return "End Date must be within 1 day of Start Date";
-            }
 
             return null;
 

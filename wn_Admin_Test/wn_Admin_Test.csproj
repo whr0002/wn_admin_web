@@ -87,8 +87,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="Unit Tests\EmployeeControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Unit Tests\PayPeriodCalculatorTest.cs" />
+    <Compile Include="Unit Tests\TimesheetDateValidatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\wn_Admin\wn_Admin.csproj">
