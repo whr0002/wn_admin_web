@@ -51,7 +51,7 @@ namespace wn_Admin.Models.CompanyModels
         [Range(0, 500000)]
         public int? StartKm { get; set; }
 
-        [KM("StartKm", ErrorMessage = "EndKm must be greater than StartKm")]
+        [KM("StartKm", "Veh", ErrorMessage = "EndKm must be greater than StartKm")]
         [DisplayName("End Km")]
         [Range(0, 500000)]
         public int? EndKm { get; set; }

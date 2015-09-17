@@ -34,28 +34,29 @@ namespace wn_Admin
 
             routes.MapRoute(
                 name: "Supervision",
-                url: "Supervisions/Edit/{eid}/{mid}/{pid}",
+                url: "Supervisions/Edit/{mid}/{pid}",
                 defaults: new { controller = "Supervisions", action = "Edit", eid = "", mid = "", pid = "" }
 
                 );
 
             routes.MapRoute(
                 name: "Supervision delete",
-                url: "Supervisions/Delete/{eid}/{mid}/{pid}",
+                url: "Supervisions/Delete/{mid}/{pid}",
                 defaults: new { controller = "Supervisions", action = "Delete", eid = "", mid = "", pid = "" }
                 );
 
             routes.MapRoute(
                 name: "Supervision delete confirm",
-                url: "Supervisions/DeleteConfirmed/{eid}/{mid}/{pid}",
+                url: "Supervisions/DeleteConfirmed/{mid}/{pid}",
                 defaults: new { controller = "Supervisions", action = "Delete", eid = "", mid = "", pid = "" }
                 );
 
             routes.MapRoute(
                 name: "Supervision detail",
-                url: "Supervisions/Detail/{eid}/{mid}/{pid}",
+                url: "Supervisions/Detail/{mid}/{pid}/",
                 defaults: new { controller = "Supervisions", action = "Detail", eid = "", mid = "", pid = "" }
                 );
+
 
 
             routes.MapRoute(

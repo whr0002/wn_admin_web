@@ -15,3 +15,15 @@
     padding-top: 8px !important;
     padding-bottom: 8px !important;
 }
+
+.s-important {
+    background-color: #FDF3E7;
+}
+
+.s-important div.grid-header-title{
+    width: 120px !important;
+}
+
+.s-bg-color{
+    background-color: #FDF3E7;
+}

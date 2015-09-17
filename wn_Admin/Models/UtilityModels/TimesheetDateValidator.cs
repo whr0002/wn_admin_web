@@ -42,6 +42,29 @@ namespace wn_Admin.Models.UtilityModels
             return offset.DateTime;
         }
 
+        public static DateTime setStartTime(DateTime d)
+        {
+            return new DateTime(
+                d.Year,
+                d.Month,
+                d.Day,
+                7,
+                0,
+                0);
+        }
+
+        public static DateTime setEndTime(DateTime d)
+        {
+            return new DateTime(
+                d.Year,
+                d.Month,
+                d.Day,
+                16,
+                0,
+                0
+                );
+        }
+
 
 
     }

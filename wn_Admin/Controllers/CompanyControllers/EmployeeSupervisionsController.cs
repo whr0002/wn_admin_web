@@ -12,116 +12,116 @@ using wn_Admin.Models.CompanyModels;
 namespace wn_Admin.Controllers.CompanyControllers
 {
     [Authorize(Roles = "SUPERADMIN, Accountant")]
-    public class SupervisionsController : Controller
+    public class EmployeeSupervisionsController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
 
-        // GET: Supervisions
+        // GET: EmployeeSupervisions
         public ActionResult Index()
         {
-            var supervisions = db.Supervisions.Include(s => s.Project).Include(s => s.Supervisor);
-            return View(supervisions.ToList());
+            var employeeSupervisions = db.EmployeeSupervisions.Include(e => e.Employee).Include(e => e.Supervisor);
+            return View(employeeSupervisions.ToList());
         }
 
-        // GET: Supervisions/Details/5
+        // GET: EmployeeSupervisions/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Supervision supervision = db.Supervisions.Find(id);
-            if (supervision == null)
+            EmployeeSupervision employeeSupervision = db.EmployeeSupervisions.Find(id);
+            if (employeeSupervision == null)
             {
                 return HttpNotFound();
             }
-            return View(supervision);
+            return View(employeeSupervision);
         }
 
-        // GET: Supervisions/Create
+        // GET: EmployeeSupervisions/Create
         public ActionResult Create()
         {
-            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName");
             ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName");
             return View();
         }
 
-        // POST: Supervisions/Create
+        // POST: EmployeeSupervisions/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SupervisionID,SupervisorID,ProjectID")] Supervision supervision)
+        public ActionResult Create([Bind(Include = "EmployeeSupervisionID,SupervisorID,EmployeeID")] EmployeeSupervision employeeSupervision)
         {
             if (ModelState.IsValid)
             {
-                db.Supervisions.Add(supervision);
+                db.EmployeeSupervisions.Add(employeeSupervision);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", supervision.ProjectID);
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.SupervisorID);
-            return View(supervision);
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", employeeSupervision.EmployeeID);
+            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", employeeSupervision.SupervisorID);
+            return View(employeeSupervision);
         }
 
-        // GET: Supervisions/Edit/5
+        // GET: EmployeeSupervisions/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Supervision supervision = db.Supervisions.Find(id);
-            if (supervision == null)
+            EmployeeSupervision employeeSupervision = db.EmployeeSupervisions.Find(id);
+            if (employeeSupervision == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", supervision.ProjectID);
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.SupervisorID);
-            return View(supervision);
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", employeeSupervision.EmployeeID);
+            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", employeeSupervision.SupervisorID);
+            return View(employeeSupervision);
         }
 
-        // POST: Supervisions/Edit/5
+        // POST: EmployeeSupervisions/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SupervisionID,SupervisorID,ProjectID")] Supervision supervision)
+        public ActionResult Edit([Bind(Include = "EmployeeSupervisionID,SupervisorID,EmployeeID")] EmployeeSupervision employeeSupervision)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(supervision).State = EntityState.Modified;
+                db.Entry(employeeSupervision).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", supervision.ProjectID);
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.SupervisorID);
-            return View(supervision);
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", employeeSupervision.EmployeeID);
+            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", employeeSupervision.SupervisorID);
+            return View(employeeSupervision);
         }
 
-        // GET: Supervisions/Delete/5
+        // GET: EmployeeSupervisions/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Supervision supervision = db.Supervisions.Find(id);
-            if (supervision == null)
+            EmployeeSupervision employeeSupervision = db.EmployeeSupervisions.Find(id);
+            if (employeeSupervision == null)
             {
                 return HttpNotFound();
             }
-            return View(supervision);
+            return View(employeeSupervision);
         }
 
-        // POST: Supervisions/Delete/5
+        // POST: EmployeeSupervisions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Supervision supervision = db.Supervisions.Find(id);
-            db.Supervisions.Remove(supervision);
+            EmployeeSupervision employeeSupervision = db.EmployeeSupervisions.Find(id);
+            db.EmployeeSupervisions.Remove(employeeSupervision);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

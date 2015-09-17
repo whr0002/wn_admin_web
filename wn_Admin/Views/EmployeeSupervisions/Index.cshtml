@@ -1,0 +1,35 @@
+﻿@model IEnumerable<wn_Admin.Models.CompanyModels.EmployeeSupervision>
+@using GridMvc.Html;
+@{
+    ViewBag.Title = "Index";
+}
+@section jsSection{
+    <link href="~/Content/Gridmvc.css" rel="stylesheet" />
+    <script src="~/Scripts/gridmvc.min.js"></script>
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.Grid(Model).Columns(columns =>
+   {
+       columns.Add(c => c.Supervisor.FullName).Titled("Supervisor").Filterable(true);
+       columns.Add(c => c.Employee.FullName).Titled("Employee").Filterable(true);
+       columns
+            .Add()
+            .Encoded(false)
+            .Sanitized(false)
+            .RenderValueAs(c =>
+            Html.ActionLink("[Edit]", "Edit", new { id = c.EmployeeSupervisionID }) + " " +
+            Html.ActionLink("[Details]", "Details", new { id = c.EmployeeSupervisionID }) + " " +
+            Html.ActionLink("[Delete]", "Delete", new { id = c.EmployeeSupervisionID })
+            );
+   }).WithPaging(50).Sortable(true)
+    </div>
+</div>

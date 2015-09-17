@@ -16,5 +16,9 @@ namespace wn_Admin.Models.CModels
         [MaxLength(100)]
         [DisplayName("Vehicle Number")]
         public string VehicleName { get; set; }
+
+        [DisplayName("Current Kilometers")]
+        [Range(0, 300000)]
+        public int? currentKm { get; set; }
     }
 }

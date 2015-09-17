@@ -29,5 +29,12 @@ namespace wn_Admin.Controllers.CControllers
 
             return Content(JsonConvert.SerializeObject(model), "application/json");
         }
+
+        public ActionResult Vehicle(string name)
+        {
+            var vehicle = db.Vehicles.Where(w => w.VehicleName.Equals(name)).FirstOrDefault();
+
+            return Json(vehicle, JsonRequestBehavior.AllowGet);
+        }
     }
 }

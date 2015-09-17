@@ -15,7 +15,7 @@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/Site.css" rel="stylesheet" />
     <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/StyleSheet_Timesheet.css" type="text/css" rel="stylesheet" />
+    <link href="~/Content/StyleSheet_Timesheet.css?v=1.0" type="text/css" rel="stylesheet" />
     <link href="~/Content/fullcalendar.css" type="text/css" rel="stylesheet" />
     <link href="~/Content/fullcalendar.print.css" type="text/css" rel="stylesheet" media='print' />
     <link href="~/Content/Gridmvc.css" rel="stylesheet" />
@@ -198,28 +198,6 @@
             <div class="col-md-12">
                 @Html.Grid(Model).Columns(columns =>
                     {
-                        columns.Add(c => c.Employee.FullName).Titled("Name").Filterable(true);
-                        columns.Add(c => c.Date).Format("{0:yyyy-MM-dd HH:mm}").Titled("Time - Start of the day");
-                        columns.Add(c => c.EndDate).Format("{0:yyyy-MM-dd HH:mm}").Titled("Time - End of the day");
-                        columns.Add(c => c.PPYr).Titled("Period Year");
-                        columns.Add(c => c.PP).Titled("Pay Period");
-                        columns.Add(c => c.Project.FK_Client.ClientName).Titled("Client");
-                        columns.Add(c => c.Project.ProjectName).Titled("Project");
-                        columns.Add(c => c.Task);
-                        columns.Add(c => c.Identifier);
-                        columns.Add(c => c.Veh).Titled("Vehicle");
-                        columns.Add(c => c.Crew);
-                        columns.Add(c => c.StartKm).Titled("Start Km");
-                        columns.Add(c => c.EndKm).Titled("End Km");
-                        columns.Add(c => c.KmDiff).Titled("Km Difference");
-                        columns.Add(c => c.Equipment);
-                        columns.Add(c => c.Field).Titled("Field Access");
-                        columns.Add(c => c.PD).RenderValueAs(c => c.PD ? "Yes" : "No").Titled("Per Diem");
-                        columns.Add(c => c.JobDescription).Titled("Job Description").Filterable(true);
-                        columns.Add(c => c.OffReason).Titled("Off Detail");
-                        columns.Add(c => c.Hours);
-                        columns.Add(c => c.isReviewed).RenderValueAs(c => c.isReviewed ? "Yes" : "No").Titled("Is Reviewed?").SetWidth(5);
-                        columns.Add(c => c.Reviewer);
 
                         if (ViewBag.hasFullControl)
                         {
@@ -267,8 +245,8 @@
                                 Html.ActionLink("[Delete]", "Delete", new { id = c.WorkingID })) : ""
                                 )
                                 .Titled("");
-                            
-                  
+
+
                         }
                         else
                         {
@@ -284,8 +262,35 @@
                                 .Titled("");
                         }
 
+                        columns.Add(c => c.isReviewed).RenderValueAs(c => c.isReviewed ? "Yes" : "No").Titled("Reviewed?").SetWidth(5).Css("s-bg-color");
+                        columns.Add(c => c.Reviewer).Css("s-important");
+                        columns.Add(c => c.Employee.FullName).Titled("Employee").Filterable(true).Css("s-important");
+                        columns.Add(c => c.Date).Format("{0:MMMM dd}").Titled("Date").Css("s-important");
+                        //columns.Add(c => c.EndDate).Format("{0:yyyy-MM-dd HH:mm}").Titled("Time - End of the day");
+                        //columns.Add(c => c.PPYr).Titled("Period Year");
+                        //columns.Add(c => c.PP).Titled("Pay Period");
+                        columns.Add(c => c.Project.FK_Client.ClientName).Titled("Client").Css("s-important");
+                        columns.Add(c => c.Project.ProjectName).Titled("Project").Css("s-important");
+                        columns.Add(c => c.Task).Css("s-important");
+                        columns.Add(c => c.Identifier).Css("s-important");
+                        columns.Add(c => c.Hours).Css("s-important");
+                        columns.Add(c => c.JobDescription).Titled("Job Description").Filterable(true).Css("s-important");
 
-                    }).WithPaging(10).Sortable(true)
+
+                        columns.Add(c => c.Veh).Titled("Vehicle");
+                        columns.Add(c => c.Crew);
+                        columns.Add(c => c.StartKm).Titled("Start Km");
+                        columns.Add(c => c.EndKm).Titled("End Km");
+                        columns.Add(c => c.KmDiff).Titled("Km Difference");
+                        columns.Add(c => c.Equipment);
+                        columns.Add(c => c.Field).Titled("Field Access");
+                        columns.Add(c => c.PD).RenderValueAs(c => c.PD ? "Yes" : "No").Titled("Per Diem");
+                        columns.Add(c => c.OffReason).Titled("Off Detail");
+
+                        
+
+
+                    }).WithPaging(30).Sortable(true)
             </div>
         </div>
     </div>

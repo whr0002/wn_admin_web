@@ -18,12 +18,19 @@ namespace wn_Admin.Models.UtilityModels
         {
             var properties = this.mPropertyNames.Select(validationContext.ObjectType.GetProperty);
             var startKM = properties.Select(s => s.GetValue(validationContext.ObjectInstance, null)).OfType<int>().FirstOrDefault();
+            var vehicle = properties.Select(s => s.GetValue(validationContext.ObjectInstance, null)).OfType<string>().FirstOrDefault();
             var endKM = Convert.ToInt32(value);
 
             if (endKM < startKM)
             {
                 return new ValidationResult(this.FormatErrorMessage(validationContext.DisplayName));
             }
+
+            if ((vehicle == null || vehicle.Trim().Equals("")) && (startKM > 0 || endKM > 0))
+            {
+                return new ValidationResult("Vehicle is required.");
+            }
+            
 
             return null;
         }

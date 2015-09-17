@@ -57,6 +57,21 @@ window.onload = function () {
 
     });
 
+    $('#Veh', formBlock).change(function () {
+
+        var vName = $('#Veh', formBlock).find(":selected").text();
+
+        $.ajax({
+            url: "/api/vehicle",
+            type: "GET",
+            data: { name: vName },
+            success: function (result) {
+                $('#StartKm', formBlock).val(result["currentKm"]);
+            }
+
+        });
+    });
+
     $('#close', formBlock).click({param: formBlock}, closeForm);
    
 
@@ -253,6 +268,21 @@ function addForm() {
 
     });
 
+
+    $('#Veh', formBlock).change(function () {
+
+        var vName = $('#Veh', formBlock).find(":selected").text();
+
+        $.ajax({
+            url: "/api/vehicle",
+            type: "GET",
+            data: { name: vName },
+            success: function (result) {
+                $('#StartKm', formBlock).val(result["currentKm"]);
+            }
+
+        });
+    });
 
     $('#close', formBlock).click({param: formBlock},closeForm);
     $('#close', formBlock).show();

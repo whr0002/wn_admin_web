@@ -71,19 +71,19 @@ namespace wn_Admin.Controllers.CControllers
             return Json(supervisors.ToList(), JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult employees(string parent, string projectID)
-        {
-            int id = int.Parse(parent.Substring(1));
-            var employees = db.Supervisions
-                .Where(w => w.SupervisorID == id && w.ProjectID.Equals(projectID.Substring(1)))
-                .Select(s => new {
-                    id = "e"+ s.EmployeeID,
-                    parent = parent,
-                    text = s.Employee.FullName,
-                    children = false
-            });
+        //public JsonResult employees(string parent, string projectID)
+        //{
+        //    int id = int.Parse(parent.Substring(1));
+        //    var employees = db.Supervisions
+        //        .Where(w => w.SupervisorID == id && w.ProjectID.Equals(projectID.Substring(1)))
+        //        .Select(s => new {
+        //            id = "e"+ s.EmployeeID,
+        //            parent = parent,
+        //            text = s.Employee.FullName,
+        //            children = false
+        //    });
 
-            return Json(employees.ToList(), JsonRequestBehavior.AllowGet);
-        }
+        //    return Json(employees.ToList(), JsonRequestBehavior.AllowGet);
+        //}
     }
 }

@@ -61,22 +61,18 @@ namespace wn_Admin.Controllers.CompanyControllers
                 var employee = mUserInfo.getEmployee(userId);
                 if (employee != null)
                 {
-
-                    var tempSupers = db.Supervisions.Where(w => w.SupervisorID == employee.EmployeeID);
-                    // Select all time sheets under one's supervision
-                    var tempWorkings = from supers in tempSupers
-                                       join works in workings
-                                       on supers.EmployeeID equals works.EmployeeID
-                                       where works.isReviewed == false &&
-                                       supers.ProjectID.Equals(works.ProjectID)
-                                       select works;
-
+                    // Get all time sheets from employees who are under THIS PERSON's supervision
+                    var tempAll = from es in db.EmployeeSupervisions
+                                  join sp in db.Supervisions on es.SupervisorID equals sp.SupervisorID
+                                  join wk in workings on sp.ProjectID equals wk.ProjectID
+                                  where es.SupervisorID == employee.EmployeeID && es.EmployeeID == wk.EmployeeID && wk.isReviewed == false
+                                  select wk;
+                    // Get all time sheets from THIS PERSON
                     var personalWorkings = db.Workings.Where(w => w.EmployeeID == employee.EmployeeID);
+                    workings = tempAll.Union(personalWorkings);
 
-                    workings = tempWorkings.Union(personalWorkings);
-                    //workings = workings.Where(w => w.EmployeeID == employee.EmployeeID || (ids.Contains(w.EmployeeID) && pids.Contains(w.ProjectID) && w.isReviewed == false));
-
-                    if (tempWorkings.Count() > 0)
+                    // Give corresponding authorization
+                    if (tempAll.Count() > 0)
                     {
                         ViewBag.hasReviewControl = true;
                         ViewBag.CurrentEID = employee.EmployeeID;
@@ -288,8 +284,9 @@ namespace wn_Admin.Controllers.CompanyControllers
 
             Working working = new Working();
 
-            working.Date = TimesheetDateValidator.getEdmontonTime();
-            working.EndDate = TimesheetDateValidator.getEdmontonTime();
+            working.Date = TimesheetDateValidator.setStartTime(TimesheetDateValidator.getEdmontonTime());
+            working.EndDate = TimesheetDateValidator.setEndTime(TimesheetDateValidator.getEdmontonTime());
+
             PayPeriodCalculator calc = new PayPeriodCalculator();
             PPViewModel ppv = calc.getPayPeriod(working.Date);
             working.PPYr = ppv.PPYear;
@@ -419,7 +416,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         [ValidateAntiForgeryToken]
         public void ajaxCreate(string[] Equipment, [Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,Field,PD,JobDescription,OffReason,Hours")] Working working)
         {
-
+            VehicleService vehicleService = new VehicleService();
 
             if (ModelState.IsValid)
             {
@@ -440,6 +437,7 @@ namespace wn_Admin.Controllers.CompanyControllers
 
                 if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
                 {
+                    vehicleService.updateVehicleStatus(working.Veh, working.EndKm);
                     db.Workings.Add(working);
                     db.SaveChanges();
                     Response.Write("valid");
@@ -454,6 +452,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                     }
                     else
                     {
+                        vehicleService.updateVehicleStatus(working.Veh, working.EndKm);
                         db.Workings.Add(working);
                         db.SaveChanges();
                         Response.Write("valid");
@@ -523,6 +522,7 @@ namespace wn_Admin.Controllers.CompanyControllers
 
             if (ModelState.IsValid)
             {
+                VehicleService vehicleService = new VehicleService();
 
                 // Check date to see if it is valid.
                 string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date, working.EndDate);
@@ -530,6 +530,7 @@ namespace wn_Admin.Controllers.CompanyControllers
 
                 if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
                 {
+                    vehicleService.updateVehicleStatus(working.Veh, working.EndKm);
                     // When modified by someone, clear the reviewer name to this person.
                     working.isReviewed = false;
                     working.Reviewer = "";
@@ -545,6 +546,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                     }
                     else
                     {
+                        vehicleService.updateVehicleStatus(working.Veh, working.EndKm);
                         // When modified by someone, clear the reviewer name to this person.
                         working.isReviewed = false;
                         working.Reviewer = "";
@@ -658,12 +660,12 @@ namespace wn_Admin.Controllers.CompanyControllers
                 else if (mUserInfo.isInRole(userId, "Employee"))
                 {
                     // User is an employee, check if he is supervisor or not.
-
-                    var result = from super in db.Supervisions
-                                 join work in db.Workings
-                                 on super.EmployeeID equals work.EmployeeID
-                                 where super.SupervisorID == employee.EmployeeID
-                                 select work;
+                    // Get all time sheets from employees who are under THIS PERSON's supervision
+                    var result = from es in db.EmployeeSupervisions
+                                  join sp in db.Supervisions on es.SupervisorID equals sp.SupervisorID
+                                  join wk in db.Workings on sp.ProjectID equals wk.ProjectID
+                                  where es.SupervisorID == employee.EmployeeID && es.EmployeeID == wk.EmployeeID && wk.isReviewed == false
+                                  select wk;
 
                     foreach (var work in result)
                     {
