@@ -66,19 +66,23 @@ namespace wn_Admin.Controllers
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Tasks", Link = "/tasks" });
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Field Accesses", Link = "/fieldaccesses" });
                     time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Off Details", Link = "/offreasons" });
-                    
-
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Vehicles", Link = "/vehicles" });
+                    time.ListLinks.Add(new LinkViewModel { LinkName = "Manage Equipments", Link = "/equipments" });
                     // Resource
                     ListLinkViewModel resource = new ListLinkViewModel();
                     resource.ListName = "Resource";
                     resource.color = "Grey";
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Vehicles", Link = "/vehicles" });
+
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Departments", Link = "/departments" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Equipments", Link = "/equipments" });
+
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Account Types", Link = "/accounttypes" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Manage Time Off Request", Link = "/timeoffrequests" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Costs", Link = "/#" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Payments", Link = "/expenses" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Employee Handbook", Link = "/file/Employee Handbook 2014 May" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Health & Safety Manual", Link = "/file/2015_Health_and_Safety_Manual" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Safe work Practices General", Link = "/file/Part 1_Safe Work Practices Manual_2015_GENERAL" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Safe work Practices Business Unit", Link = "/file/Part 2_Safe Work Practices Manual_2014_BUSINESS_UNIT" });
 
 
                     lModel.sections.Add(people);
@@ -105,8 +109,10 @@ namespace wn_Admin.Controllers
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Vehicle Inspection Form", Link = "/#" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Major Incident Report Form", Link = "/MajorAccidentForms" });
                     resource.ListLinks.Add(new LinkViewModel { LinkName = "Minor Incident Report Form", Link = "/MinorAccidentForms" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Employee Handbook", Link = "/#" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Health & Safety Manual", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Employee Handbook", Link = "/file/Employee Handbook 2014 May" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Health & Safety Manual", Link = "/file/2015_Health_and_Safety_Manual" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Safe work Practices General", Link = "/file/Part 1_Safe Work Practices Manual_2015_GENERAL" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Safe work Practices Business Unit", Link = "/file/Part 2_Safe Work Practices Manual_2014_BUSINESS_UNIT" });
 
 
                     lModel.sections.Add(time);
@@ -126,14 +132,16 @@ namespace wn_Admin.Controllers
                     ListLinkViewModel resource = new ListLinkViewModel();
                     resource.ListName = "Resource";
                     resource.color = "Grey";
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Expense Form", Link = "/expenses" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Time Off Request", Link = "/timeoffrequests" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Daily Tailgate Safety Meeting", Link = "/SafetyMeetings/create" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Vehicle Inspection Form", Link = "/#" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Major Incident Report Form", Link = "/MajorAccidentForms/create" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Minor Incident Report Form", Link = "/MinorAccidentForms/create" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Employee Handbook", Link = "/#" });
-                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Health & Safety Manual", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Expense Form (NOT COMPLETE)", Link = "/expenses" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Time Off Request (NOT COMPLETE)", Link = "/timeoffrequests" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Daily Tailgate Safety Meeting (NOT COMPLETE)", Link = "/SafetyMeetings/create" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Vehicle Inspection Form (NOT COMPLETE)", Link = "/#" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Major Incident Report Form (NOT COMPLETE)", Link = "/MajorAccidentForms/create" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Minor Incident Report Form (NOT COMPLETE)", Link = "/MinorAccidentForms/create" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Employee Handbook", Link = "/file/Employee Handbook 2014 May" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Health & Safety Manual", Link = "/file/2015_Health_and_Safety_Manual" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Safe work Practices General", Link = "/file/Part 1_Safe Work Practices Manual_2015_GENERAL" });
+                    resource.ListLinks.Add(new LinkViewModel { LinkName = "Safe work Practices Business Unit", Link = "/file/Part 2_Safe Work Practices Manual_2014_BUSINESS_UNIT" });
 
                     
 

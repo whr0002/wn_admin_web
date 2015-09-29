@@ -6,7 +6,7 @@
 
 @section jsSection{
     <script src="~/Scripts/toastr.min.js"></script>
-    <script src="~/Scripts/ng_controllers/timesheet_controller.js?v=1.6"></script>
+    <script src="~/Scripts/ng_controllers/timesheet_controller.js?v=1.8"></script>
 
 
 }
@@ -185,7 +185,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Field, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.DropDownList("Field", null, "Choose ...", htmlAttributes: new { @class = "form-control" })
+                        @Html.DropDownList("Field", (MultiSelectList)ViewBag.Field, new { multiple = "multiple", @class = "form-control my_selectlist" })
                         @Html.ValidationMessageFor(model => model.Field, "", new { @class = "text-danger" })
                     </div>
                 </div>

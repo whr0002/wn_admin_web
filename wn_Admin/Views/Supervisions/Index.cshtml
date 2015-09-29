@@ -15,7 +15,8 @@
 @Html.Grid(Model).Columns(columns =>
    {
        columns.Add(c => c.Supervisor.FullName).Titled("Supervisor").Filterable(true);
-       columns.Add(c => c.Project.ProjectName).Titled("Project").Filterable(true);
+       columns.Add(c => c.Project.ProjectName).Titled("Project Name").Filterable(true);
+       columns.Add(c => c.ProjectID).Titled("Project ID").Filterable(true);
        columns
             .Add()
             .Encoded(false)

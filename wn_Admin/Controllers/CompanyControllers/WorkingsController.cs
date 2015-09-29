@@ -28,12 +28,13 @@ namespace wn_Admin.Controllers.CompanyControllers
         private UserInfo mUserInfo = new UserInfo();
 
         // GET: Workings
-        public ActionResult Index(int[] employeeId, int? page, DateTime? startDate = null, DateTime? endDate = null, int ppYear = -1, int pp = -1, int clientId = -1, string projectId = null, string isReviewed = null, Boolean? exportToExcel = null)
+        public ActionResult Index(int[] employeeId, string[] tasks, int? page, DateTime? startDate = null, DateTime? endDate = null, int ppYear = -1, int pp = -1, int clientId = -1, string projectId = null, string isReviewed = null, Boolean? exportToExcel = null)
         {
 
 
             var workings = db.Workings.Include(w => w.Employee).Include(w => w.Project);
             string userId = User.Identity.GetUserId();
+            var employee = mUserInfo.getEmployee(userId);
             string currentFilter = "";
             string dateRange = "";
 
@@ -41,31 +42,23 @@ namespace wn_Admin.Controllers.CompanyControllers
             {
 
                 // User is an accoutant, he or she can search Timesheets by Employee ID
-
-                if (employeeId != null && employeeId.Count() > 0)
-                {
-                    workings = workings.Where(w => employeeId.Contains(w.EmployeeID));
-                    currentFilter += "&employeeId=" + string.Join("&employeeId=", employeeId);
-                }
                 ViewBag.hasReviewControl = true;
                 ViewBag.hasFullControl = true;
-                //ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName");
-
-                ViewBag.EmployeeID = new MultiSelectList(db.Employees, "EmployeeID", "FullName");
+                ViewBag.EmployeeID = new MultiSelectList(db.Employees.Where(w => w.Status == 1).OrderBy(o => o.FirstMidName), "EmployeeID", "FullName");
                 ViewBag.clientId = new SelectList(db.Clients, "ClientID", "ClientName");
                 ViewBag.projectId = new SelectList(db.Projects, "ProjectID", "ProjectName");
             }
             else
             {
                 // User is not accountant, show records from this user
-                var employee = mUserInfo.getEmployee(userId);
+
                 if (employee != null)
                 {
                     // Get all time sheets from employees who are under THIS PERSON's supervision
                     var tempAll = from es in db.EmployeeSupervisions
                                   join sp in db.Supervisions on es.SupervisorID equals sp.SupervisorID
                                   join wk in workings on sp.ProjectID equals wk.ProjectID
-                                  where es.SupervisorID == employee.EmployeeID && es.EmployeeID == wk.EmployeeID && wk.isReviewed == false
+                                  where es.SupervisorID == employee.EmployeeID && es.EmployeeID == wk.EmployeeID
                                   select wk;
                     // Get all time sheets from THIS PERSON
                     var personalWorkings = db.Workings.Where(w => w.EmployeeID == employee.EmployeeID);
@@ -87,18 +80,25 @@ namespace wn_Admin.Controllers.CompanyControllers
                     return View(new List<Working>());
                 }
 
+                // Select all employees under this person's supervision
+                var employeeIdFromSupervision = db.EmployeeSupervisions.Where(w => w.SupervisorID == employee.EmployeeID).Select(s => s.EmployeeID);
                 ViewBag.EID = employee.EmployeeID;
                 ViewBag.hasFullControl = false;
-                //ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.EmployeeID == employee.EmployeeID), "EmployeeID", "FullName");
-                ViewBag.EmployeeID = new MultiSelectList(db.Employees.Where(w => w.EmployeeID == employee.EmployeeID), "EmployeeID", "FullName");
+                ViewBag.EmployeeID = new MultiSelectList(db.Employees.Where(w => w.Status == 1 && (w.EmployeeID == employee.EmployeeID || employeeIdFromSupervision.Contains(w.EmployeeID))).OrderBy(o => o.FullName), "EmployeeID", "FullName");
                 ViewBag.clientId = new SelectList(workings.Select(s => s.Project.FK_Client).Distinct(), "ClientID", "ClientName");
                 ViewBag.projectId = new SelectList(workings.Select(s => s.Project).Distinct(), "ProjectID", "ProjectName");
 
             }
             ViewBag.isReviewed = new SelectList(db.YesNoNA.Where(w => w.YesNoNAName != "N/A"), "YesNoNAName", "YesNoNAName");
-
+            ViewBag.tasks = new MultiSelectList(db.Tasks, "TaskName", "TaskName");
 
             // Search Filters
+            // Employees
+            if (employeeId != null && employeeId.Count() > 0)
+            {
+                workings = workings.Where(w => employeeId.Contains(w.EmployeeID));
+                currentFilter += "&employeeId=" + string.Join("&employeeId=", employeeId);
+            }
 
             // Date
             if (startDate != null)
@@ -143,6 +143,13 @@ namespace wn_Admin.Controllers.CompanyControllers
                 currentFilter += "&pp=" + pp;
             }
 
+            //Task
+            if (tasks != null && tasks.Count() > 0)
+            {
+                workings = workings.Where(w => tasks.Contains(w.Task));
+                currentFilter += "&tasks=" + string.Join("&tasks=", tasks);
+            }
+
             //Client
             if (clientId != -1)
             {
@@ -172,67 +179,52 @@ namespace wn_Admin.Controllers.CompanyControllers
             ViewBag.CurrentFilter = currentFilter;
             workings = workings.OrderByDescending(o => o.Date);
 
-            // Group by Date for events
-            //var events = workings
-            //    .GroupBy(g => new 
-            //    { g.EmployeeID, 
-            //        g.Employee.FullName, 
-            //        g.Date, 
-            //        g.EndDate
-            //    })
-            //    .Select(s => new EventModel
+            //var events = (from s in workings
+            //              group s by new
+            //              {
+            //                  s.EmployeeID,
+            //                  s.Employee.FirstMidName,
+            //                  Date = DbFunctions.TruncateTime(s.Date),
+            //                  EndDate = DbFunctions.TruncateTime(s.EndDate)
+            //              }
+            //                  into g
+            //                  select new EventModel
+            //                  {
+            //                      title = g.Key.FirstMidName,
+            //                      totalHours = g.Sum(b => b.Hours),
+            //                      startDT = (DateTime)g.Key.Date,
+            //                      endDT = (DateTime)g.Key.EndDate
+            //                  }).ToList();
+
+            
+
+            //// Giving each event color and description.
+            //List<EventViewModel> evm = new List<EventViewModel>();
+
+            //foreach (var e in events)
+            //{
+            //    EventViewModel eventViewModel = new EventViewModel();
+            //    eventViewModel.start = e.startDT.ToString("yyyy-MM-dd");
+            //    eventViewModel.end = e.endDT.AddDays(1).ToString("yyyy-MM-dd");
+            //    eventViewModel.backgroundColor = (e.totalHours == 0) ? "#004C99" : "#808080";
+
+            //    //e.start = e.startDT.ToString("yyyy-MM-dd");
+            //    //e.backgroundColor = (e.totalHours == 0) ? "#004C99" : "#808080";
+            //    if (e.totalHours == 0)
             //    {
-            //        title = s.Key.FullName,
-            //        totalHours = s.Sum(b => b.Hours),
-            //        startDT = s.Key.Date,
-            //        endDT = s.Key.EndDate
-            //    })
-            //    .ToList();
+            //        e.title += ": Off";
+            //    }
+            //    else
+            //    {
+            //        e.title += ": " + e.totalHours + " h";
+            //    }
 
-            var events = (from s in workings
-                          group s by new
-                          {
-                              s.EmployeeID,
-                              s.Employee.FullName,
-                              Date = DbFunctions.TruncateTime(s.Date),
-                              EndDate = DbFunctions.TruncateTime(s.EndDate)
-                          }
-                              into g
-                              select new EventModel
-                              {
-                                  title = g.Key.FullName,
-                                  totalHours = g.Sum(b => b.Hours),
-                                  startDT = (DateTime)g.Key.Date,
-                                  endDT = (DateTime)g.Key.EndDate
-                              }).ToList();
+            //    eventViewModel.title = e.title;
 
-
-
-            // Giving each event color and description.
-            List<EventViewModel> evm = new List<EventViewModel>();
-
-            foreach (var e in events)
-            {
-                EventViewModel eventViewModel = new EventViewModel();
-                eventViewModel.start = e.startDT.ToString("yyyy-MM-dd");
-                eventViewModel.end = e.endDT.AddDays(1).ToString("yyyy-MM-dd");
-                eventViewModel.backgroundColor = (e.totalHours == 0) ? "#004C99" : "#808080";
-
-                //e.start = e.startDT.ToString("yyyy-MM-dd");
-                //e.backgroundColor = (e.totalHours == 0) ? "#004C99" : "#808080";
-                if (e.totalHours == 0)
-                {
-                    e.title += ": Off";
-                }
-                else
-                {
-                    e.title += ": " + e.totalHours + " h";
-                }
-
-                eventViewModel.title = e.title;
-
-                evm.Add(eventViewModel);
-            }
+            //    evm.Add(eventViewModel);
+            //}
+            EventService eventService = new EventService(employee);
+            List<EventViewModel> evm = eventService.getEventViewModel(workings);
 
             // Generate time sheet summary
             var tempE = mUserInfo.getEmployee(userId);
@@ -273,12 +265,13 @@ namespace wn_Admin.Controllers.CompanyControllers
         public ActionResult Create()
         {
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
-            ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessName", "FieldAccessName");
+            ViewBag.Field = new SelectList(db.FieldAccesses.OrderBy(o => o.FieldAccessName), "FieldAccessName", "FieldAccessName");
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
             ViewBag.Task = new SelectList(db.Tasks, "TaskName", "TaskName");
             ViewBag.Veh = new SelectList(db.Vehicles, "VehicleName", "VehicleName");
             ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1 || w.Status == 0).OrderBy(o => o.ProjectName), "ProjectID", "ProjectName");
             ViewBag.Equipment = new MultiSelectList(db.Equipments.OrderBy(o => o.EquipmentName), "EquipmentName", "EquipmentName");
+           
 
             setEmployeeDropdowns();
 
@@ -338,6 +331,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         {
             if (ModelState.IsValid)
             {
+                working.ProjectID = "0-0-2015";
                 if (working.EndDate >= working.Date)
                 {
 
@@ -402,9 +396,8 @@ namespace wn_Admin.Controllers.CompanyControllers
 
 
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
-            //ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", working.EmployeeID);
             setEmployeeDropdowns();
-            ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessID", "FieldAccessName", working.Field);
+            ViewBag.Field = new SelectList(db.FieldAccesses.OrderBy(o => o.FieldAccessName), "FieldAccessID", "FieldAccessName", working.Field);
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", working.OffReason);
             ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName", working.Task);
             ViewBag.Veh = new SelectList(db.Vehicles, "VehicleID", "VehicleName", working.Veh);
@@ -414,7 +407,7 @@ namespace wn_Admin.Controllers.CompanyControllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public void ajaxCreate(string[] Equipment, [Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,Field,PD,JobDescription,OffReason,Hours")] Working working)
+        public void ajaxCreate(string[] Equipment, string[] Field,[Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,PD,JobDescription,OffReason,Hours")] Working working)
         {
             VehicleService vehicleService = new VehicleService();
 
@@ -431,6 +424,13 @@ namespace wn_Admin.Controllers.CompanyControllers
                 {
                     string equipments = string.Join(", ", Equipment);
                     working.Equipment = equipments;
+                }
+
+                // Combine Field Access
+                if (Field != null)
+                {
+                    string fields = string.Join(", ", Field);
+                    working.Field = fields;
                 }
 
 
@@ -496,7 +496,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             setEmployeeDropdowns();
 
-            ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessName", "FieldAccessName");
+            ViewBag.Field = new SelectList(db.FieldAccesses.OrderBy(o => o.FieldAccessName), "FieldAccessName", "FieldAccessName");
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
             ViewBag.Task = new SelectList(db.Tasks, "TaskName", "TaskName");
             ViewBag.Veh = new SelectList(db.Vehicles, "VehicleName", "VehicleName");
@@ -511,7 +511,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Accountant, SUPERADMIN, Employee")]
-        public ActionResult Edit([Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours,Bank,OT")] Working working)
+        public ActionResult Edit([Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,PD,JobDescription,OffReason,Hours, Equipment,Field")] Working working)
         {
             var employee = mUserInfo.getEmployee(User.Identity.GetUserId());
             if (mUserInfo.isInRole(User.Identity.GetUserId(), "Employee") && employee.EmployeeID != working.EmployeeID)
@@ -563,7 +563,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             setEmployeeDropdowns();
 
-            ViewBag.Field = new SelectList(db.FieldAccesses, "FieldAccessName", "FieldAccessName");
+            ViewBag.Field = new SelectList(db.FieldAccesses.OrderBy(o => o.FieldAccessName), "FieldAccessName", "FieldAccessName");
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
             ViewBag.Task = new SelectList(db.Tasks, "TaskName", "TaskName");
             ViewBag.Veh = new SelectList(db.Vehicles, "VehicleName", "VehicleName");
@@ -778,7 +778,7 @@ namespace wn_Admin.Controllers.CompanyControllers
 
             if (employee != null)
             {
-                IQueryable<Employee> es = db.Employees;
+                IQueryable<Employee> es = db.Employees.Where(w => w.Status == 1).OrderBy(o => o.FirstMidName);
 
                 if (!mUserInfo.isInRole(userId, "SUPERADMIN") && !mUserInfo.isInRole(userId, "Accountant"))
                 {

@@ -131,7 +131,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return HttpNotFound();
             }
             ViewBag.AccountTypeID = new SelectList(db.AccountTypes, "AccountTypeID", "AccountName", expense.AccountTypeID);
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", expense.EmployeeID);
+            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", expense.EmployeeID);
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", expense.ProjectID);
             return View(expense);
         }
@@ -151,7 +151,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return RedirectToAction("Index");
             }
             ViewBag.AccountTypeID = new SelectList(db.AccountTypes, "AccountTypeID", "AccountName", expense.AccountTypeID);
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", expense.EmployeeID);
+            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", expense.EmployeeID);
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", expense.ProjectID);
             return View(expense);
         }
@@ -265,7 +265,7 @@ namespace wn_Admin.Controllers.CompanyControllers
 
             if (employee != null)
             {
-                IQueryable<Employee> es = db.Employees;
+                IQueryable<Employee> es = db.Employees.Where(w => w.Status == 1);
 
                 if (!ui.isInRole(userId, "Accountant") && !ui.isInRole(userId, "SUPERADMIN"))
                 {

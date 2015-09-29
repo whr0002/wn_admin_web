@@ -1,0 +1,26 @@
+﻿@model wn_Admin.Models.Safety.Observation
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Observation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ObservationName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ObservationName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ObservationID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

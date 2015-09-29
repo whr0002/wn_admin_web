@@ -54,7 +54,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // GET: TimeOffRequests/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName");
+            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName");
             ViewBag.OffReasonID = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName");
             return View();
         }
@@ -73,7 +73,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", timeOffRequest.EmployeeID);
+            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", timeOffRequest.EmployeeID);
             ViewBag.OffReasonID = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", timeOffRequest.OffReasonID);
             return View(timeOffRequest);
         }
@@ -90,7 +90,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             {
                 return HttpNotFound();
             }
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", timeOffRequest.EmployeeID);
+            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", timeOffRequest.EmployeeID);
             ViewBag.OffReasonID = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", timeOffRequest.OffReasonID);
             return View(timeOffRequest);
         }
@@ -108,7 +108,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", timeOffRequest.EmployeeID);
+            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", timeOffRequest.EmployeeID);
             ViewBag.OffReasonID = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", timeOffRequest.OffReasonID);
             return View(timeOffRequest);
         }

@@ -28,6 +28,8 @@ namespace wn_Admin.Models.CompanyModels
             get { return _fullName; }
         }
 
+        public int Status { get; set; }
+
 
 
         public virtual ICollection<Working> Workings { get; set; }

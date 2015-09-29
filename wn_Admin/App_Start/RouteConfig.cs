@@ -18,6 +18,11 @@ namespace wn_Admin
             //    url: "Tasks/Edit/{id}",
             //    defaults: new {controller = "Tasks", action="Edit", id=UrlParameter.Optional}
             //    );
+            routes.MapRoute(
+                name: "Files",
+                url: "File/{fileName}",
+                defaults: new { controller = "File", action = "Index", fileName = "" }
+                );
 
             routes.MapRoute(
                 name: "Projects",
@@ -31,33 +36,6 @@ namespace wn_Admin
                 defaults: new { controller = "API", action = "PayPeriods", date = "" }
 
                 );
-
-            routes.MapRoute(
-                name: "Supervision",
-                url: "Supervisions/Edit/{mid}/{pid}",
-                defaults: new { controller = "Supervisions", action = "Edit", eid = "", mid = "", pid = "" }
-
-                );
-
-            routes.MapRoute(
-                name: "Supervision delete",
-                url: "Supervisions/Delete/{mid}/{pid}",
-                defaults: new { controller = "Supervisions", action = "Delete", eid = "", mid = "", pid = "" }
-                );
-
-            routes.MapRoute(
-                name: "Supervision delete confirm",
-                url: "Supervisions/DeleteConfirmed/{mid}/{pid}",
-                defaults: new { controller = "Supervisions", action = "Delete", eid = "", mid = "", pid = "" }
-                );
-
-            routes.MapRoute(
-                name: "Supervision detail",
-                url: "Supervisions/Detail/{mid}/{pid}/",
-                defaults: new { controller = "Supervisions", action = "Detail", eid = "", mid = "", pid = "" }
-                );
-
-
 
             routes.MapRoute(
                 name: "Default",

@@ -56,5 +56,42 @@ namespace wn_Admin.Controllers.CControllers
             
             
         }
+
+        // GET: Admin
+        public void readPj()
+        {
+            var path = Server.MapPath("~/App_Data/pjs.xls");
+            var excel = new ExcelQueryFactory(path);
+
+            var pj = from e in excel.Worksheet<CUMPJ>()
+                       select e;
+
+            Response.Write("Size: " + pj.Count());
+
+            foreach (var e in pj)
+            {
+                //Project project = new Project();
+                //project.ProjectID = e.ID;
+                //project.ProjectName = e.Project;
+                //Client client = new Client();
+                //client.ClientName = e.Client;
+                //project.Client
+
+            }
+
+            //db.SaveChanges();
+
+
+        }
+
+        class CUMPJ
+        {
+            public string ID { get; set; }
+            public string Project { get; set; }
+            public string Client { get; set; }
+        }
     }
+
+
+    
 }

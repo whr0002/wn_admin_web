@@ -19,12 +19,14 @@
     <link href="~/Content/fullcalendar.css" type="text/css" rel="stylesheet" />
     <link href="~/Content/fullcalendar.print.css" type="text/css" rel="stylesheet" media='print' />
     <link href="~/Content/Gridmvc.css" rel="stylesheet" />
-
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <script src="~/Scripts/CustomJS/jquery.min.js"></script>
     <script type="text/javascript" src="~/Scripts/CustomJS/moment.min.js"></script>
     <script type="text/javascript" src="~/Scripts/CustomJS/fullcalendar.min.js"></script>
-    <script src="~/Scripts/ng_controllers/timesheet_controller.js?v=1.2"></script>
+    <script src="~/Scripts/ng_controllers/timesheet_index.js?v=1.0"></script>
     <script src="~/Scripts/gridmvc.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -32,8 +34,28 @@
 
             //events.push({title:"hello", start:"2015-07-23"});
             //console.log(events);
+            // Initializing calendar
+
             initializeCalendar(events);
+
+            // Add change event to clientName
+            $('#clientId').change(function () {
+
+                $('#projectId').empty();
+
+                var client = $('#clientId').find(":selected").text();
+
+                getProjectByClient(client);
+            });
         });
+
+
+
+
+        window.onload = function(){
+            var formBlock = $('#formBlock0');
+            setDatetiempicker($, formBlock);
+        };
     </script>
 </head>
 
@@ -80,7 +102,7 @@
 
 
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-5" id="formBlock0">
                 Advanced Search
                 <input type="checkbox" id="SearchToggle" onclick="toggleSearchPanel(this)" checked>
                 <div id="SearchPanel" class="panel panel-primary" style="">
@@ -101,14 +123,16 @@
                             <div class="form-group">
                                 @Html.Label("Start Date", htmlAttributes: new { @class = "control-label col-md-2", @for = "startDate" })
                                 <div class="col-md-10">
-                                    @Html.TextBox("startDate", "", new { @type = "date", @class = "form-control" })
+
+                                    @Html.Editor("startDate", new { htmlAttributes = new { @class = "form-control b-datepicker", @type = "text" } })
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 @Html.Label("End Date", htmlAttributes: new { @class = "control-label col-md-2", @for = "endDate" })
                                 <div class="col-md-10">
-                                    @Html.TextBox("endDate", "", new { @type = "date", @class = "form-control" })
+
+                                    @Html.Editor("endDate", new { htmlAttributes = new { @class = "form-control b-datepicker", @type = "text" } })
                                 </div>
                             </div>
 
@@ -123,6 +147,13 @@
                                 @Html.Label("Period", htmlAttributes: new { @class = "control-label col-md-2", @for = "pp" })
                                 <div class="col-md-10">
                                     @Html.TextBox("pp", "", new { @type = "number", @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label("Task", htmlAttributes: new { @class = "control-label col-md-2", @for = "taskIds" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("tasks", (MultiSelectList)ViewBag.taskIds, htmlAttributes: new { @class = "form-control", multiple = "multiple" })
                                 </div>
                             </div>
 
@@ -224,7 +255,7 @@
                             columns.Add()
                             .Encoded(false)
                             .Sanitized(false)
-                            .RenderValueAs(c => (ViewBag.CurrentEID == null || ViewBag.CurrentEID != c.EmployeeID) ?
+                            .RenderValueAs(c => (ViewBag.CurrentEID == null || (ViewBag.CurrentEID != c.EmployeeID && c.isReviewed == false)) ?
                                     Html.CheckBox("box", false, new { value = @c.WorkingID, @class = "reviewBox" }) + "" : ""
                                 );
 
@@ -271,7 +302,7 @@
                         //columns.Add(c => c.PP).Titled("Pay Period");
                         columns.Add(c => c.Project.FK_Client.ClientName).Titled("Client").Css("s-important");
                         columns.Add(c => c.Project.ProjectName).Titled("Project").Css("s-important");
-                        columns.Add(c => c.Task).Css("s-important");
+                        columns.Add(c => c.Task).Css("s-important").Filterable(true);
                         columns.Add(c => c.Identifier).Css("s-important");
                         columns.Add(c => c.Hours).Css("s-important");
                         columns.Add(c => c.JobDescription).Titled("Job Description").Filterable(true).Css("s-important");

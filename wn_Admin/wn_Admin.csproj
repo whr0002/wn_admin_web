@@ -231,6 +231,7 @@
     <Compile Include="Controllers\CompanyControllers\EquipmentsController.cs" />
     <Compile Include="Controllers\CompanyControllers\ExcelController.cs" />
     <Compile Include="Controllers\CompanyControllers\ExpensesController.cs" />
+    <Compile Include="Controllers\CompanyControllers\FileController.cs" />
     <Compile Include="Controllers\CompanyControllers\ProjectsController.cs" />
     <Compile Include="Controllers\CompanyControllers\ProjectSummaryController.cs" />
     <Compile Include="Controllers\CompanyControllers\SupervisionsController.cs" />
@@ -251,12 +252,14 @@
     <Compile Include="Controllers\SafetyControllers\MinorAccidentFormsController.cs" />
     <Compile Include="Controllers\SafetyControllers\MinorRelToesController.cs" />
     <Compile Include="Controllers\SafetyControllers\MinorTypesController.cs" />
+    <Compile Include="Controllers\SafetyControllers\ObservationsController.cs" />
     <Compile Include="Controllers\SafetyControllers\ReoccurOptionsController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyCategoriesController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyInterfaceController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyItemsController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyItemValuesController.cs" />
     <Compile Include="Controllers\SafetyControllers\SafetyMeetingsController.cs" />
+    <Compile Include="Controllers\SafetyControllers\SafetyObservationsController.cs" />
     <Compile Include="Controllers\SafetyControllers\YesNoNAsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -264,6 +267,22 @@
     <Compile Include="Migrations\201509171710571_21343.cs" />
     <Compile Include="Migrations\201509171710571_21343.Designer.cs">
       <DependentUpon>201509171710571_21343.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509251446284_so.cs" />
+    <Compile Include="Migrations\201509251446284_so.Designer.cs">
+      <DependentUpon>201509251446284_so.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509251451598_so_status.cs" />
+    <Compile Include="Migrations\201509251451598_so_status.Designer.cs">
+      <DependentUpon>201509251451598_so_status.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509251459231_obs.cs" />
+    <Compile Include="Migrations\201509251459231_obs.Designer.cs">
+      <DependentUpon>201509251459231_obs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509291536356_estatus.cs" />
+    <Compile Include="Migrations\201509291536356_estatus.Designer.cs">
+      <DependentUpon>201509291536356_estatus.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -293,6 +312,7 @@
     <Compile Include="Models\Safety\MinorAccidentForm.cs" />
     <Compile Include="Models\Safety\MinorRelTo.cs" />
     <Compile Include="Models\Safety\MinorType.cs" />
+    <Compile Include="Models\Safety\Observation.cs" />
     <Compile Include="Models\Safety\PotReoccur.cs" />
     <Compile Include="Models\Safety\ReoccurOption.cs" />
     <Compile Include="Models\Safety\SafetyCategory.cs" />
@@ -307,10 +327,12 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\CompanyModels\Project.cs" />
+    <Compile Include="Models\Safety\SafetyObservation.cs" />
     <Compile Include="Models\Safety\YesNoNA.cs" />
     <Compile Include="Models\UtilityModels\CustomValidators.cs" />
     <Compile Include="Models\UtilityModels\DateDiffAttribute.cs" />
     <Compile Include="Models\UtilityModels\EventModel.cs" />
+    <Compile Include="Models\UtilityModels\EventService.cs" />
     <Compile Include="Models\UtilityModels\EventViewModel.cs" />
     <Compile Include="Models\UtilityModels\IntArrayModelBinder.cs" />
     <Compile Include="Models\UtilityModels\KMAttribute.cs" />
@@ -461,6 +483,10 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
+    <Content Include="App_Data\2015_Health_and_Safety_Manual.pdf" />
+    <Content Include="App_Data\Employee Handbook 2014 May.pdf" />
+    <Content Include="App_Data\Part 1_Safe Work Practices Manual_2015_GENERAL.pdf" />
+    <Content Include="App_Data\Part 2_Safe Work Practices Manual_2014_BUSINESS_UNIT.pdf" />
     <None Include="Properties\PublishProfiles\wnasap.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -494,6 +520,7 @@
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\ng_controllers\timesheet_controller.js" />
     <Content Include="Scripts\ng_controllers\timesheet_index.js" />
+    <Content Include="Scripts\ng_controllers\timesheet_off.js" />
     <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -722,9 +749,19 @@
     <Content Include="Views\EmployeeSupervisions\Details.cshtml" />
     <Content Include="Views\EmployeeSupervisions\Edit.cshtml" />
     <Content Include="Views\EmployeeSupervisions\Index.cshtml" />
+    <Content Include="Views\File\Index.cshtml" />
+    <Content Include="Views\SafetyObservations\Create.cshtml" />
+    <Content Include="Views\SafetyObservations\Delete.cshtml" />
+    <Content Include="Views\SafetyObservations\Details.cshtml" />
+    <Content Include="Views\SafetyObservations\Edit.cshtml" />
+    <Content Include="Views\SafetyObservations\Index.cshtml" />
+    <Content Include="Views\Observations\Create.cshtml" />
+    <Content Include="Views\Observations\Delete.cshtml" />
+    <Content Include="Views\Observations\Details.cshtml" />
+    <Content Include="Views\Observations\Edit.cshtml" />
+    <Content Include="Views\Observations\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Controllers\Mobile\" />
     <Folder Include="UnitTests\" />
     <Folder Include="Views\Admin\" />
@@ -740,6 +777,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201509171710571_21343.resx">
       <DependentUpon>201509171710571_21343.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509251446284_so.resx">
+      <DependentUpon>201509251446284_so.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509251451598_so_status.resx">
+      <DependentUpon>201509251451598_so_status.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509251459231_obs.resx">
+      <DependentUpon>201509251459231_obs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509291536356_estatus.resx">
+      <DependentUpon>201509291536356_estatus.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

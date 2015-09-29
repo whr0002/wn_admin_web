@@ -1,0 +1,99 @@
+﻿@model IEnumerable<wn_Admin.Models.Safety.SafetyObservation>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee.FirstMidName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Crew)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Location)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Observation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Investigation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KeyState)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CriticalError)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Solution)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateAction)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Employee.FirstMidName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Crew)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Location)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Observation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Investigation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KeyState)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CriticalError)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Solution)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateAction)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.SafetyObservationID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.SafetyObservationID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.SafetyObservationID })
+        </td>
+    </tr>
+}
+
+</table>

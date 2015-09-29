@@ -42,7 +42,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         public ActionResult Create()
         {
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName");
+            ViewBag.SupervisorID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName");
             return View();
         }
 
@@ -61,7 +61,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             }
 
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", supervision.ProjectID);
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.SupervisorID);
+            ViewBag.SupervisorID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", supervision.SupervisorID);
             return View(supervision);
         }
 
@@ -78,7 +78,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return HttpNotFound();
             }
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", supervision.ProjectID);
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.SupervisorID);
+            ViewBag.SupervisorID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", supervision.SupervisorID);
             return View(supervision);
         }
 
@@ -96,7 +96,7 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return RedirectToAction("Index");
             }
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", supervision.ProjectID);
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", supervision.SupervisorID);
+            ViewBag.SupervisorID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", supervision.SupervisorID);
             return View(supervision);
         }
 

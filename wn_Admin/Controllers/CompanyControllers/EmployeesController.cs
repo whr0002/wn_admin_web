@@ -11,7 +11,6 @@ using wn_Admin.Models.CompanyModels;
 
 namespace wn_Admin.Controllers.CompanyControllers
 {
-    [Authorize(Roles = "SUPERADMIN, Accountant")]
     public class EmployeesController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
@@ -19,7 +18,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // GET: Employees
         public ActionResult Index()
         {
-            return View(db.Employees.ToList());
+            return View(db.Employees.OrderBy(o => o.FirstMidName).ToList());
         }
 
         // GET: Employees/Details/5
@@ -34,8 +33,6 @@ namespace wn_Admin.Controllers.CompanyControllers
             {
                 return HttpNotFound();
             }
-
-
             return View(employee);
         }
 
@@ -50,7 +47,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "EmployeeID,LastName,FirstMidName,FullName")] Employee employee)
+        public ActionResult Create([Bind(Include = "EmployeeID,FirstMidName,LastName,FullName,Status")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -82,7 +79,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EmployeeID,LastName,FirstMidName,FullName")] Employee employee)
+        public ActionResult Edit([Bind(Include = "EmployeeID,FirstMidName,LastName,FullName,Status")] Employee employee)
         {
             if (ModelState.IsValid)
             {

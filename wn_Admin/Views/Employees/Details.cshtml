@@ -11,19 +11,19 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.FirstMidName)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.FirstMidName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
         </dd>
 
         <dt>
@@ -35,35 +35,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Workings)
+            @Html.DisplayNameFor(model => model.Status)
         </dt>
 
         <dd>
-            <table class="table" style="background:lightblue;">
-                <tr>
-                    <th>Project ID</th>
-                    <th>Project Name</th>
-                    <th>Hours</th>
-                </tr>
-
-                @foreach (var item in Model.Workings)
-                {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Project.ProjectID)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Project.ProjectName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Hours)</td>
-                    </tr>
-                }
-                @{
-                    var result = Model.Workings.GroupBy(o => o.EmployeeID).Select(s => new { Total = s.Sum(i => i.Hours) });
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td><strong>Total: </strong>@result.FirstOrDefault().Total</td>
-                    </tr>
-                }
-            </table>
-
+            @Html.DisplayFor(model => model.Status)
         </dd>
 
     </dl>

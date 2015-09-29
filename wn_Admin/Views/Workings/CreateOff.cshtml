@@ -5,9 +5,18 @@
 }
 
 @section jsSection{
-    <script src="~/Scripts/ng_controllers/timesheet_controller.js"></script>
-}
 
+<script src="~/Scripts/ng_controllers/timesheet_off.js?v=1.0"></script>
+}
+<script type="text/javascript">
+    var jq14 = jQuery.noConflict(true);
+    (function ($) {
+        $(document).ready(function () {
+            var formBlock = $('#formBlock0');
+            setDatetiempicker($, formBlock);
+        });
+    }(jq14));
+</script>
 <h2>
     Create
 </h2>
@@ -34,7 +43,7 @@
                 <div class="form-group">
                     @Html.Label("Date From", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.Editor("Date", new { htmlAttributes = new { @class = "form-control b-datepicker", @type = "text" } })
                         @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -42,7 +51,7 @@
                 <div class="form-group">
                     @Html.Label("Date To", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control b-datepicker", @type = "text" } })
                         @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
                     </div>
                 </div>

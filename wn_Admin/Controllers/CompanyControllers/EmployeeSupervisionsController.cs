@@ -41,8 +41,8 @@ namespace wn_Admin.Controllers.CompanyControllers
         // GET: EmployeeSupervisions/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName");
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName");
+            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName");
+            ViewBag.SupervisorID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName");
             return View();
         }
 
@@ -60,8 +60,8 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", employeeSupervision.EmployeeID);
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", employeeSupervision.SupervisorID);
+            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", employeeSupervision.EmployeeID);
+            ViewBag.SupervisorID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", employeeSupervision.SupervisorID);
             return View(employeeSupervision);
         }
 
@@ -77,8 +77,8 @@ namespace wn_Admin.Controllers.CompanyControllers
             {
                 return HttpNotFound();
             }
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", employeeSupervision.EmployeeID);
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", employeeSupervision.SupervisorID);
+            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", employeeSupervision.EmployeeID);
+            ViewBag.SupervisorID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", employeeSupervision.SupervisorID);
             return View(employeeSupervision);
         }
 
@@ -95,8 +95,8 @@ namespace wn_Admin.Controllers.CompanyControllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", employeeSupervision.EmployeeID);
-            ViewBag.SupervisorID = new SelectList(db.Employees, "EmployeeID", "FirstMidName", employeeSupervision.SupervisorID);
+            ViewBag.EmployeeID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", employeeSupervision.EmployeeID);
+            ViewBag.SupervisorID = new SelectList(db.Employees.Where(w => w.Status == 1), "EmployeeID", "FirstMidName", employeeSupervision.SupervisorID);
             return View(employeeSupervision);
         }
 
