@@ -13,11 +13,17 @@ namespace wn_Admin.Models.UtilityModels
 
             DateTime current = getEdmontonTime();
             DateTime minDate = current.AddDays(-10);
+            DateTime endOfDay = new DateTime(current.Year, current.Month, current.Day, 23, 58, 59);
 
-            if (date > current)
+            if (date > endOfDay)
             {
-                return "Date should not be in the future.";
-            }        
+                return "Start Date should not be in the future.";
+            }
+
+            if (endDate > endOfDay)
+            {
+                return "End Date Should not be in the future.";
+            }
 
             if (date <= minDate)
             {

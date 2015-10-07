@@ -38,60 +38,6 @@ namespace wn_Admin.Controllers.CompanyControllers
             string currentFilter = "";
             string dateRange = "";
 
-            if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
-            {
-
-                // User is an accoutant, he or she can search Timesheets by Employee ID
-                ViewBag.hasReviewControl = true;
-                ViewBag.hasFullControl = true;
-                ViewBag.EmployeeID = new MultiSelectList(db.Employees.Where(w => w.Status == 1).OrderBy(o => o.FirstMidName), "EmployeeID", "FullName");
-                ViewBag.clientId = new SelectList(db.Clients, "ClientID", "ClientName");
-                ViewBag.projectId = new SelectList(db.Projects, "ProjectID", "ProjectName");
-            }
-            else
-            {
-                // User is not accountant, show records from this user
-
-                if (employee != null)
-                {
-                    // Get all time sheets from employees who are under THIS PERSON's supervision
-                    var tempAll = from es in db.EmployeeSupervisions
-                                  join sp in db.Supervisions on es.SupervisorID equals sp.SupervisorID
-                                  join wk in workings on sp.ProjectID equals wk.ProjectID
-                                  where es.SupervisorID == employee.EmployeeID && es.EmployeeID == wk.EmployeeID
-                                  select wk;
-                    // Get all time sheets from THIS PERSON
-                    var personalWorkings = db.Workings.Where(w => w.EmployeeID == employee.EmployeeID);
-                    workings = tempAll.Union(personalWorkings);
-
-                    // Give corresponding authorization
-                    if (tempAll.Count() > 0)
-                    {
-                        ViewBag.hasReviewControl = true;
-                        ViewBag.CurrentEID = employee.EmployeeID;
-                    }
-                    else
-                    {
-                        ViewBag.hasReviewControl = false;
-                    }
-                }
-                else
-                {
-                    return View(new List<Working>());
-                }
-
-                // Select all employees under this person's supervision
-                var employeeIdFromSupervision = db.EmployeeSupervisions.Where(w => w.SupervisorID == employee.EmployeeID).Select(s => s.EmployeeID);
-                ViewBag.EID = employee.EmployeeID;
-                ViewBag.hasFullControl = false;
-                ViewBag.EmployeeID = new MultiSelectList(db.Employees.Where(w => w.Status == 1 && (w.EmployeeID == employee.EmployeeID || employeeIdFromSupervision.Contains(w.EmployeeID))).OrderBy(o => o.FullName), "EmployeeID", "FullName");
-                ViewBag.clientId = new SelectList(workings.Select(s => s.Project.FK_Client).Distinct(), "ClientID", "ClientName");
-                ViewBag.projectId = new SelectList(workings.Select(s => s.Project).Distinct(), "ProjectID", "ProjectName");
-
-            }
-            ViewBag.isReviewed = new SelectList(db.YesNoNA.Where(w => w.YesNoNAName != "N/A"), "YesNoNAName", "YesNoNAName");
-            ViewBag.tasks = new MultiSelectList(db.Tasks, "TaskName", "TaskName");
-
             // Search Filters
             // Employees
             if (employeeId != null && employeeId.Count() > 0)
@@ -118,10 +64,10 @@ namespace wn_Admin.Controllers.CompanyControllers
             }
 
             // Get working records within 2 months
-            if (startDate == null && endDate == null)
+            if (startDate == null && endDate == null && ppYear == -1 && pp == -1)
             {
                 DateTime now = TimesheetDateValidator.getEdmontonTime();
-                DateTime preMonth = now.AddMonths(-2);
+                DateTime preMonth = now.AddMonths(-1);
                 workings = workings.Where(w => w.Date >= preMonth || w.EndDate >= preMonth);
 
                 // Used by timesheet summary
@@ -171,76 +117,95 @@ namespace wn_Admin.Controllers.CompanyControllers
                 currentFilter += "&isReviewed=" + isReviewed;
             }
 
+            // Export to Excel?
             if (exportToExcel != null && exportToExcel == true)
             {
                 return Content(generateExcel(workings), "application/ms-excel");
             }
 
+            // Attach current filters
             ViewBag.CurrentFilter = currentFilter;
-            workings = workings.OrderByDescending(o => o.Date);
 
-            //var events = (from s in workings
-            //              group s by new
-            //              {
-            //                  s.EmployeeID,
-            //                  s.Employee.FirstMidName,
-            //                  Date = DbFunctions.TruncateTime(s.Date),
-            //                  EndDate = DbFunctions.TruncateTime(s.EndDate)
-            //              }
-            //                  into g
-            //                  select new EventModel
-            //                  {
-            //                      title = g.Key.FirstMidName,
-            //                      totalHours = g.Sum(b => b.Hours),
-            //                      startDT = (DateTime)g.Key.Date,
-            //                      endDT = (DateTime)g.Key.EndDate
-            //                  }).ToList();
+            if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
+            {
+
+                // User is an accoutant, he or she can search Timesheets by Employee ID
+                ViewBag.hasReviewControl = true;
+                ViewBag.hasFullControl = true;
+                ViewBag.EmployeeID = new MultiSelectList(db.Employees.Where(w => w.Status == 1).OrderBy(o => o.FirstMidName), "EmployeeID", "FullName");
+                ViewBag.clientId = new SelectList(db.Clients, "ClientID", "ClientName");
+                ViewBag.projectId = new SelectList(db.Projects, "ProjectID", "ProjectName");
+            }
+            else
+            {
+                // User is not accountant, show records from this user
+                if (employee != null)
+                {
+                    // Get all time sheets from employees who are under THIS PERSON's supervision
+                    var tempAll = from ws in db.WorkingSupervisors
+                                  join tm in workings
+                                  on ws.WorkingID equals tm.WorkingID
+                                  where ws.EmployeeID == employee.EmployeeID
+                                  select tm;
+
+
+                    // Get all time sheets from THIS PERSON
+                    var personalWorkings = workings.Where(w => w.EmployeeID == employee.EmployeeID);
+                    workings = tempAll.Union(personalWorkings);
+
+                    // Give corresponding authorization
+                    if (tempAll.Count() > 0)
+                    {
+                        ViewBag.hasReviewControl = true;
+                        ViewBag.CurrentEID = employee.EmployeeID;
+                    }
+                    else
+                    {
+                        ViewBag.hasReviewControl = false;
+                    }
+                    var selfList = db.Employees.Where(w => w.EmployeeID == employee.EmployeeID);
+
+                    ViewBag.EmployeeID = new MultiSelectList(tempAll.Where(w => w.Employee.Status == 1).Select(s => s.Employee).Union(selfList).Distinct().OrderBy(o => o.FirstMidName), "EmployeeID", "FullName");
+                }
+                else
+                {
+                    return View(new List<Working>());
+                }
+
+                // Select all employees under this person's supervision
+                //var employeeIdFromSupervision = db.EmployeeSupervisions.Where(w => w.SupervisorID == employee.EmployeeID).Select(s => s.EmployeeID);
+                ViewBag.EID = employee.EmployeeID;
+                ViewBag.hasFullControl = false;
+                //ViewBag.EmployeeID = new MultiSelectList(db.Employees.Where(w => w.Status == 1 && (w.EmployeeID == employee.EmployeeID || employeeIdFromSupervision.Contains(w.EmployeeID))).OrderBy(o => o.FullName), "EmployeeID", "FullName");
+                ViewBag.clientId = new SelectList(workings.Select(s => s.Project.FK_Client).Distinct(), "ClientID", "ClientName");
+                ViewBag.projectId = new SelectList(workings.Select(s => s.Project).Distinct(), "ProjectID", "ProjectName");
+
+            }
+
+            ViewBag.isReviewed = new SelectList(db.YesNoNA.Where(w => w.YesNoNAName != "N/A"), "YesNoNAName", "YesNoNAName");
+            ViewBag.tasks = new MultiSelectList(db.Tasks, "TaskName", "TaskName");
 
             
+            
 
-            //// Giving each event color and description.
-            //List<EventViewModel> evm = new List<EventViewModel>();
-
-            //foreach (var e in events)
-            //{
-            //    EventViewModel eventViewModel = new EventViewModel();
-            //    eventViewModel.start = e.startDT.ToString("yyyy-MM-dd");
-            //    eventViewModel.end = e.endDT.AddDays(1).ToString("yyyy-MM-dd");
-            //    eventViewModel.backgroundColor = (e.totalHours == 0) ? "#004C99" : "#808080";
-
-            //    //e.start = e.startDT.ToString("yyyy-MM-dd");
-            //    //e.backgroundColor = (e.totalHours == 0) ? "#004C99" : "#808080";
-            //    if (e.totalHours == 0)
-            //    {
-            //        e.title += ": Off";
-            //    }
-            //    else
-            //    {
-            //        e.title += ": " + e.totalHours + " h";
-            //    }
-
-            //    eventViewModel.title = e.title;
-
-            //    evm.Add(eventViewModel);
-            //}
-            EventService eventService = new EventService(employee);
+            // Create and Pass events to view
+            EventService eventService = new EventService(employee, db);
             List<EventViewModel> evm = eventService.getEventViewModel(workings);
-
-            // Generate time sheet summary
-            var tempE = mUserInfo.getEmployee(userId);
-
-            ViewBag.TMSummary = workings.Where(w => w.EmployeeID == tempE.EmployeeID).GroupBy(g => new { g.EmployeeID, g.Employee.FullName }).Select(
-                s => new TimesheetSummaryViewModel
-                {
-                    EmployeeName = s.Key.FullName,
-                    TotalHours = s.Sum(b => b.Hours),
-                    DateRange = dateRange
-                }).ToList();
-
-
-            // Pass events to view
+            //List<EventViewModel> evm = new List<EventViewModel>();
             ViewBag.Events = evm;
 
+            // Generate time sheet summary
+            //var tempE = mUserInfo.getEmployee(userId);
+            //ViewBag.TMSummary = workings.Where(w => w.EmployeeID == tempE.EmployeeID).GroupBy(g => new { g.EmployeeID, g.Employee.FullName }).Select(
+            //    s => new TimesheetSummaryViewModel
+            //    {
+            //        EmployeeName = s.Key.FullName,
+            //        TotalHours = s.Sum(b => b.Hours),
+            //        DateRange = dateRange
+            //    }).ToList();
+
+            // Order by date
+            workings = workings.OrderByDescending(o => o.Date);
 
             return View(workings.ToList());
         }
@@ -264,14 +229,19 @@ namespace wn_Admin.Controllers.CompanyControllers
         // GET: Workings/Create
         public ActionResult Create()
         {
+
+
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             ViewBag.Field = new SelectList(db.FieldAccesses.OrderBy(o => o.FieldAccessName), "FieldAccessName", "FieldAccessName");
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
             ViewBag.Task = new SelectList(db.Tasks, "TaskName", "TaskName");
             ViewBag.Veh = new SelectList(db.Vehicles, "VehicleName", "VehicleName");
-            ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1 || w.Status == 0).OrderBy(o => o.ProjectName), "ProjectID", "ProjectName");
+            ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1).OrderBy(o => o.ProjectName), "ProjectID", "ProjectName");
             ViewBag.Equipment = new MultiSelectList(db.Equipments.OrderBy(o => o.EquipmentName), "EquipmentName", "EquipmentName");
-           
+
+            TimesheetSupervisorService tss = new TimesheetSupervisorService();
+            var currentEmployee = mUserInfo.getEmployee(User.Identity.GetUserId());
+            ViewBag.Supervisors = tss.getSupervisorList(currentEmployee.EmployeeID);
 
             setEmployeeDropdowns();
 
@@ -307,6 +277,9 @@ namespace wn_Admin.Controllers.CompanyControllers
                     ), "OffReasonName", "OffReasonName");
             }
 
+            TimesheetSupervisorService tss = new TimesheetSupervisorService();
+            var currentEmployee = mUserInfo.getEmployee(userId);
+            ViewBag.Supervisors = tss.getSupervisorList(currentEmployee.EmployeeID);
 
             Working working = new Working();
 
@@ -327,9 +300,13 @@ namespace wn_Admin.Controllers.CompanyControllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOff([Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP, ProjectID,Task, JobDescription,OffReason")] Working working)
+        public ActionResult CreateOff(int[] Supervisors, [Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP, ProjectID,Task, JobDescription,OffReason")] Working working)
         {
-            if (ModelState.IsValid)
+            TimesheetSupervisorService tss = new TimesheetSupervisorService();
+            SupervisorValidator supervisorValidator = new SupervisorValidator();
+            var result = supervisorValidator.validate(Supervisors);
+
+            if (ModelState.IsValid && result == null)
             {
                 working.ProjectID = "0-0-2015";
                 if (working.EndDate >= working.Date)
@@ -337,7 +314,7 @@ namespace wn_Admin.Controllers.CompanyControllers
 
                     db.Workings.Add(working);
                     db.SaveChanges();
-
+                    tss.create(working.WorkingID, Supervisors);
                     return RedirectToAction("Index");
                 }
                 else
@@ -346,7 +323,14 @@ namespace wn_Admin.Controllers.CompanyControllers
                 }
 
             }
+            else if (result != null)
+            {
+                ModelState.AddModelError("Supervisors", result);
+            }
 
+
+            var currentEmployee = mUserInfo.getEmployee(User.Identity.GetUserId());
+            ViewBag.Supervisors = tss.getSupervisorList(currentEmployee.EmployeeID);
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName");
             setEmployeeDropdowns();
             return View(working);
@@ -355,63 +339,64 @@ namespace wn_Admin.Controllers.CompanyControllers
         // POST: Workings/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours")] Working working)
+        //{
+
+
+        //    if (ModelState.IsValid)
+        //    {
+
+        //        // Check date to see if it is valid.
+        //        string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date, working.EndDate);
+        //        string userId = User.Identity.GetUserId();
+
+        //        // For working days, set end date to start date
+        //        working.EndDate = working.Date;
+
+        //        if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
+        //        {
+        //            db.Workings.Add(working);
+        //            db.SaveChanges();
+        //            return RedirectToAction("Index");
+        //        }
+        //        else
+        //        {
+        //            if (validationError != null)
+        //            {
+        //                ModelState.AddModelError("Date", validationError);
+        //            }
+        //            else
+        //            {
+        //                db.Workings.Add(working);
+        //                db.SaveChanges();
+        //                return RedirectToAction("Index");
+        //            }
+
+        //        }
+
+        //    }
+
+
+        //    ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
+        //    setEmployeeDropdowns();
+        //    ViewBag.Field = new SelectList(db.FieldAccesses.OrderBy(o => o.FieldAccessName), "FieldAccessID", "FieldAccessName", working.Field);
+        //    ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", working.OffReason);
+        //    ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName", working.Task);
+        //    ViewBag.Veh = new SelectList(db.Vehicles, "VehicleID", "VehicleName", working.Veh);
+        //    ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", working.ProjectID);
+        //    return View(working);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,GPS,Field,PD,JobDescription,OffReason,Hours")] Working working)
+        public void ajaxCreate(string[] Equipment, string[] Field, int[] Supervisors, [Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,PD,JobDescription,OffReason,Hours")] Working working)
         {
+            SupervisorValidator supervisorValidator = new SupervisorValidator();
+            var result = supervisorValidator.validate(Supervisors);
 
-
-            if (ModelState.IsValid)
-            {
-
-                // Check date to see if it is valid.
-                string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date, working.EndDate);
-                string userId = User.Identity.GetUserId();
-
-                // For working days, set end date to start date
-                working.EndDate = working.Date;
-
-                if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
-                {
-                    db.Workings.Add(working);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    if (validationError != null)
-                    {
-                        ModelState.AddModelError("Date", validationError);
-                    }
-                    else
-                    {
-                        db.Workings.Add(working);
-                        db.SaveChanges();
-                        return RedirectToAction("Index");
-                    }
-
-                }
-
-            }
-
-
-            ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
-            setEmployeeDropdowns();
-            ViewBag.Field = new SelectList(db.FieldAccesses.OrderBy(o => o.FieldAccessName), "FieldAccessID", "FieldAccessName", working.Field);
-            ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonID", "OffReasonName", working.OffReason);
-            ViewBag.Task = new SelectList(db.Tasks, "TaskID", "TaskName", working.Task);
-            ViewBag.Veh = new SelectList(db.Vehicles, "VehicleID", "VehicleName", working.Veh);
-            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", working.ProjectID);
-            return View(working);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public void ajaxCreate(string[] Equipment, string[] Field,[Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,PD,JobDescription,OffReason,Hours")] Working working)
-        {
-            VehicleService vehicleService = new VehicleService();
-
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && result == null)
             {
 
 
@@ -437,11 +422,7 @@ namespace wn_Admin.Controllers.CompanyControllers
 
                 if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
                 {
-                    vehicleService.updateVehicleStatus(working.Veh, working.EndKm);
-                    db.Workings.Add(working);
-                    db.SaveChanges();
-                    Response.Write("valid");
-
+                    createWorking(working, Supervisors);
                 }
                 else
                 {
@@ -452,24 +433,29 @@ namespace wn_Admin.Controllers.CompanyControllers
                     }
                     else
                     {
-                        vehicleService.updateVehicleStatus(working.Veh, working.EndKm);
-                        db.Workings.Add(working);
-                        db.SaveChanges();
-                        Response.Write("valid");
+                        createWorking(working, Supervisors);
                     }
-
                 }
-
-
-
             }
             else
             {
                 var errors = string.Join("<br />", this.ModelState.Keys.SelectMany(key => this.ModelState[key].Errors).Select(s => s.ErrorMessage).ToArray());
-
+                if (result != null) errors += "<br />" + result;
                 Response.Write(errors);
             }
+        }
 
+        private void createWorking(Working working, int[] sids)
+        {
+            VehicleService vehicleService = new VehicleService();
+            TimesheetSupervisorService tss = new TimesheetSupervisorService();
+
+            vehicleService.updateVehicleStatus(working.Veh, working.EndKm);
+            db.Workings.Add(working);
+            db.SaveChanges();
+            tss.create(working.WorkingID, sids);
+
+            Response.Write("valid");
         }
 
         // GET: Workings/Edit/5
@@ -500,8 +486,13 @@ namespace wn_Admin.Controllers.CompanyControllers
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
             ViewBag.Task = new SelectList(db.Tasks, "TaskName", "TaskName");
             ViewBag.Veh = new SelectList(db.Vehicles, "VehicleName", "VehicleName");
-            ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1 || w.Status == 0), "ProjectID", "ProjectName");
+            ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1), "ProjectID", "ProjectName");
             ViewBag.Equipment = new MultiSelectList(db.Equipments, "EquipmentName", "EquipmentName");
+
+            TimesheetSupervisorService tss = new TimesheetSupervisorService();
+            var currentEmployee = mUserInfo.getEmployee(User.Identity.GetUserId());
+            ViewBag.Reviewers = tss.getSupervisorListWithValues(currentEmployee.EmployeeID, working);
+
             return View(working);
         }
 
@@ -511,7 +502,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Accountant, SUPERADMIN, Employee")]
-        public ActionResult Edit([Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,PD,JobDescription,OffReason,Hours, Equipment,Field")] Working working)
+        public ActionResult Edit(int[] Supervisors, [Bind(Include = "WorkingID,EmployeeID,Date,EndDate,PPYr,PP,ProjectID,Task,Identifier,Veh,Crew,StartKm,EndKm,PD,JobDescription,OffReason,Hours, Equipment,Field")] Working working)
         {
             var employee = mUserInfo.getEmployee(User.Identity.GetUserId());
             if (mUserInfo.isInRole(User.Identity.GetUserId(), "Employee") && employee.EmployeeID != working.EmployeeID)
@@ -520,9 +511,12 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return HttpNotFound();
             }
 
-            if (ModelState.IsValid)
+            SupervisorValidator supervisorValidator = new SupervisorValidator();
+            var result = supervisorValidator.validate(Supervisors);
+
+            if (ModelState.IsValid && result == null)
             {
-                VehicleService vehicleService = new VehicleService();
+
 
                 // Check date to see if it is valid.
                 string validationError = TimesheetDateValidator.ValidateTimesheetDateRange(working.Date, working.EndDate);
@@ -530,12 +524,7 @@ namespace wn_Admin.Controllers.CompanyControllers
 
                 if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
                 {
-                    vehicleService.updateVehicleStatus(working.Veh, working.EndKm);
-                    // When modified by someone, clear the reviewer name to this person.
-                    working.isReviewed = false;
-                    working.Reviewer = "";
-                    db.Entry(working).State = EntityState.Modified;
-                    db.SaveChanges();
+                    editWorking(working, Supervisors);
                     return RedirectToAction("Index");
                 }
                 else
@@ -546,19 +535,18 @@ namespace wn_Admin.Controllers.CompanyControllers
                     }
                     else
                     {
-                        vehicleService.updateVehicleStatus(working.Veh, working.EndKm);
-                        // When modified by someone, clear the reviewer name to this person.
-                        working.isReviewed = false;
-                        working.Reviewer = "";
-                        db.Entry(working).State = EntityState.Modified;
-                        db.SaveChanges();
+                        editWorking(working, Supervisors);
                         return RedirectToAction("Index");
                     }
 
                 }
 
 
-                
+
+            }
+            else if (result != null)
+            {
+                ModelState.AddModelError("Supervisors", result);
             }
             ViewBag.ClientName = new SelectList(db.Clients, "ClientID", "ClientName");
             setEmployeeDropdowns();
@@ -567,9 +555,28 @@ namespace wn_Admin.Controllers.CompanyControllers
             ViewBag.OffReason = new SelectList(db.OffReasons, "OffReasonName", "OffReasonName");
             ViewBag.Task = new SelectList(db.Tasks, "TaskName", "TaskName");
             ViewBag.Veh = new SelectList(db.Vehicles, "VehicleName", "VehicleName");
-            ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1 || w.Status == 0), "ProjectID", "ProjectName");
+            ViewBag.ProjectID = new SelectList(db.Projects.Where(w => w.Status == 1), "ProjectID", "ProjectName");
             ViewBag.Equipment = new MultiSelectList(db.Equipments, "EquipmentName", "EquipmentName");
+            TimesheetSupervisorService tss = new TimesheetSupervisorService();
+            var currentEmployee = mUserInfo.getEmployee(User.Identity.GetUserId());
+            ViewBag.Reviewers = tss.getSupervisorListWithValues(currentEmployee.EmployeeID, working);
             return View(working);
+        }
+
+        private void editWorking(Working working, int[] sids)
+        {
+            VehicleService vehicleService = new VehicleService();
+            TimesheetSupervisorService tss = new TimesheetSupervisorService();
+
+            vehicleService.updateVehicleStatus(working.Veh, working.EndKm);
+            // When modified by someone, clear the reviewer name to this person.
+            working.isReviewed = false;
+            working.Reviewer = "";
+            db.Entry(working).State = EntityState.Modified;
+            db.SaveChanges();
+
+            tss.delete(working.WorkingID);
+            tss.create(working.WorkingID, sids);
         }
 
         // GET: Workings/Delete/5
@@ -613,8 +620,13 @@ namespace wn_Admin.Controllers.CompanyControllers
                 return HttpNotFound();
             }
 
+            TimesheetSupervisorService tss = new TimesheetSupervisorService();
+            tss.delete(working.WorkingID);
+
             db.Workings.Remove(working);
             db.SaveChanges();
+
+
             return RedirectToAction("Index");
         }
 
@@ -661,11 +673,11 @@ namespace wn_Admin.Controllers.CompanyControllers
                 {
                     // User is an employee, check if he is supervisor or not.
                     // Get all time sheets from employees who are under THIS PERSON's supervision
-                    var result = from es in db.EmployeeSupervisions
-                                  join sp in db.Supervisions on es.SupervisorID equals sp.SupervisorID
-                                  join wk in db.Workings on sp.ProjectID equals wk.ProjectID
-                                  where es.SupervisorID == employee.EmployeeID && es.EmployeeID == wk.EmployeeID && wk.isReviewed == false
-                                  select wk;
+                    var result = from ws in db.WorkingSupervisors
+                                  join tm in db.Workings
+                                  on ws.WorkingID equals tm.WorkingID
+                                  where ws.EmployeeID == employee.EmployeeID && tm.isReviewed == false
+                                  select tm;
 
                     foreach (var work in result)
                     {

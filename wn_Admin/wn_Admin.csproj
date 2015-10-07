@@ -59,6 +59,14 @@
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Azure.WebJobs, Version=1.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.WebJobs.Core.1.0.1\lib\net45\Microsoft.Azure.WebJobs.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Azure.WebJobs.Host, Version=1.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.WebJobs.1.0.1\lib\net45\Microsoft.Azure.WebJobs.Host.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -94,6 +102,14 @@
     </Reference>
     <Reference Include="Remotion.Interfaces, Version=1.13.52.2, Culture=neutral, PublicKeyToken=0669cf0452175907, processorArchitecture=MSIL">
       <HintPath>..\packages\LinqToExcel.1.10.1\lib\Remotion.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SendGrid.SmtpApi, Version=1.3.1.0, Culture=neutral, PublicKeyToken=2ae73662c35d80e4, processorArchitecture=MSIL">
+      <HintPath>..\packages\SendGrid.SmtpApi.1.3.1\lib\net40\SendGrid.SmtpApi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SendGridMail, Version=6.1.0.0, Culture=neutral, PublicKeyToken=2ae73662c35d80e4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sendgrid.6.1.0\lib\SendGridMail.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -214,6 +230,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CControllers\AdminController.cs" />
+    <Compile Include="Controllers\CControllers\AdminDataController.cs" />
     <Compile Include="Controllers\CControllers\APIController.cs" />
     <Compile Include="Controllers\CControllers\APITreeController.cs" />
     <Compile Include="Controllers\CControllers\ClientsController.cs" />
@@ -226,9 +243,11 @@
     <Compile Include="Controllers\CControllers\VehiclesController.cs" />
     <Compile Include="Controllers\CompanyControllers\AccountTypesController.cs" />
     <Compile Include="Controllers\CompanyControllers\DepartmentsController.cs" />
+    <Compile Include="Controllers\CompanyControllers\EmployeeRolesController.cs" />
     <Compile Include="Controllers\CompanyControllers\EmployeesController.cs" />
     <Compile Include="Controllers\CompanyControllers\EmployeeSupervisionsController.cs" />
     <Compile Include="Controllers\CompanyControllers\EquipmentsController.cs" />
+    <Compile Include="Controllers\CompanyControllers\ERolesController.cs" />
     <Compile Include="Controllers\CompanyControllers\ExcelController.cs" />
     <Compile Include="Controllers\CompanyControllers\ExpensesController.cs" />
     <Compile Include="Controllers\CompanyControllers\FileController.cs" />
@@ -238,6 +257,7 @@
     <Compile Include="Controllers\CompanyControllers\TimeOffRequestsController.cs" />
     <Compile Include="Controllers\CompanyControllers\UserEmployeesController.cs" />
     <Compile Include="Controllers\CompanyControllers\WorkingsController.cs" />
+    <Compile Include="Controllers\CompanyControllers\WorkingSupervisorsController.cs" />
     <Compile Include="Controllers\CompanyControllers\WorksForsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -284,6 +304,42 @@
     <Compile Include="Migrations\201509291536356_estatus.Designer.cs">
       <DependentUpon>201509291536356_estatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509301523359_ws1.cs" />
+    <Compile Include="Migrations\201509301523359_ws1.Designer.cs">
+      <DependentUpon>201509301523359_ws1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509301538442_roles.cs" />
+    <Compile Include="Migrations\201509301538442_roles.Designer.cs">
+      <DependentUpon>201509301538442_roles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509301547416_erole.cs" />
+    <Compile Include="Migrations\201509301547416_erole.Designer.cs">
+      <DependentUpon>201509301547416_erole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509301554252_fk_ws.cs" />
+    <Compile Include="Migrations\201509301554252_fk_ws.Designer.cs">
+      <DependentUpon>201509301554252_fk_ws.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509301628176_uniqueklds.cs" />
+    <Compile Include="Migrations\201509301628176_uniqueklds.Designer.cs">
+      <DependentUpon>201509301628176_uniqueklds.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509301957018_off_status.cs" />
+    <Compile Include="Migrations\201509301957018_off_status.Designer.cs">
+      <DependentUpon>201509301957018_off_status.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510012109091_int2double.cs" />
+    <Compile Include="Migrations\201510012109091_int2double.Designer.cs">
+      <DependentUpon>201510012109091_int2double.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510021520530_emailphone.cs" />
+    <Compile Include="Migrations\201510021520530_emailphone.Designer.cs">
+      <DependentUpon>201510021520530_emailphone.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510061918031_index_on_fields.cs" />
+    <Compile Include="Migrations\201510061918031_index_on_fields.Designer.cs">
+      <DependentUpon>201510061918031_index_on_fields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CModels\Client.cs" />
@@ -291,8 +347,10 @@
     <Compile Include="Models\CModels\OffReason.cs" />
     <Compile Include="Models\CModels\PayPeriod.cs" />
     <Compile Include="Models\CModels\PPViewModel.cs" />
+    <Compile Include="Models\CompanyModels\EmployeeRole.cs" />
     <Compile Include="Models\CompanyModels\EmployeeSupervision.cs" />
     <Compile Include="Models\CompanyModels\Equipment.cs" />
+    <Compile Include="Models\CompanyModels\ERole.cs" />
     <Compile Include="Models\CompanyModels\Task.cs" />
     <Compile Include="Models\CModels\Vehicle.cs" />
     <Compile Include="Models\CompanyModels\AccountType.cs" />
@@ -300,6 +358,7 @@
     <Compile Include="Models\CompanyModels\Department.cs" />
     <Compile Include="Models\CompanyModels\Employee.cs" />
     <Compile Include="Models\CompanyModels\Expense.cs" />
+    <Compile Include="Models\CompanyModels\WorkingSupervisor.cs" />
     <Compile Include="Models\Safety\AccidentPhoto.cs" />
     <Compile Include="Models\Safety\AccidentPPEOption.cs" />
     <Compile Include="Models\Safety\AccidentType.cs" />
@@ -331,6 +390,7 @@
     <Compile Include="Models\Safety\YesNoNA.cs" />
     <Compile Include="Models\UtilityModels\CustomValidators.cs" />
     <Compile Include="Models\UtilityModels\DateDiffAttribute.cs" />
+    <Compile Include="Models\UtilityModels\EmailNotificationService.cs" />
     <Compile Include="Models\UtilityModels\EventModel.cs" />
     <Compile Include="Models\UtilityModels\EventService.cs" />
     <Compile Include="Models\UtilityModels\EventViewModel.cs" />
@@ -343,8 +403,10 @@
     <Compile Include="Models\UtilityModels\SheetEmp.cs" />
     <Compile Include="Models\UtilityModels\StorageController.cs" />
     <Compile Include="Models\UtilityModels\SummaryModel.cs" />
+    <Compile Include="Models\UtilityModels\SupervisorValidator.cs" />
     <Compile Include="Models\UtilityModels\TimesheetDateValidator.cs" />
     <Compile Include="Models\UtilityModels\TimesheetSummaryViewModel.cs" />
+    <Compile Include="Models\UtilityModels\TimesheetSupervisorService.cs" />
     <Compile Include="Models\UtilityModels\TotalHoursAttribute.cs" />
     <Compile Include="Models\UtilityModels\UEViewModel.cs" />
     <Compile Include="Models\UtilityModels\UserInfo.cs" />
@@ -492,6 +554,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\CustomJS\Employee.js" />
     <Content Include="Scripts\CustomJS\fullcalendar.min.js" />
@@ -552,10 +615,6 @@
     <Content Include="Views\Account\VerifyCode.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Roles\Index.cshtml" />
-    <Content Include="Views\Roles\Create.cshtml" />
-    <Content Include="Views\Roles\Edit.cshtml" />
-    <Content Include="Views\Roles\ManageUserRoles.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Users\ChangePassword.cshtml" />
     <Content Include="Views\Users\RemoveAccount.cshtml" />
@@ -760,10 +819,30 @@
     <Content Include="Views\Observations\Details.cshtml" />
     <Content Include="Views\Observations\Edit.cshtml" />
     <Content Include="Views\Observations\Index.cshtml" />
+    <Content Include="Views\WorkingSupervisors\Create.cshtml" />
+    <Content Include="Views\WorkingSupervisors\Delete.cshtml" />
+    <Content Include="Views\WorkingSupervisors\Details.cshtml" />
+    <Content Include="Views\WorkingSupervisors\Edit.cshtml" />
+    <Content Include="Views\WorkingSupervisors\Index.cshtml" />
+    <Content Include="Views\EmployeeRoles\Create.cshtml" />
+    <Content Include="Views\EmployeeRoles\Delete.cshtml" />
+    <Content Include="Views\EmployeeRoles\Details.cshtml" />
+    <Content Include="Views\EmployeeRoles\Edit.cshtml" />
+    <Content Include="Views\EmployeeRoles\Index.cshtml" />
+    <Content Include="Views\Roles\Create.cshtml" />
+    <Content Include="Views\Roles\Edit.cshtml" />
+    <Content Include="Views\Roles\Index.cshtml" />
+    <Content Include="Views\Roles\ManageUserRoles.cshtml" />
+    <Content Include="Views\ERoles\Create.cshtml" />
+    <Content Include="Views\ERoles\Delete.cshtml" />
+    <Content Include="Views\ERoles\Details.cshtml" />
+    <Content Include="Views\ERoles\Edit.cshtml" />
+    <Content Include="Views\ERoles\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\Mobile\" />
     <Folder Include="UnitTests\" />
+    <Folder Include="Views\AdminData\" />
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\APITree\" />
     <Folder Include="Views\API\" />
@@ -789,6 +868,33 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509291536356_estatus.resx">
       <DependentUpon>201509291536356_estatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509301523359_ws1.resx">
+      <DependentUpon>201509301523359_ws1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509301538442_roles.resx">
+      <DependentUpon>201509301538442_roles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509301547416_erole.resx">
+      <DependentUpon>201509301547416_erole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509301554252_fk_ws.resx">
+      <DependentUpon>201509301554252_fk_ws.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509301628176_uniqueklds.resx">
+      <DependentUpon>201509301628176_uniqueklds.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509301957018_off_status.resx">
+      <DependentUpon>201509301957018_off_status.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510012109091_int2double.resx">
+      <DependentUpon>201510012109091_int2double.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510021520530_emailphone.resx">
+      <DependentUpon>201510021520530_emailphone.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510061918031_index_on_fields.resx">
+      <DependentUpon>201510061918031_index_on_fields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
@@ -828,6 +934,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\packages\Microsoft.Web.WebJobs.Publish.1.0.3\tools\webjobs.targets" Condition="Exists('..\packages\Microsoft.Web.WebJobs.Publish.1.0.3\tools\webjobs.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

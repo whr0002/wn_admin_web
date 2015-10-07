@@ -4,10 +4,10 @@ function setDatetiempicker($, formBlock) {
     $('.b-datepicker').datetimepicker({
         sideBySide: true
     });
-    //var startDate = $('#Date', formBlock).data('DateTimePicker');
+    var startDate = $('#Date', formBlock).data('date');
     //startDate.clear();
     //startDate.setStartDate(new Date());
-    //setDateLimits(startDate, formBlock);
+    setDateLimits({date: startDate}, formBlock);
     $('#Date', formBlock).on("dp.change", function (e) {
 
         setDateLimits(e, formBlock);
@@ -261,6 +261,7 @@ function ajaxSubmit() {
                 PPYr: $('#PPYr', formBlock).val(),
                 PP: $('#PP', formBlock).val(),
                 ProjectID: $('#ProjectID option:selected', formBlock).val(),
+                Supervisors: $('#Supervisors', formBlock).val(),
                 Task: $('#Task option:selected', formBlock).val(),
                 identifier: $('#Identifier', formBlock).val(),
                 Veh: $('#Veh option:selected', formBlock).val(),

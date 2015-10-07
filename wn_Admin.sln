@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wn_Admin", "wn_Admin\wn_Adm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wn_Admin_Test", "wn_Admin_Test\wn_Admin_Test.csproj", "{5DF4C8C6-01A7-42A7-A9E1-D5F9F33187E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailNotification", "EmailNotification\EmailNotification.csproj", "{0E039F8E-B3B0-4D33-84E0-166830B24205}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,12 @@ Global
 		{5DF4C8C6-01A7-42A7-A9E1-D5F9F33187E6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5DF4C8C6-01A7-42A7-A9E1-D5F9F33187E6}.Web.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DF4C8C6-01A7-42A7-A9E1-D5F9F33187E6}.Web.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E039F8E-B3B0-4D33-84E0-166830B24205}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E039F8E-B3B0-4D33-84E0-166830B24205}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E039F8E-B3B0-4D33-84E0-166830B24205}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E039F8E-B3B0-4D33-84E0-166830B24205}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E039F8E-B3B0-4D33-84E0-166830B24205}.Web.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E039F8E-B3B0-4D33-84E0-166830B24205}.Web.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -28,6 +28,10 @@ namespace wn_Admin.Models.CompanyModels
             get { return _fullName; }
         }
 
+        public string Email { get; set; }
+
+        public string Phone { get; set; }
+
         public int Status { get; set; }
 
 

@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="EmailNotification.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DefaultConnectionString" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Data Source=tcp:d8fx7wpavu.database.windows.net,1433;Initial Catalog=wnasap_db;User Id=woodlandstest@d8fx7wpavu;Password=!whr8288680;</Value>
+    </Setting>
+    <Setting Name="SENDGRID_USER" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">azure_a504ee65e2af4f068dcf7850772831df@azure.com</Value>
+    </Setting>
+    <Setting Name="SENDGRID_PASS" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">j2Xoadm4xC5n270</Value>
+    </Setting>
+    <Setting Name="TWILIO_ID" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">AC231d44643ad2393addeb57b7a7891579</Value>
+    </Setting>
+    <Setting Name="TWILIO_TOKEN" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">fa965e006d61e9b81c7ec49dd1f5bdee</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

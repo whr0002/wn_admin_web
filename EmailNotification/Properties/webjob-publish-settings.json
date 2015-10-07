@@ -1,0 +1,9 @@
+﻿{
+  "$schema": "http://schemastore.org/schemas/json/webjob-publish-settings.json",
+  "webJobName": "EmailNotification",
+  "startTime": "2015-10-04T08:00:00-07:00",
+  "endTime": "2016-12-25T00:00:00-07:00",
+  "jobRecurrenceFrequency": "Week",
+  "interval": 1,
+  "runMode": "Scheduled"
+}

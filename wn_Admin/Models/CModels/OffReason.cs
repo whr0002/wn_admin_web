@@ -15,5 +15,7 @@ namespace wn_Admin.Models.CModels
         [MaxLength(100)]
         [DisplayName("Off Details")]
         public string OffReasonName { get; set; }
+
+        public int Status { get; set; }
     }
 }

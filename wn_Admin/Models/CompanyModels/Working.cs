@@ -18,11 +18,13 @@ namespace wn_Admin.Models.CompanyModels
         [DisplayName("Employee")]
         public int EmployeeID { get; set; }
 
+        [Index]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString="{0:MM/dd/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         [DisplayName("Time - Start of the day")]
         public DateTime Date { get; set; }
 
+        [Index]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         [DisplayName("Time - End of the day")]
@@ -93,16 +95,17 @@ namespace wn_Admin.Models.CompanyModels
         public string OffReason { get; set; }
 
         [Range(0, 18)]
-        [TotalHours("EmployeeID", "Date", "WorkingID", ErrorMessage="Total hours for a day must not be over 18 hours")]
+        [TotalHours("EmployeeID", "Date", "WorkingID", ErrorMessage = "Total hours for a day must not be over 18 hours")]
         public double Hours { get; set; }
 
         [Range(0, 6)]
-        public int? Bank { get; set; }
+        public double? Bank { get; set; }
 
         [DisplayName("Over time")]
-        [Range(0,6)]
-        public int? OT { get; set; }
+        [Range(0, 6)]
+        public double? OT { get; set; }
 
+        [Index]
         [DisplayName("Is Reviewed?")]
         public bool isReviewed { get; set; }
 

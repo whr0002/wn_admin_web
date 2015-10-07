@@ -11,7 +11,6 @@ using wn_Admin.Models.CModels;
 
 namespace wn_Admin.Controllers.CControllers
 {
-    [Authorize(Roles = "SUPERADMIN, Accountant")]
     public class OffReasonsController : Controller
     {
         private wn_admin_db db = new wn_admin_db();
@@ -48,7 +47,7 @@ namespace wn_Admin.Controllers.CControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "OffReasonID,OffReasonName")] OffReason offReason)
+        public ActionResult Create([Bind(Include = "OffReasonID,OffReasonName,Status")] OffReason offReason)
         {
             if (ModelState.IsValid)
             {
@@ -80,7 +79,7 @@ namespace wn_Admin.Controllers.CControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "OffReasonID,OffReasonName")] OffReason offReason)
+        public ActionResult Edit([Bind(Include = "OffReasonID,OffReasonName,Status")] OffReason offReason)
         {
             if (ModelState.IsValid)
             {

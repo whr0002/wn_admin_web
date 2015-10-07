@@ -28,10 +28,10 @@ namespace wn_Admin.Models.UtilityModels
 
         public double Hours { get; set; }
 
-        public int? Bank { get; set; }
+        public double? Bank { get; set; }
 
         [DisplayName("Over Time")]
-        public int? OverTime { get; set; }
+        public double? OverTime { get; set; }
 
         public int ClientID { get; set; }
         public string ProjectID { get; set; }

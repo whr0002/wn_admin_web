@@ -19,3 +19,7 @@ box-shadow: 1px 1px 18px 0px rgba(0,0,0,0.75);
 #close{
     display:none;
 }
+
+.form-margin{
+    margin-top: 50px;
+}

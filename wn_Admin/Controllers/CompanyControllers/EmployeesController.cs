@@ -47,7 +47,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "EmployeeID,FirstMidName,LastName,FullName,Status")] Employee employee)
+        public ActionResult Create([Bind(Include = "EmployeeID,FirstMidName,LastName,FullName,Email,Phone,Status")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -79,7 +79,7 @@ namespace wn_Admin.Controllers.CompanyControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EmployeeID,FirstMidName,LastName,FullName,Status")] Employee employee)
+        public ActionResult Edit([Bind(Include = "EmployeeID,FirstMidName,LastName,FullName,Email,Phone,Status")] Employee employee)
         {
             if (ModelState.IsValid)
             {

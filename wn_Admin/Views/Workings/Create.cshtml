@@ -6,7 +6,7 @@
 
 @section jsSection{
     <script src="~/Scripts/toastr.min.js"></script>
-    <script src="~/Scripts/ng_controllers/timesheet_controller.js?v=1.8"></script>
+    <script src="~/Scripts/ng_controllers/timesheet_controller.js?v=1.91"></script>
 
 
 }
@@ -14,7 +14,7 @@
 @section cssSection{
     <link rel="stylesheet" href="/Content/bootstrap-datetimepicker.css" />
     <link href="~/Content/toastr.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/Content/timesheet_create.css?v=1.0" />
+    <link rel="stylesheet" href="~/Content/timesheet_create.css?v=1.1" />
 }
 
 <script type="text/javascript">
@@ -36,7 +36,7 @@
     <div id="formBlock0" class="col-md-6">
         <div class="col-md-12" id="validationErrors" style="color:red;"></div>
 
-        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm", @class = "form-margin" }))
         {
             @Html.AntiForgeryToken()
 
@@ -111,6 +111,14 @@
 
                     <div class="col-md-5">
                         <span id="PID"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Supervisor", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("Supervisors", (MultiSelectList)ViewBag.Supervisors, new { multiple = "multiple", @class = "form-control my_selectlist" })
+                        @Html.ValidationMessageFor(model => model.Field, "", new { @class = "text-danger" })
                     </div>
                 </div>
 

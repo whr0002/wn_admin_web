@@ -85,6 +85,13 @@
                     @*@Html.HiddenFor(model => model.Task)*@
                 </div>
 
+                <div class="form-group">
+                    @Html.Label("Supervisor", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("Supervisors", (MultiSelectList)ViewBag.Supervisors, new { multiple = "multiple", @class = "form-control my_selectlist" })
+                        @Html.ValidationMessage("Supervisors", "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
                 <div class="form-group">
                     @Html.Label("Description", htmlAttributes: new { @class = "control-label col-md-2" })

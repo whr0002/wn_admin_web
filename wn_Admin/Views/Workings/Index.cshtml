@@ -30,13 +30,16 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            var events = @Html.Raw(Json.Encode(ViewBag.Events as List<wn_Admin.Models.UtilityModels.EventViewModel>));
-
-            //events.push({title:"hello", start:"2015-07-23"});
-            //console.log(events);
             // Initializing calendar
-
+            var events = @Html.Raw(Json.Encode(ViewBag.Events as List<wn_Admin.Models.UtilityModels.EventViewModel>));
             initializeCalendar(events);
+
+            //$.getJSON("/admindata/workings", null, function (data) {
+            //    initializeCalendar(data);
+            //});
+
+            
+            
 
             // Add change event to clientName
             $('#clientId').change(function () {
@@ -197,7 +200,7 @@
                 </div>
 
                 <div class="col-md-12">
-                    @foreach (var summary in ViewBag.TMSummary as List<wn_Admin.Models.UtilityModels.TimesheetSummaryViewModel>)
+                    @*@foreach (var summary in ViewBag.TMSummary as List<wn_Admin.Models.UtilityModels.TimesheetSummaryViewModel>)
                     {
                         <div class="col-md-6" style="border:1px solid black;">
                             <div class="col-md-12">
@@ -210,7 +213,7 @@
                                 Time: @summary.TotalHours hours
                             </div>
                         </div>
-                    }
+                    }*@
                 </div>
             </div>
 
