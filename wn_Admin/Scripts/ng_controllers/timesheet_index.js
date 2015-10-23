@@ -114,3 +114,16 @@ function setDateLimits(e, formBlock) {
         endDatepicker.maxDate(endDate);
     }
 }
+
+function toggleSummaryBox(element) {
+
+    var isGroupBy = $('#isGroupBy');
+    var summarySection = $('#summarySection');
+    if (element.checked) {
+        summarySection.show();
+
+    } else {
+        summarySection.hide();
+        isGroupBy.prop("checked", false);
+    }
+}

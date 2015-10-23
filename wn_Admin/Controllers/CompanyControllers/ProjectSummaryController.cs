@@ -19,28 +19,33 @@ namespace wn_Admin.Controllers.CompanyControllers
         private wn_admin_db  db = new wn_admin_db();
 
         // GET: ProjectSummary
-        public ActionResult Index(int ClientID = -1, string ProjectID = "", DateTime? startDate = null, DateTime? endDate = null)
+        public ActionResult Index(int[] employeeId, int[] ClientID, string[] ProjectID, DateTime? startDate = null, DateTime? endDate = null)
         {
             SummaryModel model = new SummaryModel();
             var workings = db.Workings.Include(w => w.Employee).Include(w => w.Project);
             var expenses = db.Expenses.Include(e => e.AccountType).Include(e => e.Employee).Include(e => e.Project);
 
-            if (ClientID == -1 && ProjectID.Equals("") && startDate == null && endDate == null)
+            if (employeeId != null && employeeId.Count() > 0)
+            {
+                workings = workings.Where(w => employeeId.Contains(w.EmployeeID));
+            }
+
+            if (ClientID == null && ProjectID == null && startDate == null && endDate == null)
             {
                 workings = Enumerable.Empty<Working>().AsQueryable();
                 expenses = Enumerable.Empty<Expense>().AsQueryable();
             }
 
-            if (ClientID != -1)
+            if (ClientID != null && ClientID.Count() > 0)
             {
-                workings = workings.Where(w => w.Project.FK_Client.ClientID == ClientID);
-                expenses = expenses.Where(w => w.Project.FK_Client.ClientID == ClientID);
+                workings = workings.Where(w => ClientID.Contains(w.Project.Client));
+                expenses = expenses.Where(w => ClientID.Contains(w.Project.Client));
             }
 
-            if (!ProjectID.Equals(""))
+            if (ProjectID != null && ProjectID.Count() > 0)
             {
-                workings = workings.Where(w => w.ProjectID.Equals(ProjectID));
-                expenses = expenses.Where(w => w.ProjectID.Equals(ProjectID));
+                workings = workings.Where(w => ProjectID.Contains(w.ProjectID));
+                expenses = expenses.Where(w => ProjectID.Contains(w.ProjectID));
             }
 
             if (startDate != null)
@@ -85,8 +90,10 @@ namespace wn_Admin.Controllers.CompanyControllers
             ViewBag.BankSum = bankSum;
             ViewBag.OTSum = otSum;
             ViewBag.AmountSum = amountSum;
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "ClientName");
-            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
+
+            ViewBag.EmployeeID = new MultiSelectList(db.Employees.OrderBy(o => o.FirstMidName), "EmployeeID", "FullName");
+            ViewBag.ClientID = new MultiSelectList(db.Clients.OrderBy(o => o.ClientName), "ClientID", "ClientName");
+            ViewBag.ProjectID = new MultiSelectList(db.Projects.OrderBy(o => o.ProjectName), "ProjectID", "ProjectName");
             
 
             return View(model);

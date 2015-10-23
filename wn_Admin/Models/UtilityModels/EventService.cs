@@ -13,18 +13,27 @@ namespace wn_Admin.Models.UtilityModels
         private Employee mEmployee;
         private IQueryable<Employee> employees;
         private DateTime now;
-        private DateTime preMonthDate;
+        //private DateTime preMonthDate;
         private DateTime preWeekDate;
+        private DateTime prePeriodDate;
         private wn_admin_db db;
+        private bool showMissingEvents = true;
 
-        public EventService(Employee employee, wn_admin_db db) {
+        public EventService(Employee employee, wn_admin_db db, DateTime? startDate = null, DateTime? endDate = null, int? ppYear = -1, int? pp = -1)
+        {
             this.db = db;
             this.mEmployee = employee;
             this.employees = getEmployeeList();
             this.now = TimesheetDateValidator.getEdmontonTime().Date;
-            this.preMonthDate = now.AddDays(-14);
             this.preWeekDate = now.AddDays(-14);
+            this.prePeriodDate = now.AddDays(-14);
 
+
+            if (startDate != null || endDate != null || ppYear != -1 || pp != -1)
+            {
+                // User want to query data based on a time period, do not show missing events
+                showMissingEvents = false;
+            }
 
         }
 
@@ -33,9 +42,9 @@ namespace wn_Admin.Models.UtilityModels
         // Create a View Model for events
         public List<EventViewModel> getEventViewModel(IQueryable<Working> workings)
         {
-            var filteredWokring = workings.Where(w => w.Date >= preMonthDate);
+            //var filteredWokring = workings.Where(w => w.Date >= preWeekDate);
 
-            var events = (from s in filteredWokring
+            var events = (from s in workings
                           group s by new
                           {
                               s.EmployeeID,
@@ -55,8 +64,12 @@ namespace wn_Admin.Models.UtilityModels
 
 
             var eventList = events.ToList();
-            var missings = getMissingTimesheetEvents2(filteredWokring);
-            eventList.AddRange(missings);
+
+            if (showMissingEvents) {
+                var filteredWokring = workings.Where(w => w.Date >= prePeriodDate);
+                var missings = getMissingTimesheetEvents(filteredWokring);
+                eventList.AddRange(missings);
+            }
 
             // Giving each event color and description.
             List<EventViewModel> evm = new List<EventViewModel>();
@@ -95,26 +108,7 @@ namespace wn_Admin.Models.UtilityModels
         }
         
 
-        // Get all missing events in the last 14 days
-        private List<EventModel> getMissingTimesheetEvents(IQueryable<EventModel> events)
-        {
-            List<EventModel> ems = new List<EventModel>();
-            
-
-
-            while ( preWeekDate <= now)
-            {
-
-                var eventsByDay = getEventsByDate(events, preWeekDate);
-                var missingEvents = getMissingEventsByDate(eventsByDay, employees, preWeekDate);
-                ems.AddRange(missingEvents);
-                preWeekDate = preWeekDate.AddDays(1);
-            }
-
-            return ems;
-        }
-
-        private List<EventModel> getMissingTimesheetEvents2(IQueryable<Working> workings)
+        private List<EventModel> getMissingTimesheetEvents(IQueryable<Working> workings)
         {
 
             List<EventModel> ems = new List<EventModel>();
@@ -168,45 +162,6 @@ namespace wn_Admin.Models.UtilityModels
             }
 
             return ems;
-        }
-
-        // Get existing events on a specific day
-        private IQueryable<EventModel> getEventsByDate(IQueryable<EventModel> events, DateTime date)
-        {
-            IQueryable<EventModel> eventsByDate = events.Where(w => w.startDT == date || (w.startDT <= date && w.endDT >= date));
-
-            return eventsByDate;
-        }
-
-        // Get missing events on a specific day
-        private IEnumerable<EventModel> getMissingEventsByDate(IQueryable<EventModel> events, IQueryable<Employee> employees, DateTime date)
-        {
-
-            List<EventModel> missingEvents = new List<EventModel>();
-            Hashtable hashtable = new Hashtable();
-            foreach (var i in events)
-            {
-                hashtable[i.employeeID] = true;
-            }
-
-            foreach (var employee in employees)
-            {
-                if (hashtable[employee.EmployeeID] == null)
-                {
-                    // Missing time sheet from this employee
-                    // Create a missing event
-                    EventModel em = new EventModel();
-                    em.employeeID = employee.EmployeeID;
-                    em.startDT = date;
-                    em.endDT = date;
-                    em.title = "-Missing: " + employee.FirstMidName;
-                    em.totalHours = -1;
-
-                    missingEvents.Add(em);
-                }
-            }
-
-            return missingEvents;
         }
 
         // Get a list of active employees

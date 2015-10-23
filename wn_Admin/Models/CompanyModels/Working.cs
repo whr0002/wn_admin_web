@@ -31,9 +31,11 @@ namespace wn_Admin.Models.CompanyModels
         public DateTime EndDate { get; set; }
 
         [DisplayName("Period Year")]
+        [Index]
         public int PPYr { get; set; }
 
         [DisplayName("Period")]
+        [Index]
         public int PP { get; set; }
 
         [DisplayName("Project")]
@@ -114,16 +116,5 @@ namespace wn_Admin.Models.CompanyModels
         public virtual Employee Employee { get; set; }
         public virtual Project Project { get; set; }
 
-
-        //[ForeignKey("Field")]
-        //public virtual FieldAccess FK_FieldAccess { get; set; }
-
-        //[ForeignKey("OffReason")]
-        //public virtual OffReason FK_OffReason { get; set; }
-
-        //[ForeignKey("Task")]
-        //public virtual Task FK_Task { get; set; }
-        //[ForeignKey("Veh")]
-        //public virtual Vehicle FK_Vehicle { get; set; }
     }
 }

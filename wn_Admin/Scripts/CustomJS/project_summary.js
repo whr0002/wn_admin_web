@@ -1,6 +1,6 @@
 ﻿window.onload = function () {
     // Add change listener on client field
-    $("#ClientID").change({ param: $("#ClientID").find(":selected").text() }, getProjectByClient);
+    $("#ClientID").change(getProjectByClient);
 
     $("#export").click(exportToExcel);
 }
@@ -22,15 +22,19 @@ function exportToExcel() {
 }
 
 // Get a list of projects by a given client
-function getProjectByClient() {
+function getProjectByClient(e) {
+    var selected = $(e.target).val();
+    //console.log(selected);
+    var combinedParams = selected.join("&clients=");
+    //console.log(combinedParams);
 
-    var client = $("#ClientID").find(":selected").text();
+    //var client = $("#ClientID").find(":selected").text();
     var mySelect = $('#ProjectID');
     mySelect.empty();
     mySelect.val("");
     mySelect.append('<option value="">Choose ...</option>');
 
-    $.getJSON("/api/projects/" + client, function (data) {
+    $.getJSON("/api/projects2?clients=" + combinedParams, function (data) {
 
         for (var i = 0; i < data.length; i++) {
             //console.log(data[i]);

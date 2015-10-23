@@ -6,11 +6,12 @@
 
 @section cssSection{
     <link href="~/Content/Gridmvc.css" rel="stylesheet" />
+    <link href="~/Content/project_summary.css" rel="stylesheet" />
 }
 
 @section jsSection{
     <script src="~/Scripts/gridmvc.min.js"></script>
-    <script src="~/Scripts/CustomJS/project_summary.js"></script>
+    <script src="~/Scripts/CustomJS/project_summary.js?v=1.0"></script>
 }
 
 
@@ -32,15 +33,27 @@
 
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-3">
+                        
+                        
+                        <div class="col-md-4">
+                            Employees
+                            @Html.DropDownList("EmployeeID", (MultiSelectList)ViewBag.EmployeeID, htmlAttributes: new { @class = "form-control boxHeight", multiple = "multiple" })
+                        </div>
+                        
+                        <div class="col-md-4">
                             Client
-                            @Html.DropDownList("ClientID", null, "Choose ...", htmlAttributes: new { @class = "form-control" })
+                            @Html.DropDownList("ClientID", (MultiSelectList)ViewBag.ClientID, htmlAttributes: new { @class = "form-control boxHeight", multiple = "multiple" })
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             Project
-                            @Html.DropDownList("ProjectID", null, "Choose ...", htmlAttributes: new { @class = "form-control" })
+                            @Html.DropDownList("ProjectID", (MultiSelectList)ViewBag.ProjectID, "Choose ...", htmlAttributes: new { @class = "form-control boxHeight", multiple = "multiple" })
                         </div>
+
+
+                    </div>
+
+                    <div class="row ps-margin-top">
                         <div class="col-md-3">
                             Date From
                             @Html.TextBox("startDate", null, htmlAttributes: new { @class = "form-control", @type = "date" })
@@ -52,8 +65,9 @@
                     </div>
                 </div>
 
-                <div class="panel-footer">
-                    <input class="btn btn-default" type="submit" value="Search" />
+                <div class="panel-footer ">
+                    <input class="btn btn-primary pull-right"  type="submit" value="Search" />
+                    <div class="clearfix"></div>
                 </div>
             </div>
         }

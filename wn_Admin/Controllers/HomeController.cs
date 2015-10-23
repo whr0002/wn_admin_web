@@ -37,9 +37,11 @@ namespace wn_Admin.Controllers
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Change an Account's password", Link = "/users/changepassword" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Remove an Account", Link = "/users/removeaccount" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Assign an Account to an Employee", Link = "/useremployees" });
+                    //people.ListLinks.Add(new LinkViewModel { LinkName = "Manage Employee Roles", Link = "/ERoles" });
+                    people.ListLinks.Add(new LinkViewModel { LinkName = "Manage Supervisors", Link = "/EmployeeRoles" });
                     //people.ListLinks.Add(new LinkViewModel { LinkName = "Assign an Employee to a Department", Link = "/worksfors" });
-                    people.ListLinks.Add(new LinkViewModel { LinkName = "Assign a Project to a Supervisor", Link = "/supervisions" });
-                    people.ListLinks.Add(new LinkViewModel { LinkName = "Assign a Supervisor to an Employee", Link = "/employeesupervisions" });
+                    //people.ListLinks.Add(new LinkViewModel { LinkName = "Assign a Project to a Supervisor", Link = "/supervisions" });
+                    //people.ListLinks.Add(new LinkViewModel { LinkName = "Assign a Supervisor to an Employee", Link = "/employeesupervisions" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Safety Meeting", Link = "/SafetyMeetings" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Safety Categories", Link = "/SafetyCategories" });
                     people.ListLinks.Add(new LinkViewModel { LinkName = "Safety Item List", Link = "/SafetyItemValues" });

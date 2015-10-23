@@ -21,6 +21,23 @@ namespace wn_Admin.Controllers.CControllers
             return Content(JsonConvert.SerializeObject(projects), "application/json");
         }
 
+        [Authorize(Roles="SUPERADMIN")]
+        public ActionResult Projects2(int[] clients)
+        {
+
+            if (clients != null && clients.Count() > 0)
+            {
+              var projects = db.Projects.Where(w => clients.Contains(w.Client) && (w.Status == 1)).OrderBy(o => o.ProjectName).Select(s => new { s.ProjectID, s.ProjectName }).ToList();
+              return Content(JsonConvert.SerializeObject(projects), "application/json");
+            }
+            else
+            {
+                return Content(null, "application/json");
+            }
+
+            
+        }
+
         [HttpPost]
         public ActionResult PayPeriods(DateTime date)
         {

@@ -13,7 +13,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/Site.css?v=1.0" rel="stylesheet" />
     <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/StyleSheet_Timesheet.css?v=1.0" type="text/css" rel="stylesheet" />
     <link href="~/Content/fullcalendar.css" type="text/css" rel="stylesheet" />
@@ -23,7 +23,7 @@
     <script src="~/Scripts/CustomJS/jquery.min.js"></script>
     <script type="text/javascript" src="~/Scripts/CustomJS/moment.min.js"></script>
     <script type="text/javascript" src="~/Scripts/CustomJS/fullcalendar.min.js"></script>
-    <script src="~/Scripts/ng_controllers/timesheet_index.js?v=1.0"></script>
+    <script src="~/Scripts/ng_controllers/timesheet_index.js?v=1.1"></script>
     <script src="~/Scripts/gridmvc.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
@@ -31,15 +31,20 @@
     <script type="text/javascript">
         $(document).ready(function () {
             // Initializing calendar
-            var events = @Html.Raw(Json.Encode(ViewBag.Events as List<wn_Admin.Models.UtilityModels.EventViewModel>));
-            initializeCalendar(events);
+            @*var events = @Html.Raw(Json.Encode(ViewBag.Events as List<wn_Admin.Models.UtilityModels.EventViewModel>));*@
+            var url = window.location.href;
+            var hasParams = url.indexOf('?');
+            var filters = "";
+            if(hasParams >= 0){
+               filters = url.substring(url.indexOf('?'));
+            }
 
-            //$.getJSON("/admindata/workings", null, function (data) {
-            //    initializeCalendar(data);
-            //});
-
+            $.getJSON("/EventData" + filters, null, function (data) {
+                initializeCalendar(data);
+                $('#spinnerSection').hide();
+            });
             
-            
+      
 
             // Add change event to clientName
             $('#clientId').change(function () {
@@ -185,7 +190,14 @@
                             <div class="form-group">
                                 @Html.Label("Export To Excel?", htmlAttributes: new { @class = "control-label col-md-2", @for = "exportToExcel" })
                                 <div class="col-md-10">
-                                    @Html.CheckBox("exportToExcel", false)
+                                    @Html.CheckBox("exportToExcel", false, new { @onchange="toggleSummaryBox(this)"})
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="display:none" id="summarySection">
+                                @Html.Label("Group by Employee?", htmlAttributes: new { @class = "control-label col-md-2", @for = "isGroupBy" })
+                                <div class="col-md-10">
+                                    @Html.CheckBox("isGroupBy", false)
                                 </div>
                             </div>
 
@@ -220,7 +232,7 @@
             <div class="col-md-7">
                 <div class="col-md-12">
                     <div id="mCldr">
-
+                        <div class="spinner spinner-position" id="spinnerSection"></div>
                     </div>
 
                 </div>

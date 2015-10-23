@@ -28,171 +28,48 @@ namespace wn_Admin.Controllers.CompanyControllers
         private UserInfo mUserInfo = new UserInfo();
 
         // GET: Workings
-        public ActionResult Index(int[] employeeId, string[] tasks, int? page, DateTime? startDate = null, DateTime? endDate = null, int ppYear = -1, int pp = -1, int clientId = -1, string projectId = null, string isReviewed = null, Boolean? exportToExcel = null)
+        public ActionResult Index(int[] employeeId, string[] tasks, int? page, DateTime? startDate = null, DateTime? endDate = null, int ppYear = -1, int pp = -1, int clientId = -1, string projectId = null, string isReviewed = null, Boolean? exportToExcel = null, Boolean? isGroupBy = null)
         {
 
-
-            var workings = db.Workings.Include(w => w.Employee).Include(w => w.Project);
             string userId = User.Identity.GetUserId();
             var employee = mUserInfo.getEmployee(userId);
-            string currentFilter = "";
-            string dateRange = "";
 
-            // Search Filters
-            // Employees
-            if (employeeId != null && employeeId.Count() > 0)
-            {
-                workings = workings.Where(w => employeeId.Contains(w.EmployeeID));
-                currentFilter += "&employeeId=" + string.Join("&employeeId=", employeeId);
-            }
+            DataFilterService dfs = new DataFilterService();
+            var dataFilterModel = dfs.filter(db, employeeId, tasks, page, startDate, endDate, ppYear, pp, clientId, projectId, isReviewed);
+            var workings = dataFilterModel.Workings;
+            ViewBag.CurrentFilter = dataFilterModel.filters;
 
-            // Date
-            if (startDate != null)
-            {
-                workings = workings.Where(w => w.Date >= startDate || w.EndDate >= startDate);
-                currentFilter += "&startDate=" + String.Format("{0:yyyy-MM-dd}", startDate);
+            EmployeeFormViewModel efvm = new EmployeeFormService().getEmployeeFormViewModel(db, userId, mUserInfo, employee, workings);
+            ViewBag.hasReviewControl = efvm.hasReviewControl;
+            ViewBag.hasFullControl = efvm.hasFullControl;
+            ViewBag.EmployeeID = efvm.EmployeeID;
+            ViewBag.clientId = efvm.clientId;
+            ViewBag.projectId = efvm.projectId;
+            ViewBag.CurrentEID = efvm.CurrentEID;
+            ViewBag.EID = efvm.EID;
+            ViewBag.isReviewed = efvm.isReviewed;
+            ViewBag.tasks = efvm.tasks;
 
-                dateRange = "From " + String.Format("{0:yyyy-MM-dd}", startDate);
-            }
 
-            if (endDate != null)
-            {
-                workings = workings.Where(w => w.Date <= endDate || w.EndDate <= endDate);
-                currentFilter += "&endDate=" + String.Format("{0:yyyy-MM-dd}", endDate);
-
-                dateRange += " To " + String.Format("{0:yyyy-MM-dd}", endDate);
-            }
-
-            // Get working records within 2 months
-            if (startDate == null && endDate == null && ppYear == -1 && pp == -1)
-            {
-                DateTime now = TimesheetDateValidator.getEdmontonTime();
-                DateTime preMonth = now.AddMonths(-1);
-                workings = workings.Where(w => w.Date >= preMonth || w.EndDate >= preMonth);
-
-                // Used by timesheet summary
-                dateRange = "From " + preMonth.ToString("yyyy-MM-dd") + " to " + now.ToString("yyyy-MM-dd");
-
-            }
-
-            // Pay Period Year
-            if (ppYear != -1)
-            {
-                workings = workings.Where(w => w.PPYr == ppYear);
-                currentFilter += "&ppYear=" + ppYear;
-            }
-
-            //Pay Period
-            if (pp != -1)
-            {
-                workings = workings.Where(w => w.PP == pp);
-                currentFilter += "&pp=" + pp;
-            }
-
-            //Task
-            if (tasks != null && tasks.Count() > 0)
-            {
-                workings = workings.Where(w => tasks.Contains(w.Task));
-                currentFilter += "&tasks=" + string.Join("&tasks=", tasks);
-            }
-
-            //Client
-            if (clientId != -1)
-            {
-                workings = workings.Where(w => w.Project.Client == clientId);
-                currentFilter += "&clientId=" + clientId;
-            }
-
-            //Project
-            if (!String.IsNullOrWhiteSpace(projectId))
-            {
-                workings = workings.Where(w => w.ProjectID.Equals(projectId));
-                currentFilter += "&projectId=" + projectId;
-            }
-
-            // Aprovel
-            if (!String.IsNullOrWhiteSpace(isReviewed))
-            {
-                workings = workings.Where(w => w.isReviewed == (isReviewed.Equals("Yes")));
-                currentFilter += "&isReviewed=" + isReviewed;
-            }
+            workings = efvm.workings;
 
             // Export to Excel?
             if (exportToExcel != null && exportToExcel == true)
             {
-                return Content(generateExcel(workings), "application/ms-excel");
-            }
+                Response.ClearContent();
+                Response.Buffer = true;
+                Response.AddHeader("content-disposition", "attachment; filename=timesheets.xls");
+                Response.Charset = "";
+                ExcelService excelService = new ExcelService();
 
-            // Attach current filters
-            ViewBag.CurrentFilter = currentFilter;
-
-            if (mUserInfo.isInRole(userId, "SUPERADMIN") || mUserInfo.isInRole(userId, "Accountant"))
-            {
-
-                // User is an accoutant, he or she can search Timesheets by Employee ID
-                ViewBag.hasReviewControl = true;
-                ViewBag.hasFullControl = true;
-                ViewBag.EmployeeID = new MultiSelectList(db.Employees.Where(w => w.Status == 1).OrderBy(o => o.FirstMidName), "EmployeeID", "FullName");
-                ViewBag.clientId = new SelectList(db.Clients, "ClientID", "ClientName");
-                ViewBag.projectId = new SelectList(db.Projects, "ProjectID", "ProjectName");
-            }
-            else
-            {
-                // User is not accountant, show records from this user
-                if (employee != null)
+                if (isGroupBy != null && isGroupBy == true)
                 {
-                    // Get all time sheets from employees who are under THIS PERSON's supervision
-                    var tempAll = from ws in db.WorkingSupervisors
-                                  join tm in workings
-                                  on ws.WorkingID equals tm.WorkingID
-                                  where ws.EmployeeID == employee.EmployeeID
-                                  select tm;
-
-
-                    // Get all time sheets from THIS PERSON
-                    var personalWorkings = workings.Where(w => w.EmployeeID == employee.EmployeeID);
-                    workings = tempAll.Union(personalWorkings);
-
-                    // Give corresponding authorization
-                    if (tempAll.Count() > 0)
-                    {
-                        ViewBag.hasReviewControl = true;
-                        ViewBag.CurrentEID = employee.EmployeeID;
-                    }
-                    else
-                    {
-                        ViewBag.hasReviewControl = false;
-                    }
-                    var selfList = db.Employees.Where(w => w.EmployeeID == employee.EmployeeID);
-
-                    ViewBag.EmployeeID = new MultiSelectList(tempAll.Where(w => w.Employee.Status == 1).Select(s => s.Employee).Union(selfList).Distinct().OrderBy(o => o.FirstMidName), "EmployeeID", "FullName");
-                }
-                else
-                {
-                    return View(new List<Working>());
+                    return Content(excelService.groupResult(workings), "application/ms-excel");
                 }
 
-                // Select all employees under this person's supervision
-                //var employeeIdFromSupervision = db.EmployeeSupervisions.Where(w => w.SupervisorID == employee.EmployeeID).Select(s => s.EmployeeID);
-                ViewBag.EID = employee.EmployeeID;
-                ViewBag.hasFullControl = false;
-                //ViewBag.EmployeeID = new MultiSelectList(db.Employees.Where(w => w.Status == 1 && (w.EmployeeID == employee.EmployeeID || employeeIdFromSupervision.Contains(w.EmployeeID))).OrderBy(o => o.FullName), "EmployeeID", "FullName");
-                ViewBag.clientId = new SelectList(workings.Select(s => s.Project.FK_Client).Distinct(), "ClientID", "ClientName");
-                ViewBag.projectId = new SelectList(workings.Select(s => s.Project).Distinct(), "ProjectID", "ProjectName");
-
+                return Content(excelService.generateExcel(workings), "application/ms-excel");
             }
 
-            ViewBag.isReviewed = new SelectList(db.YesNoNA.Where(w => w.YesNoNAName != "N/A"), "YesNoNAName", "YesNoNAName");
-            ViewBag.tasks = new MultiSelectList(db.Tasks, "TaskName", "TaskName");
-
-            
-            
-
-            // Create and Pass events to view
-            EventService eventService = new EventService(employee, db);
-            List<EventViewModel> evm = eventService.getEventViewModel(workings);
-            //List<EventViewModel> evm = new List<EventViewModel>();
-            ViewBag.Events = evm;
 
             // Generate time sheet summary
             //var tempE = mUserInfo.getEmployee(userId);
@@ -700,87 +577,7 @@ namespace wn_Admin.Controllers.CompanyControllers
             return RedirectToAction("Index");
         }
 
-        private string generateExcel(IQueryable<Working> ws)
-        {
-            var timesheets = ws.ToList();
-
-            var table = new System.Data.DataTable("teste");
-            table.Columns.Add("Name", typeof(string));
-            table.Columns.Add("Date", typeof(DateTime));
-            table.Columns.Add("End Date", typeof(DateTime));
-            table.Columns.Add("PPyr", typeof(int));
-            table.Columns.Add("PP", typeof(int));
-            table.Columns.Add("Client", typeof(string));
-            table.Columns.Add("Project", typeof(string));
-            table.Columns.Add("ProjectID", typeof(string));
-            table.Columns.Add("Task", typeof(string));
-            table.Columns.Add("Identifier", typeof(string));
-            table.Columns.Add("Veh", typeof(string));
-            table.Columns.Add("Crew", typeof(string));
-            table.Columns.Add("StartKm", typeof(double));
-            table.Columns.Add("EndKm", typeof(double));
-            table.Columns.Add("KmDiff", typeof(double));
-            table.Columns.Add("Equipments", typeof(string));
-            table.Columns.Add("Field", typeof(string));
-            table.Columns.Add("PD", typeof(bool));
-            table.Columns.Add("JobDescription", typeof(string));
-            table.Columns.Add("Off", typeof(string));
-            table.Columns.Add("Hours", typeof(double));
-
-
-            if (timesheets != null)
-            {
-                foreach (var t in timesheets)
-                {
-                    table.Rows.Add
-                        (
-                        t.Employee.FullName,
-                        t.Date,
-                        t.EndDate,
-                        t.PPYr,
-                        t.PP,
-                        t.Project.FK_Client.ClientName,
-                        t.Project.ProjectName,
-                        t.Project.ProjectID,
-                        t.Task,
-                        t.Identifier,
-                        t.Veh,
-                        t.Crew,
-                        t.StartKm,
-                        t.EndKm,
-                        t.KmDiff,
-                        t.Equipment,
-                        t.Field,
-                        t.PD,
-                        t.JobDescription,
-                        t.OffReason,
-                        t.Hours
-                        );
-
-                }
-            }
-
-
-
-
-            var grid = new GridView();
-            grid.DataSource = table;
-            grid.DataBind();
-
-            Response.ClearContent();
-            Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment; filename=timesheets.xls");
-            //Response.ContentType = "application/excel";
-
-            Response.Charset = "";
-            StringWriter sw = new StringWriter();
-            HtmlTextWriter htw = new HtmlTextWriter(sw);
-
-            grid.RenderControl(htw);
-
-            //return Content(sw.ToString(), "application/ms-excel");
-            return sw.ToString();
-        }
+        
 
 
         private void setEmployeeDropdowns()
